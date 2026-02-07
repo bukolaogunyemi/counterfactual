@@ -1138,7 +1138,7 @@ export default function App(){
           <h2 style={{fontFamily:S.sf,fontSize:30,fontWeight:400,margin:0}}>Choose a figure</h2>
           <p style={{fontSize:14,color:S.textDim,margin:"4px 0 0"}}>Sorted by difficulty — easier judgments first</p>
         </div>
-        <div style={{display:"flex",gap:8"}}>
+        <div style={{display:"flex",gap:8}}>
           {scores.length>0&&<button style={bs} onClick={()=>go(()=>setPh("score"))}>Scores ({scores.length})</button>}
           <button style={{...bs,display:"flex",alignItems:"center",gap:6}} onClick={()=>go(()=>setPh("custom"))}>
             🔮 Any Figure</button>
