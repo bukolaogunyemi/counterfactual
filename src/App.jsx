@@ -4293,7 +4293,6 @@ const INSTITUTIONS = [
       {year:2024,happened:"HRW investigates globally",alternate:"Human rights documentation less professionalized"}
     ],
     impact:{lives:"Human rights protection",econ:"Policy influence",cultural:"Accountability norm",reach:"90+ countries",timeline:"Human rights documentation different"}},
-    impact:{lives:"Human rights accountability",econ:"Policy changes",cultural:"Documentation standard",reach:"90+ countries",timeline:"Human rights documentation continues"}},
   {id:"redcrescentsocieties",name:"Int'l Fed. of Red Cross/Crescent",born:1919,died:null,cat:"institutions",field:"Disaster Response",
     quote:"Together for humanity.",
     contributions:["Disaster response coordination","National society support","Blood services","Community resilience"],
