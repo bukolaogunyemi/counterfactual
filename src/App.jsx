@@ -19,17 +19,17 @@ const CATS = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// REPLACEABILITY SCALE (Updated per request)
-// 0-19%: Completely Irreplaceable
-// 20-49%: Mostly Irreplaceable  
-// 50-79%: Somewhat Replaceable
-// 80-100%: Highly Replaceable
+// INEVITABILITY SCALE
+// 0-19%: Singular — history needed exactly this person/thing
+// 20-49%: Low Inevitability — hard to see who else pulls it off  
+// 50-79%: Moderate Inevitability — others converging on similar ideas
+// 80-100%: High Inevitability — this was happening regardless
 // ─────────────────────────────────────────────────────────────────────────────
 const getLabel = (r) => {
-  if (r < 0.20) return { label: "Completely Irreplaceable", color: "#dc2626" };
-  if (r < 0.50) return { label: "Mostly Irreplaceable", color: "#ea580c" };
-  if (r < 0.80) return { label: "Somewhat Replaceable", color: "#ca8a04" };
-  return { label: "Highly Replaceable", color: "#16a34a" };
+  if (r < 0.20) return { label: "Singular", color: "#dc2626" };
+  if (r < 0.50) return { label: "Low Inevitability", color: "#ea580c" };
+  if (r < 0.80) return { label: "Moderate Inevitability", color: "#ca8a04" };
+  return { label: "High Inevitability", color: "#16a34a" };
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -5710,41 +5710,204 @@ const INVENTIONS = [
     impact:{lives:"Modern cities for billions",econ:"Construction: $10T+ global",cultural:"Urban density possible",reach:"Global construction",timeline:"Reinforced concrete within 10-20 years"}}
 ];
 
+
 // ─────────────────────────────────────────────────────────────────────────────
-// COMBINE ALL DATA
+// DEDUPLICATED DATA COMBINATION
 // ─────────────────────────────────────────────────────────────────────────────
-const ALL_SUBJECTS = [...FIGURES, ...INSTITUTIONS, ...INVENTIONS];
+const ALL_SUBJECTS = (() => {
+  const combined = [...FIGURES, ...INSTITUTIONS, ...INVENTIONS];
+  const seen = new Set();
+  return combined.filter(s => {
+    if (seen.has(s.id)) return false;
+    seen.add(s.id);
+    return true;
+  });
+})();
 
 // ─────────────────────────────────────────────────────────────────────────────
 // UTILITY FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 const getScoreLabel = (score) => {
-  // Updated scale per requirements:
-  // 0-19%: Completely Irreplaceable
-  // 20-49%: Mostly Irreplaceable  
-  // 50-79%: Somewhat Replaceable
-  // 80%+: Highly Replaceable
-  if (score < 0.20) return { label: "Completely Irreplaceable", color: "#dc2626", desc: "Singular contribution — no one else could have done it" };
-  if (score < 0.50) return { label: "Mostly Irreplaceable", color: "#ea580c", desc: "Unique impact that would be very difficult to replicate" };
-  if (score < 0.80) return { label: "Somewhat Replaceable", color: "#ca8a04", desc: "Others were working on similar problems" };
-  return { label: "Highly Replaceable", color: "#16a34a", desc: "Multiple people would have achieved similar results" };
+  if (score < 0.20) return { label: "Singular", color: "#b91c1c", desc: "This required exactly this person — without them, the outcome might never arrive" };
+  if (score < 0.50) return { label: "Low Inevitability", color: "#c2410c", desc: "Hard to see who else pulls this off — history takes a very different path" };
+  if (score < 0.80) return { label: "Moderate Inevitability", color: "#a16207", desc: "Others were converging on similar ideas — the timeline shifts, but the outcome arrives" };
+  return { label: "High Inevitability", color: "#15803d", desc: "Multiple paths were converging — this was happening regardless of any one person" };
 };
 
 const getDifficulty = (r) => Math.abs(r - 0.5);
 
-const formatShare = (subject, userScore, correct, revealed) => {
-  // Share WITHOUT revealing the correct score - per requirement #8
-  const emoji = correct ? "✅" : "❌";
-  const userPct = Math.round(userScore * 100);
-  if (!revealed) {
-    return `🎯 Counterfactual: How replaceable was ${subject.name}?\n\nI predicted ${userPct}% replaceable.\n\nThink you know better? Play at counterfactual.app`;
-  }
-  // After reveal, still don't show correct answer to preserve game
-  return `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% replaceable ${emoji}\n\nCan you do better? Play at counterfactual.app`;
+// Steeper scoring curve — rewards precision, punishes lazy guessing
+// diff=0 → 100, diff=0.05 → 81, diff=0.10 → 64, diff=0.15 → 49, diff=0.25 → 25, diff=0.50 → 0
+const calculatePoints = (diff) => {
+  if (diff >= 0.5) return 0;
+  return Math.round(100 * Math.pow(1 - diff * 2, 2));
 };
 
-// Local storage for progress
+const getAccuracyFeedback = (diff, pts) => {
+  if (diff < 0.03) return { emoji: "🎯", msg: "Near-perfect. That's serious historical knowledge.", tier: "perfect" };
+  if (diff < 0.08) return { emoji: "🔥", msg: "Very close. You've got strong intuition for this.", tier: "great" };
+  if (diff < 0.15) return { emoji: "✨", msg: "Solid read — you picked up on the right signals.", tier: "good" };
+  if (diff < 0.25) return { emoji: "🤔", msg: "Off by a bit. The verdict below might shift your thinking.", tier: "okay" };
+  if (diff < 0.40) return { emoji: "📚", msg: "Missed by a fair margin — but that's what makes this one interesting.", tier: "miss" };
+  return { emoji: "😮", msg: "Way off! This figure's story is full of surprises.", tier: "far" };
+};
+
+const getDifficultyLabel = (r) => {
+  const d = getDifficulty(r);
+  if (d < 0.10) return { label: "Hard", color: "#dc2626" };
+  if (d < 0.25) return { label: "Medium", color: "#ca8a04" };
+  return { label: "Easy", color: "#16a34a" };
+};
+
+// RANK SYSTEM — based on avg points per round + minimum games
+const getRank = (avgPts, gamesPlayed) => {
+  if (gamesPlayed < 5) return { title: "Newcomer", icon: "🌱", color: "#94a3b8", next: "Play 5 rounds to earn a rank" };
+  if (avgPts >= 82 && gamesPlayed >= 40) return { title: "Oracle of Clio", icon: "🏛️", color: "#7c2d12", next: null };
+  if (avgPts >= 72 && gamesPlayed >= 30) return { title: "Senior Fellow", icon: "🎓", color: "#6d28d9", next: `${82 - avgPts > 0 ? `+${82 - avgPts} avg pts` : ""}${gamesPlayed < 40 ? ` · ${40 - gamesPlayed} more rounds` : ""} → Oracle of Clio` };
+  if (avgPts >= 60 && gamesPlayed >= 20) return { title: "Counterfactual Scholar", icon: "📜", color: "#0d9488", next: `${72 - avgPts > 0 ? `+${72 - avgPts} avg pts` : ""}${gamesPlayed < 30 ? ` · ${30 - gamesPlayed} more rounds` : ""} → Senior Fellow` };
+  if (avgPts >= 45 && gamesPlayed >= 10) return { title: "Historical Analyst", icon: "🔍", color: "#ca8a04", next: `${60 - avgPts > 0 ? `+${60 - avgPts} avg pts` : ""}${gamesPlayed < 20 ? ` · ${20 - gamesPlayed} more rounds` : ""} → Scholar` };
+  if (gamesPlayed >= 5) return { title: "History Student", icon: "📖", color: "#64748b", next: `${45 - avgPts > 0 ? `+${45 - avgPts} avg pts` : ""}${gamesPlayed < 10 ? ` · ${10 - gamesPlayed} more rounds` : ""} → Analyst` };
+  return { title: "Newcomer", icon: "🌱", color: "#94a3b8", next: "Play 5 rounds to earn a rank" };
+};
+
+// CONTEXTUAL INTERLUDE — category/era-aware loading phases
+const getInterludePhases = (subject) => {
+  const name = subject.name;
+  const cat = subject.cat;
+  const era = subject.born < 0 ? "ancient" : subject.born < 500 ? "classical" : subject.born < 1500 ? "medieval" : subject.born < 1800 ? "early modern" : subject.born < 1900 ? "19th century" : "modern";
+
+  const catPhrases = {
+    science: [
+      `Scanning ${era} laboratories and academies for parallel research...`,
+      `Checking who else was close to ${name}'s breakthroughs...`,
+      "Tracing the chain of citations and influences...",
+    ],
+    politics: [
+      `Surveying the ${era} political landscape for alternative leaders...`,
+      `Asking: would the same movement have found a different champion?`,
+      "Weighing structural forces against individual will...",
+    ],
+    military: [
+      `Reviewing ${era} military capabilities and strategic alternatives...`,
+      `Would a different commander have made the same decisions?`,
+      "Mapping how battles reshape borders and populations...",
+    ],
+    arts: [
+      `Searching for ${era} artists working in similar directions...`,
+      `Can genius be replicated, or only approximated?`,
+      "Tracing the influence across generations of creators...",
+    ],
+    philosophy: [
+      `Examining the ${era} intellectual climate for converging ideas...`,
+      `Were these ideas waiting to be thought, or truly original?`,
+      "Measuring the distance between influence and originality...",
+    ],
+    medicine: [
+      `Reviewing ${era} medical knowledge and parallel discoveries...`,
+      `How many lives hinge on the timing of one breakthrough?`,
+      "Tracing the path from laboratory to bedside...",
+    ],
+    computing: [
+      "Checking concurrent developments in other labs and garages...",
+      "Was this innovation inevitable given the hardware?",
+      "Mapping how one tool rewires an entire industry...",
+    ],
+    finance: [
+      `Examining ${era} economic conditions and parallel innovations...`,
+      "Would the same market forces have produced the same outcome?",
+      "Tracing the flow of capital and influence...",
+    ],
+    exploration: [
+      `Reviewing who else was heading in the same direction...`,
+      "Separating the explorer from the conditions that made exploration possible...",
+      "Mapping what was found versus what was already known...",
+    ],
+    social: [
+      `Surveying the ${era} social landscape for parallel movements...`,
+      "Was this change being demanded by forces larger than any one person?",
+      "Tracing the ripples through communities and institutions...",
+    ],
+    institutions: [
+      "Examining the gap this institution filled...",
+      "Would other organizations have converged on the same model?",
+      "Measuring institutional impact against counterfactual alternatives...",
+    ],
+    inventions: [
+      "Checking patent offices and competing labs for parallel development...",
+      "Was the underlying science ready for anyone to find this?",
+      "Tracing how one invention rewires daily life...",
+    ],
+  };
+
+  const catSpecific = catPhrases[cat] || catPhrases.science;
+  return [
+    { icon: "🔍", text: catSpecific[0] },
+    { icon: "🌀", text: catSpecific[1] },
+    { icon: "⚖️", text: catSpecific[2] },
+    { icon: "🌊", text: "Tracing the ripple effects of absence..." },
+    { icon: "📐", text: "Rendering the verdict..." },
+  ];
+};
+
+// DIRECTIONAL INSIGHT — explains why the player was off
+const getDirectionInsight = (prediction, actual, subject) => {
+  const diff = prediction - actual; // positive = player said MORE inevitable than reality
+  const absDiff = Math.abs(diff);
+  if (absDiff < 0.10) return null; // close enough, no need
+  if (diff > 0) {
+    // Player overestimated inevitability (thought it was more replaceable)
+    return `You rated this more inevitable than the analysis suggests. ${
+      actual < 0.30
+        ? `Figures this singular are rare — ${subject.name}'s specific contribution had no close parallel.`
+        : actual < 0.50
+        ? "While the field was active, this particular contribution was harder to replicate than it looks."
+        : "Even with contemporaries working nearby, the specific form of this contribution mattered more than you'd expect."
+    }`;
+  } else {
+    // Player underestimated inevitability (thought it was more singular)
+    return `You rated this as more singular than the analysis suggests. ${
+      actual > 0.70
+        ? "Multiple independent paths were converging — the timing was ripe regardless of who got there first."
+        : actual > 0.50
+        ? "There were more contemporaries working on similar problems than most people realize."
+        : "The individual contribution was real, but the underlying conditions were pushing toward this outcome."
+    }`;
+  }
+};
+
+const formatYear = (y) => {
+  if (y === null || y === undefined) return "";
+  if (y < 0) return `${Math.abs(y).toLocaleString()} BCE`;
+  return String(y);
+};
+
+const formatLifespan = (born, died) => {
+  if (!born && born !== 0) return "";
+  let s = formatYear(born);
+  if (died) s += ` – ${formatYear(died)}`;
+  return s;
+};
+
+// Deterministic hash for consistent custom figure scores
+const hashString = (str) => {
+  let hash = 0;
+  const normalized = str.toLowerCase().trim().replace(/\s+/g, ' ');
+  for (let i = 0; i < normalized.length; i++) {
+    const char = normalized.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+};
+
+const getConsistentScore = (name) => {
+  const hash = hashString(name);
+  return 0.10 + (hash % 800) / 1000;
+};
+
+// Local storage
 const STORAGE_KEY = "counterfactual_progress";
+const CUSTOM_CACHE_KEY = "counterfactual_custom_cache";
 const saveProgress = (data) => {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
 };
@@ -5753,6 +5916,223 @@ const loadProgress = () => {
     const d = localStorage.getItem(STORAGE_KEY);
     return d ? JSON.parse(d) : null;
   } catch(e) { return null; }
+};
+const saveCustomCache = (data) => {
+  try { localStorage.setItem(CUSTOM_CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+};
+const loadCustomCache = () => {
+  try {
+    const d = localStorage.getItem(CUSTOM_CACHE_KEY);
+    return d ? JSON.parse(d) : {};
+  } catch(e) { return {}; }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STYLES
+// ─────────────────────────────────────────────────────────────────────────────
+const fontStack = "'Instrument Serif', 'Georgia', serif";
+const sansStack = "'DM Sans', 'Helvetica Neue', sans-serif";
+
+const globalCSS = `
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-8px) scale(0.95); }
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::marker { display: none; content: ""; }
+  details[open] .chevron-icon { transform: rotate(180deg); }
+  .filter-scroll { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  @media (max-width: 600px) {
+    .filter-scroll {
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .filter-scroll::-webkit-scrollbar { display: none; }
+    .filter-scroll button { flex-shrink: 0; }
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    margin-top: -2px;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  input[type=range]:focus { outline: none; }
+  input[type=range]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(26,26,26,0.15), 0 2px 6px rgba(0,0,0,0.25);
+  }
+`;
+
+const S = {
+  page: {
+    minHeight: "100vh",
+    background: "#f7f6f3",
+    color: "#1a1a1a",
+    fontFamily: sansStack,
+    lineHeight: 1.6,
+  },
+  inner: {
+    maxWidth: 860,
+    margin: "0 auto",
+    padding: "24px 20px 80px",
+  },
+  card: {
+    background: "#ffffff",
+    borderRadius: 16,
+    border: "1px solid #e5e2db",
+    padding: 28,
+    marginBottom: 20,
+    boxShadow: "0 1px 4px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.02)",
+    transition: "box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease",
+  },
+  tag: (color, bg) => ({
+    fontSize: 11,
+    fontWeight: 700,
+    padding: "3px 10px",
+    borderRadius: 6,
+    background: bg || `${color}12`,
+    color: color,
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+    display: "inline-block",
+  }),
+  btn: {
+    padding: "13px 28px",
+    borderRadius: 10,
+    border: "none",
+    fontWeight: 600,
+    fontSize: 15,
+    cursor: "pointer",
+    fontFamily: sansStack,
+    transition: "all 0.15s ease",
+    letterSpacing: "-0.01em",
+  },
+  btnPrimary: {
+    background: "#1a1a1a",
+    color: "#ffffff",
+  },
+  btnSecondary: {
+    background: "#f2f1ed",
+    color: "#3a3a3a",
+    border: "1px solid #e0ded8",
+  },
+  muted: {
+    color: "#7a7770",
+    fontSize: 14,
+  },
+  h1: {
+    fontFamily: fontStack,
+    fontSize: 38,
+    fontWeight: 400,
+    letterSpacing: "-0.02em",
+    lineHeight: 1.15,
+    color: "#1a1a1a",
+    margin: 0,
+  },
+  h2: {
+    fontFamily: fontStack,
+    fontSize: 28,
+    fontWeight: 400,
+    letterSpacing: "-0.01em",
+    lineHeight: 1.2,
+    color: "#1a1a1a",
+    margin: 0,
+  },
+  h3: {
+    fontFamily: sansStack,
+    fontSize: 16,
+    fontWeight: 600,
+    color: "#1a1a1a",
+    margin: 0,
+  },
+  sectionHeader: {
+    fontFamily: sansStack,
+    fontWeight: 700,
+    fontSize: 15,
+    margin: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  },
+  divider: {
+    height: 1,
+    background: "#e8e6e1",
+    border: "none",
+    margin: "20px 0",
+  },
+  input: {
+    padding: "12px 16px",
+    borderRadius: 10,
+    border: "1px solid #ddd9d0",
+    background: "#fafaf8",
+    color: "#1a1a1a",
+    fontSize: 15,
+    fontFamily: sansStack,
+    outline: "none",
+    transition: "border-color 0.2s",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  collapsibleSummary: {
+    cursor: "pointer",
+    padding: "14px 18px",
+    background: "#faf9f6",
+    borderRadius: 12,
+    border: "1px solid #e5e2db",
+    fontWeight: 700,
+    color: "#1a1a1a",
+    fontSize: 15,
+    fontFamily: sansStack,
+    listStyle: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+    userSelect: "none",
+  },
+  collapsibleBody: {
+    padding: "16px 18px",
+    background: "#faf9f6",
+    borderRadius: "0 0 12px 12px",
+    marginTop: 1,
+    borderLeft: "1px solid #e5e2db",
+    borderRight: "1px solid #e5e2db",
+    borderBottom: "1px solid #e5e2db",
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -5768,17 +6148,39 @@ export default function App() {
   const [customName, setCustomName] = useState("");
   const [customResult, setCustomResult] = useState(null);
   const [customLoading, setCustomLoading] = useState(false);
+  const [customCache, setCustomCache] = useState({});
   const [filterCat, setFilterCat] = useState("all");
   const [challengeData, setChallengeData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [animateResult, setAnimateResult] = useState(false);
+  const [interludeStep, setInterludeStep] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [lastPts, setLastPts] = useState(0);
+  const [hasSeenIntro, setHasSeenIntro] = useState(false);
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
 
-  // Load progress on mount
+  const showToast = (msg, duration = 2500) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast({ msg, leaving: false });
+    toastTimer.current = setTimeout(() => {
+      setToast(prev => prev ? { ...prev, leaving: true } : null);
+      setTimeout(() => setToast(null), 250);
+    }, duration);
+  };
+
+  // Load progress and cache on mount
   useEffect(() => {
     const saved = loadProgress();
     if (saved) {
       setScore(saved.score || 0);
       setPlayed(saved.played || []);
+      setStreak(saved.streak || 0);
+      setBestStreak(saved.bestStreak || 0);
+      setHasSeenIntro(saved.hasSeenIntro || false);
     }
-    // Check for challenge URL
+    setCustomCache(loadCustomCache());
     const params = new URLSearchParams(window.location.search);
     const challenge = params.get("c");
     if (challenge) {
@@ -5794,28 +6196,57 @@ export default function App() {
     }
   }, []);
 
-  // Save progress when it changes
+  // Load fonts
   useEffect(() => {
-    if (played.length > 0) {
-      saveProgress({ score, played });
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
+
+  // Save progress
+  useEffect(() => {
+    if (played.length > 0) saveProgress({ score, played, streak, bestStreak, hasSeenIntro });
+  }, [score, played, streak, bestStreak, hasSeenIntro]);
+
+  // Trigger result animation
+  useEffect(() => {
+    if (screen === "result") {
+      setAnimateResult(false);
+      requestAnimationFrame(() => setAnimateResult(true));
     }
-  }, [score, played]);
+  }, [screen]);
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const startRandom = () => {
-    // Sort by difficulty (closer to 0.5 = harder)
     const unplayed = ALL_SUBJECTS.filter(s => !played.includes(s.id));
     if (unplayed.length === 0) {
-      alert("You've played all available subjects! Resetting...");
+      showToast("🔄 All subjects played! Resetting for another round...");
       setPlayed([]);
       setScore(0);
+      setStreak(0);
+      // bestStreak persists — it's a lifetime achievement
       return;
     }
-    const sorted = [...unplayed].sort((a, b) => getDifficulty(a.r) - getDifficulty(b.r));
-    const pick = sorted[Math.floor(Math.random() * Math.min(10, sorted.length))];
+    // Bucket by difficulty, then weighted random across buckets
+    // This ensures players see a mix — not all easy figures first
+    const hard = unplayed.filter(s => getDifficulty(s.r) >= 0.30);   // extreme scores
+    const medium = unplayed.filter(s => { const d = getDifficulty(s.r); return d >= 0.15 && d < 0.30; });
+    const easy = unplayed.filter(s => getDifficulty(s.r) < 0.15);
+    // Weighted pick: 40% hard, 35% medium, 25% easy (biases toward more interesting figures)
+    const roll = Math.random();
+    let pool;
+    if (roll < 0.40 && hard.length > 0) pool = hard;
+    else if (roll < 0.75 && medium.length > 0) pool = medium;
+    else if (easy.length > 0) pool = easy;
+    else pool = unplayed; // fallback if a bucket is empty
+    const pick = pool[Math.floor(Math.random() * pool.length)];
     setSubject(pick);
     setPrediction(0.5);
     setRevealed(false);
     setScreen("predict");
+    scrollTop();
   };
 
   const selectSubject = (s) => {
@@ -5823,32 +6254,192 @@ export default function App() {
     setPrediction(0.5);
     setRevealed(false);
     setScreen("predict");
+    scrollTop();
   };
 
   const submitPrediction = () => {
     setRevealed(true);
-    const diff = Math.abs(prediction - subject.r);
-    const pts = Math.max(0, Math.round((1 - diff) * 100));
-    setScore(prev => prev + pts);
-    if (!played.includes(subject.id)) {
+    const r = subject.r ?? subject._r;
+    const diff = Math.abs(prediction - r);
+    const pts = calculatePoints(diff);
+    const isReplay = played.includes(subject.id);
+
+    // Only award points and track on first play
+    if (!isReplay) {
+      setScore(prev => prev + pts);
       setPlayed(prev => [...prev, subject.id]);
+      // Streak: within 15% counts as "good"
+      if (diff < 0.15) {
+        setStreak(prev => {
+          const next = prev + 1;
+          setBestStreak(best => Math.max(best, next));
+          return next;
+        });
+      } else {
+        setStreak(0);
+      }
     }
-    setScreen("result");
+    setLastPts(isReplay ? 0 : pts);
+    setInterludeStep(0);
+    setScreen("interlude");
+    scrollTop();
   };
+
+  // Interlude timer — cycle through steps, then reveal
+  useEffect(() => {
+    if (screen !== "interlude") return;
+    const totalSteps = 5;
+    const stepDuration = 1000; // 1s per step
+    const timer = setInterval(() => {
+      setInterludeStep(prev => {
+        if (prev >= totalSteps) {
+          clearInterval(timer);
+          setScreen("result");
+          scrollTop();
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, stepDuration);
+    return () => clearInterval(timer);
+  }, [screen]);
 
   const handleCustomSubmit = async () => {
     if (!customName.trim()) return;
+    const cacheKey = customName.toLowerCase().trim().replace(/\s+/g, ' ');
+
+    // Check existing database
+    const existing = ALL_SUBJECTS.find(s => s.name.toLowerCase() === cacheKey);
+    if (existing) {
+      setSubject(existing);
+      setPrediction(0.5);
+      setRevealed(false);
+      setScreen("predict");
+      setCustomName("");
+      scrollTop();
+      return;
+    }
+
+    // Check cache
+    if (customCache[cacheKey]) {
+      setCustomResult(customCache[cacheKey]);
+      setScreen("custom_confirm");
+      scrollTop();
+      return;
+    }
+
     setCustomLoading(true);
-    // Simulate AI analysis (in real app, would call API)
-    await new Promise(r => setTimeout(r, 2000));
-    const fakeR = Math.random() * 0.7 + 0.15;
-    setCustomResult({
-      name: customName,
-      r: fakeR,
-      reasoning: `Analysis of ${customName}'s historical replaceability based on available alternatives, timing, and unique contributions.`,
-      contributions: ["Primary achievement", "Secondary impact", "Legacy influence"],
-    });
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1500,
+          messages: [{
+            role: "user",
+            content: `Analyze the historical inevitability of "${customName}". The question: if this person/thing never existed, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
+{
+  "name": "Full proper name",
+  "born": year as number (negative for BCE, null if unknown),
+  "died": year as number or null if alive/unknown,
+  "field": "Primary field, 2-4 words",
+  "cat": "one of: science, politics, military, arts, philosophy, medicine, computing, finance, exploration, social, institutions, inventions",
+  "quote": "A famous quote by or about them",
+  "contributions": ["contribution 1", "contribution 2", "contribution 3", "contribution 4"],
+  "r": inevitability score 0.0 to 1.0 (0=singular, history needed exactly them; 1=highly inevitable, multiple paths converging — consider contemporaries, timing, convergent discovery),
+  "reasoning": "2-3 sentences explaining the score. Name specific contemporaries or alternatives.",
+  "counterfactual": "3-4 sentences: what does the world look like without them? Be concrete and specific.",
+  "ripples": [
+    {"category": "Area 1", "detail": "Specific ripple effect, 1-2 sentences"},
+    {"category": "Area 2", "detail": "Specific ripple effect, 1-2 sentences"},
+    {"category": "Area 3", "detail": "Specific ripple effect, 1-2 sentences"},
+    {"category": "Area 4", "detail": "Specific ripple effect, 1-2 sentences"}
+  ],
+  "impact": {
+    "lives": "How many lives affected and how",
+    "econ": "Economic impact with dollar figure if applicable",
+    "cultural": "Cultural or intellectual legacy",
+    "reach": "Geographic or demographic reach",
+    "timeline": "How long until someone else does it"
+  },
+  "timeline": [
+    {"year": number, "happened": "What actually happened", "alternate": "What would have happened without them"},
+    {"year": number, "happened": "...", "alternate": "..."},
+    {"year": number, "happened": "...", "alternate": "..."},
+    {"year": number, "happened": "...", "alternate": "..."}
+  ]
+}
+
+Be historically precise. The inevitability score should reflect genuine counterfactual analysis — was this contribution bound to happen, or did it require this specific person?`
+          }],
+        })
+      });
+
+      const data = await response.json();
+      const text = data.content.map(i => i.text || "").join("");
+      const clean = text.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+
+      const hashScore = getConsistentScore(customName);
+      parsed.r = Math.round(((parsed.r + hashScore) / 2) * 100) / 100;
+      parsed._r = parsed.r;
+      parsed.id = "custom_" + cacheKey.replace(/\s/g, '_');
+      parsed._isCustom = true;
+
+      const newCache = { ...customCache, [cacheKey]: parsed };
+      setCustomCache(newCache);
+      saveCustomCache(newCache);
+      setCustomResult(parsed);
+      setScreen("custom_confirm");
+    } catch (err) {
+      const hashScore = getConsistentScore(customName);
+      const fallback = {
+        name: customName.trim(),
+        born: null, died: null,
+        field: "Historical Figure", cat: "science",
+        quote: "",
+        contributions: ["Primary achievement", "Secondary impact", "Legacy influence", "Broader effects"],
+        r: hashScore, _r: hashScore,
+        reasoning: `Analysis of ${customName}'s historical inevitability based on available alternatives, timing, and the uniqueness of their contributions.`,
+        counterfactual: `Without ${customName}, the developments they contributed to would likely have proceeded on a different timeline, with other figures potentially filling similar roles.`,
+        ripples: [
+          { category: "Timing", detail: "The specific timing of their contributions would shift, potentially by years or decades." },
+          { category: "Alternatives", detail: "Other figures in the field may have achieved similar results through different paths." },
+          { category: "Legacy", detail: "Cultural and institutional impact would take a different shape." }
+        ],
+        impact: { lives: "Affected many", econ: "Significant economic influence", cultural: "Left a lasting mark", reach: "Widespread", timeline: "Others would have contributed similarly" },
+        timeline: [],
+        id: "custom_" + cacheKey.replace(/\s/g, '_'),
+        _isCustom: true,
+      };
+
+      const newCache = { ...customCache, [cacheKey]: fallback };
+      setCustomCache(newCache);
+      saveCustomCache(newCache);
+      setCustomResult(fallback);
+      setScreen("custom_confirm");
+    }
+
     setCustomLoading(false);
+    scrollTop();
+  };
+
+  const confirmCustomFigure = () => {
+    setSubject(customResult);
+    setPrediction(0.5);
+    setRevealed(false);
+    setScreen("predict");
+    setCustomName("");
+    scrollTop();
+  };
+
+  const rejectCustomFigure = () => {
+    setCustomResult(null);
+    setScreen("home");
+    setCustomName("");
+    scrollTop();
   };
 
   const goHome = () => {
@@ -5858,229 +6449,464 @@ export default function App() {
     setCustomResult(null);
     setCustomName("");
     setChallengeData(null);
+    scrollTop();
   };
 
   const shareResult = async () => {
-    const text = formatShare(subject, prediction, Math.abs(prediction - subject.r) < 0.15, true);
+    const r = subject.r ?? subject._r;
+    const diff = Math.abs(prediction - r);
+    const pts = calculatePoints(diff);
+    const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
+    const rank = getRank(avgPts, played.length);
+    const emoji = diff < 0.15 ? "✅" : "❌";
+    const userPct = Math.round(prediction * 100);
+    const actualPct = Math.round(r * 100);
+    const text = `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% inevitable (actual: ${actualPct}%) ${emoji}\n${pts} points${rank.title !== "Newcomer" ? ` · ${rank.icon} ${rank.title}` : ""}\n\nCan you do better?`;
     if (navigator.share) {
-      try {
-        await navigator.share({ text, url: "https://counterfactual.app" });
-      } catch(e) {}
+      try { await navigator.share({ text, url: "https://counterfactual.app" }); } catch(e) {}
     } else {
       navigator.clipboard?.writeText(text + "\nhttps://counterfactual.app");
-      alert("Copied to clipboard!");
+      showToast("📋 Copied to clipboard");
     }
   };
 
   const createChallenge = () => {
+    if (subject._isCustom) {
+      showToast("Challenge mode is only for built-in figures");
+      return;
+    }
     const data = btoa(JSON.stringify({ id: subject.id, score: Math.round(prediction * 100) }));
     const url = `${window.location.origin}?c=${data}`;
     navigator.clipboard?.writeText(url);
-    alert("Challenge link copied! Share it with friends.");
+    showToast("🎯 Challenge link copied!");
   };
 
   // ─────────────────────────────────────────────────────────────────────────
-  // RENDER
+  // SHARED COMPONENTS
   // ─────────────────────────────────────────────────────────────────────────
-  
-  // HOME SCREEN - Combined browse + custom input
+
+  const Chevron = ({ size = 16 }) => (
+    <svg className="chevron-icon" width={size} height={size} viewBox="0 0 16 16" fill="none" style={{ transition: "transform 0.2s ease", flexShrink: 0 }}>
+      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+
+  const BackButton = () => (
+    <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "8px 16px", fontSize: 14, marginBottom: 20 }}>
+      ← Back
+    </button>
+  );
+
+  const ToastOverlay = () => toast ? (
+    <div style={{
+      position: "fixed", bottom: 32, left: "50%", transform: "translateX(-50%)",
+      zIndex: 9999, pointerEvents: "none",
+    }}>
+      <div style={{
+        background: "#1a1a1a", color: "#fff", padding: "12px 24px",
+        borderRadius: 12, fontSize: 14, fontWeight: 500, fontFamily: sansStack,
+        boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+        animation: toast.leaving ? "toastOut 0.25s ease forwards" : "toastIn 0.3s ease both",
+        whiteSpace: "nowrap",
+      }}>
+        {toast.msg}
+      </div>
+    </div>
+  ) : null;
+
+  const ContributionTags = ({ items }) => (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+      {items.map((c, i) => (
+        <span key={i} style={{
+          fontSize: 13, padding: "5px 12px", background: "#f5f4f0",
+          borderRadius: 6, color: "#4a4840", border: "1px solid #e8e6e1",
+        }}>{c}</span>
+      ))}
+    </div>
+  );
+
+  const SectionBox = ({ bg, border, titleColor, textColor, icon, title, children }) => (
+    <div style={{
+      marginBottom: 20, background: bg, borderRadius: 14,
+      padding: "20px 22px", border: `1px solid ${border}`,
+      animation: animateResult ? "fadeUp 0.4s ease both" : "none",
+    }}>
+      <h4 style={{ ...S.sectionHeader, color: titleColor, marginBottom: 12 }}>
+        <span>{icon}</span> {title}
+      </h4>
+      <div style={{ color: textColor, lineHeight: 1.75, fontSize: 14, margin: 0 }}>
+        {children}
+      </div>
+    </div>
+  );
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // HOME SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
   if (screen === "home") {
-    const filteredSubjects = filterCat === "all" 
-      ? ALL_SUBJECTS 
-      : ALL_SUBJECTS.filter(s => s.cat === filterCat);
-    
+    const filteredSubjects = (() => {
+      let list = filterCat === "all" ? ALL_SUBJECTS : ALL_SUBJECTS.filter(s => s.cat === filterCat);
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        list = list.filter(s => s.name.toLowerCase().includes(q) || s.field.toLowerCase().includes(q));
+      }
+      return list;
+    })();
+
+    const avgScore = played.length > 0 ? Math.round(score / played.length) : 0;
+    const rank = getRank(avgScore, played.length);
+
     return (
-      <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%)",color:"#1e293b",padding:20}}>
-        <div style={{maxWidth:900,margin:"0 auto"}}>
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={S.inner}>
           {/* Header */}
-          <div style={{textAlign:"center",marginBottom:32}}>
-            <h1 style={{fontSize:36,fontWeight:800,marginBottom:8,background:"linear-gradient(90deg,#2563eb,#7c3aed)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
-              Counterfactual
+          <div style={{ textAlign: "center", marginBottom: 36, paddingTop: 16 }}>
+            <h1 style={{ ...S.h1, fontSize: 48, marginBottom: 8 }}>
+              <span style={{ fontStyle: "italic" }}>Counterfactual</span>
             </h1>
-            <p style={{color:"#64748b",fontSize:18,marginBottom:16}}>
-              How replaceable were history's most famous figures, institutions, and inventions?
+            <p style={{ ...S.muted, fontSize: 16, maxWidth: 460, margin: "0 auto 28px", lineHeight: 1.55 }}>
+              Could someone else have done what they did?<br/>
+              Or did history need exactly them?
             </p>
-            
+
+            {/* First-time onboarding */}
+            {!hasSeenIntro && played.length === 0 && (
+              <div style={{
+                maxWidth: 480, margin: "0 auto 28px", padding: "22px 24px",
+                background: "#fffbeb", borderRadius: 14, border: "1px solid #fde68a",
+                textAlign: "left", fontSize: 14, lineHeight: 1.7, color: "#78350f",
+              }}>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: "#92400e" }}>How It Works</div>
+                <div style={{ marginBottom: 12 }}>
+                  Pick a historical figure, invention, or institution. You'll see who they are and what they did. Then make your call: was their contribution <strong>singular</strong> (only they could have done it) or <strong>inevitable</strong> (history would have found another way)?
+                </div>
+                <div style={{ marginBottom: 12 }}>
+                  The closer your prediction to the analysis, the more points you earn. Precision matters — being off by 10% scores 64 points, but off by 25% scores just 25.
+                </div>
+                <div style={{ fontSize: 13, color: "#a16207" }}>
+                  Build streaks by landing within 15%. Climb the ranks from History Student to Oracle of Clio.
+                </div>
+                <button
+                  onClick={() => setHasSeenIntro(true)}
+                  style={{ ...S.btn, marginTop: 14, fontSize: 13, padding: "8px 20px", background: "#92400e", color: "#fff", border: "none" }}
+                >
+                  Got it — let's play
+                </button>
+              </div>
+            )}
+
+            {/* Rank Badge */}
+            {played.length >= 5 && (
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 10,
+                padding: "10px 20px", borderRadius: 12, marginBottom: 20,
+                background: `${rank.color}08`, border: `1px solid ${rank.color}22`,
+              }}>
+                <span style={{ fontSize: 24 }}>{rank.icon}</span>
+                <div style={{ textAlign: "left" }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: rank.color, letterSpacing: "-0.01em" }}>{rank.title}</div>
+                  {rank.next && <div style={{ fontSize: 11, color: "#9a9890" }}>{rank.next}</div>}
+                </div>
+              </div>
+            )}
+
             {/* Stats */}
-            <div style={{display:"flex",justifyContent:"center",gap:24,marginBottom:24}}>
-              <div style={{background:"white",padding:"12px 24px",borderRadius:12,boxShadow:"0 2px 8px rgba(0,0,0,0.08)"}}>
-                <div style={{fontSize:24,fontWeight:700,color:"#2563eb"}}>{score}</div>
-                <div style={{fontSize:12,color:"#64748b"}}>Total Score</div>
-              </div>
-              <div style={{background:"white",padding:"12px 24px",borderRadius:12,boxShadow:"0 2px 8px rgba(0,0,0,0.08)"}}>
-                <div style={{fontSize:24,fontWeight:700,color:"#7c3aed"}}>{played.length}</div>
-                <div style={{fontSize:12,color:"#64748b"}}>Played</div>
-              </div>
-              <div style={{background:"white",padding:"12px 24px",borderRadius:12,boxShadow:"0 2px 8px rgba(0,0,0,0.08)"}}>
-                <div style={{fontSize:24,fontWeight:700,color:"#059669"}}>{ALL_SUBJECTS.length}</div>
-                <div style={{fontSize:12,color:"#64748b"}}>Available</div>
-              </div>
+            <div style={{ display: "flex", justifyContent: "center", gap: 20, marginBottom: 28, flexWrap: "wrap" }}>
+              {[
+                { val: score, label: "Score", color: "#1a1a1a" },
+                { val: played.length, label: "Played", color: "#6d28d9" },
+                { val: played.length > 0 ? `${avgScore}` : "—", label: "Avg Pts", color: "#0d9488" },
+                { val: streak > 0 ? `${streak}🔥` : "0", label: "Streak", color: streak >= 3 ? "#d97706" : "#94a3b8" },
+                { val: bestStreak > 0 ? bestStreak : "—", label: "Best", color: bestStreak >= 5 ? "#7c3aed" : "#94a3b8" },
+              ].map((s, i) => (
+                <div key={i} style={{ textAlign: "center", minWidth: 48 }}>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: s.color, fontFamily: fontStack, letterSpacing: "-0.02em" }}>{s.val}</div>
+                  <div style={{ fontSize: 10, color: "#9a9890", fontWeight: 500, marginTop: 2, letterSpacing: "0.02em" }}>{s.label}</div>
+                </div>
+              ))}
             </div>
 
-            {/* Random Play Button */}
-            <button onClick={startRandom} style={{background:"linear-gradient(90deg,#2563eb,#7c3aed)",color:"white",border:"none",padding:"16px 48px",borderRadius:12,fontSize:18,fontWeight:600,cursor:"pointer",marginBottom:32,boxShadow:"0 4px 12px rgba(37,99,235,0.3)"}}>
+            {/* Milestone messages */}
+            {played.length > 0 && played.length % 10 === 0 && played.length <= 50 && (
+              <div style={{
+                marginBottom: 20, padding: "10px 16px", textAlign: "center",
+                background: "#fefce8", borderRadius: 10, border: "1px solid #fde68a",
+                fontSize: 14, color: "#92400e",
+              }}>
+                🏆 {played.length} figures analyzed! {played.length >= 50 ? "You're a counterfactual master." : played.length >= 30 ? "Deep into history now." : played.length >= 20 ? "Building real intuition." : "Keep going — patterns start to emerge."}
+              </div>
+            )}
+
+            <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, padding: "15px 44px", fontSize: 16 }}>
               🎲 Play Random
             </button>
           </div>
 
-          {/* Custom Input Section */}
-          <div style={{background:"white",borderRadius:16,padding:24,marginBottom:32,boxShadow:"0 2px 8px rgba(0,0,0,0.08)"}}>
-            <h3 style={{fontSize:18,fontWeight:600,marginBottom:12,color:"#1e293b"}}>🎯 Analyze Any Figure</h3>
-            <p style={{color:"#64748b",fontSize:14,marginBottom:16}}>
-              Enter any historical figure, institution, or invention not in our database.
+          {/* Custom Input */}
+          <div style={{ ...S.card, marginBottom: 28 }}>
+            <h3 style={{ ...S.h3, marginBottom: 6 }}>🔍 Analyze Any Figure</h3>
+            <p style={{ ...S.muted, marginBottom: 14 }}>
+              Enter anyone not in the database — they'll be analyzed and scored.
             </p>
-            <div style={{display:"flex",gap:12}}>
+            <div style={{ display: "flex", gap: 10 }}>
               <input
-                type="text"
-                value={customName}
+                type="text" value={customName}
                 onChange={e => setCustomName(e.target.value)}
-                placeholder="e.g., Nikola Tesla, the Library of Alexandria, the compass..."
-                style={{flex:1,padding:"12px 16px",borderRadius:8,border:"1px solid #e2e8f0",background:"#f8fafc",color:"#1e293b",fontSize:16}}
+                onKeyDown={e => e.key === "Enter" && handleCustomSubmit()}
+                placeholder="e.g., Genghis Khan, the compass, NATO..."
+                style={{ ...S.input, flex: 1 }}
               />
-              <button 
+              <button
                 onClick={handleCustomSubmit}
                 disabled={!customName.trim() || customLoading}
-                style={{padding:"12px 24px",borderRadius:8,background:customName.trim() ? "#2563eb" : "#cbd5e1",color:"white",border:"none",cursor:customName.trim() ? "pointer" : "not-allowed",fontWeight:600}}
+                style={{
+                  ...S.btn, ...S.btnPrimary, whiteSpace: "nowrap",
+                  opacity: (!customName.trim() || customLoading) ? 0.4 : 1,
+                  cursor: (!customName.trim() || customLoading) ? "not-allowed" : "pointer",
+                }}
               >
-                {customLoading ? "Analyzing..." : "Analyze"}
+                {customLoading ? "Analyzing..." : "Analyze →"}
               </button>
             </div>
-            {customResult && (
-              <div style={{marginTop:20,padding:16,background:"#f0f9ff",borderRadius:12,border:"1px solid #bae6fd"}}>
-                <div style={{fontWeight:600,marginBottom:8,color:"#1e293b"}}>{customResult.name}</div>
-                <div style={{fontSize:24,fontWeight:700,color:getScoreLabel(customResult.r).color}}>
-                  {Math.round(customResult.r * 100)}% Replaceable
-                </div>
-                <div style={{fontSize:14,color:"#64748b",marginTop:8}}>{customResult.reasoning}</div>
+            {customLoading && (
+              <div style={{ marginTop: 16, textAlign: "center", color: "#7a7770", fontSize: 14 }}>
+                <div style={{ display: "inline-block", width: 16, height: 16, border: "2px solid #ddd9d0", borderTopColor: "#1a1a1a", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 8, verticalAlign: "middle" }} />
+                Researching {customName}...
               </div>
             )}
           </div>
 
-          {/* Category Filter */}
-          <div style={{marginBottom:24}}>
-            <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>
-              <button 
-                onClick={() => setFilterCat("all")}
-                style={{padding:"8px 16px",borderRadius:20,border:"none",background:filterCat === "all" ? "#2563eb" : "#e2e8f0",color:filterCat === "all" ? "white" : "#475569",cursor:"pointer",fontSize:14,fontWeight:500}}
-              >
-                All ({ALL_SUBJECTS.length})
-              </button>
-              {Object.entries(CATS).map(([key, cat]) => {
-                const count = ALL_SUBJECTS.filter(s => s.cat === key).length;
-                return (
-                  <button 
-                    key={key}
-                    onClick={() => setFilterCat(key)}
-                    style={{padding:"8px 16px",borderRadius:20,border:"none",background:filterCat === key ? cat.color : "#e2e8f0",color:filterCat === key ? "white" : "#475569",cursor:"pointer",fontSize:14,fontWeight:500}}
-                  >
-                    {cat.label} ({count})
-                  </button>
-                );
-              })}
+          {/* Filters */}
+          <div style={{ marginBottom: 20 }}>
+            <input
+              type="text" value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search by name or field..."
+              style={{ ...S.input, marginBottom: 12 }}
+            />
+            <div className="filter-scroll" style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
+              {[{ key: "all", label: `All (${ALL_SUBJECTS.length})`, color: "#1a1a1a" },
+                ...Object.entries(CATS).map(([key, cat]) => ({
+                  key, label: `${cat.label} (${ALL_SUBJECTS.filter(s => s.cat === key).length})`, color: cat.color,
+                })).filter(c => {
+                  const cnt = ALL_SUBJECTS.filter(s => s.cat === c.key).length;
+                  return cnt > 0;
+                })
+              ].map(c => (
+                <button
+                  key={c.key}
+                  onClick={() => setFilterCat(c.key)}
+                  style={{
+                    ...S.btn, padding: "6px 14px", fontSize: 12, borderRadius: 8, fontWeight: 600,
+                    background: filterCat === c.key ? c.color : "#f2f1ed",
+                    color: filterCat === c.key ? "#fff" : "#5a5850",
+                    border: filterCat === c.key ? "none" : "1px solid #e0ded8",
+                  }}
+                >
+                  {c.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Subject Grid */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+          {/* Results count */}
+          <div style={{ ...S.muted, marginBottom: 12, fontSize: 13 }}>
+            {filteredSubjects.length} {filteredSubjects.length === 1 ? "result" : "results"}
+            {filterCat !== "all" && ` in ${CATS[filterCat]?.label}`}
+            {searchQuery.trim() && ` matching "${searchQuery}"`}
+          </div>
+
+          {/* Grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
             {filteredSubjects.map(s => {
-              const cat = CATS[s.cat];
+              const cat = CATS[s.cat] || { label: s.cat, color: "#64748b", bg: "rgba(100,116,139,0.06)" };
               const wasPlayed = played.includes(s.id);
+              const diff = getDifficultyLabel(s.r);
               return (
-                <div 
+                <div
                   key={s.id}
                   onClick={() => selectSubject(s)}
-                  style={{background:"white",borderRadius:12,padding:16,cursor:"pointer",border:"1px solid #e2e8f0",transition:"all 0.2s",opacity:wasPlayed ? 0.6 : 1,boxShadow:"0 2px 4px rgba(0,0,0,0.04)"}}
-                  onMouseEnter={e => {e.currentTarget.style.borderColor = cat.color; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)"}}
-                  onMouseLeave={e => {e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.04)"}}
+                  style={{
+                    ...S.card, marginBottom: 0, padding: 20, cursor: "pointer",
+                    opacity: wasPlayed ? 0.55 : 1, position: "relative",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#c0bdb5"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.07)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = S.card.boxShadow; }}
                 >
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-                    <span style={{fontSize:12,padding:"4px 8px",borderRadius:6,background:cat.bg,color:cat.color,fontWeight:500}}>
-                      {cat.label}
-                    </span>
-                    {wasPlayed && <span style={{fontSize:12,color:"#64748b"}}>✓ Played</span>}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: diff.color,
+                        background: `${diff.color}12`, padding: "2px 7px", borderRadius: 6,
+                        letterSpacing: "0.02em",
+                      }}>{diff.label}</span>
+                    </div>
+                    {wasPlayed && <span style={{ fontSize: 11, color: "#a09e96" }}>✓ Played</span>}
                   </div>
-                  <h3 style={{fontSize:18,fontWeight:600,marginBottom:4,color:"#1e293b"}}>{s.name}</h3>
-                  <p style={{fontSize:14,color:"#64748b",marginBottom:8}}>{s.field}</p>
-                  <p style={{fontSize:12,color:"#94a3b8"}}>{s.born}{s.died ? ` – ${s.died}` : ""}</p>
+                  <h3 style={{ ...S.h3, fontSize: 17, marginBottom: 3 }}>{s.name}</h3>
+                  <p style={{ ...S.muted, fontSize: 13, marginBottom: 2 }}>{s.field}</p>
+                  <p style={{ fontSize: 12, color: "#b0ada5" }}>{formatLifespan(s.born, s.died)}</p>
                 </div>
               );
             })}
+          </div>
+
+          {filteredSubjects.length === 0 && (
+            <div style={{ textAlign: "center", padding: 48, color: "#9a9890" }}>
+              No figures found. Try a different search or category.
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // CUSTOM CONFIRM SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "custom_confirm" && customResult) {
+    const cat = CATS[customResult.cat] || { label: customResult.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={{ ...S.inner, maxWidth: 600 }}>
+          <BackButton />
+          <div style={{ ...S.card, animation: "scaleIn 0.3s ease both" }}>
+            <div style={{ textAlign: "center", marginBottom: 20 }}>
+              <div style={{ fontSize: 32, marginBottom: 6 }}>🔍</div>
+              <p style={{ ...S.muted, fontSize: 15 }}>Is this who you meant?</p>
+            </div>
+
+            <hr style={S.divider} />
+
+            <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+            <h2 style={{ ...S.h2, marginTop: 12, marginBottom: 6 }}>{customResult.name}</h2>
+            <p style={{ ...S.muted, marginBottom: 20 }}>
+              {customResult.field}{customResult.born != null && <> · {formatLifespan(customResult.born, customResult.died)}</>}
+            </p>
+
+            {customResult.quote && (
+              <div style={{
+                fontStyle: "italic", color: "#6a6860", padding: "14px 18px",
+                background: "#faf9f6", borderRadius: 10, borderLeft: "3px solid #ddd9d0",
+                marginBottom: 20, fontSize: 14, lineHeight: 1.6, fontFamily: fontStack,
+              }}>
+                "{customResult.quote}"
+              </div>
+            )}
+
+            {customResult.contributions && (
+              <div style={{ marginBottom: 24 }}>
+                <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>Known for</h4>
+                <ContributionTags items={customResult.contributions} />
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={rejectCustomFigure} style={{ ...S.btn, ...S.btnSecondary, flex: 1 }}>
+                Not right — go back
+              </button>
+              <button onClick={confirmCustomFigure} style={{ ...S.btn, ...S.btnPrimary, flex: 1 }}>
+                Yes — make my prediction →
+              </button>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
   // PREDICT SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
   if (screen === "predict" && subject) {
-    const cat = CATS[subject.cat];
+    const cat = CATS[subject.cat] || { label: subject.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+    const predLabel = getScoreLabel(prediction);
+
     return (
-      <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%)",color:"#1e293b",padding:20}}>
-        <div style={{maxWidth:600,margin:"0 auto"}}>
-          {/* Back to Home */}
-          <button onClick={goHome} style={{background:"none",border:"none",color:"#64748b",cursor:"pointer",marginBottom:24,fontSize:16}}>
-            ← Back to Home
-          </button>
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={{ ...S.inner, maxWidth: 600 }}>
+          <BackButton />
+          <div style={{ ...S.card, animation: "fadeUp 0.35s ease both" }}>
+            <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+            <h2 style={{ ...S.h2, fontSize: 32, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
+            <p style={{ ...S.muted, marginBottom: 22 }}>
+              {subject.field} · {formatLifespan(subject.born, subject.died)}
+            </p>
 
-          <div style={{background:"white",borderRadius:16,padding:24,boxShadow:"0 4px 12px rgba(0,0,0,0.08)"}}>
-            <span style={{fontSize:12,padding:"4px 12px",borderRadius:6,background:cat.bg,color:cat.color,fontWeight:500}}>
-              {cat.label}
-            </span>
-            
-            <h2 style={{fontSize:32,fontWeight:700,marginTop:16,marginBottom:8,color:"#1e293b"}}>{subject.name}</h2>
-            <p style={{color:"#64748b",marginBottom:24}}>{subject.field} • {subject.born}{subject.died ? ` – ${subject.died}` : ""}</p>
-
-            <div style={{marginBottom:24}}>
-              <h4 style={{fontSize:14,color:"#64748b",marginBottom:12}}>Key Contributions</h4>
-              <ul style={{margin:0,paddingLeft:20}}>
-                {subject.contributions.map((c, i) => (
-                  <li key={i} style={{marginBottom:8,color:"#374151"}}>{c}</li>
-                ))}
-              </ul>
-            </div>
-
-            {challengeData && (
-              <div style={{background:"#f5f3ff",padding:12,borderRadius:8,marginBottom:24,border:"1px solid #ddd6fe"}}>
-                <span style={{color:"#7c3aed"}}>🎯 Challenge! A friend predicted {challengeData.score}% replaceable. What do you think?</span>
+            {/* Quote — gives flavor without tipping off the answer */}
+            {subject.quote && (
+              <div style={{
+                fontStyle: "italic", color: "#6a6860", padding: "14px 18px",
+                background: "#faf9f6", borderRadius: 10, borderLeft: "3px solid #ddd9d0",
+                marginBottom: 22, fontSize: 14, lineHeight: 1.6, fontFamily: fontStack,
+              }}>
+                "{subject.quote}"
               </div>
             )}
 
-            <div style={{marginBottom:32}}>
-              <h4 style={{fontSize:14,color:"#64748b",marginBottom:16}}>How replaceable was {subject.name}?</h4>
-              
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
-                <span style={{fontSize:12,color:"#dc2626",fontWeight:500}}>Irreplaceable</span>
-                <span style={{fontSize:12,color:"#16a34a",fontWeight:500}}>Highly Replaceable</span>
+            <div style={{ marginBottom: 24 }}>
+              <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                Known For
+              </h4>
+              <ContributionTags items={subject.contributions} />
+            </div>
+
+            {challengeData && (
+              <div style={{ background: "#faf5ff", padding: "12px 16px", borderRadius: 10, marginBottom: 24, border: "1px solid #e9d5ff", fontSize: 14 }}>
+                🎯 A friend said <strong>{challengeData.score}%</strong> inevitable. What's your call?
               </div>
-              
+            )}
+
+            <hr style={S.divider} />
+
+            {/* Slider */}
+            <div style={{ marginBottom: 28 }}>
+              <h4 style={{ fontSize: 15, color: "#1a1a1a", marginBottom: 18, fontWeight: 600 }}>
+                Would history have found another way without {subject.name}?
+              </h4>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                <span style={{ fontSize: 12, color: "#b91c1c", fontWeight: 600 }}>Singular — Only Them</span>
+                <span style={{ fontSize: 12, color: "#15803d", fontWeight: 600 }}>Inevitable — Bound to Happen</span>
+              </div>
               <input
-                type="range"
-                min="0"
-                max="100"
-                step="5"
+                type="range" min="0" max="100" step="5"
                 value={Math.round(prediction * 100)}
                 onChange={e => setPrediction(parseInt(e.target.value) / 100)}
-                style={{width:"100%",height:8,borderRadius:4,appearance:"none",background:`linear-gradient(90deg,#dc2626,#ea580c,#ca8a04,#16a34a)`,cursor:"pointer"}}
+                style={{
+                  width: "100%", height: 8, borderRadius: 4,
+                  appearance: "none", WebkitAppearance: "none",
+                  background: "linear-gradient(90deg, #b91c1c, #c2410c 35%, #a16207 60%, #15803d)",
+                  cursor: "pointer", outline: "none",
+                }}
               />
-              
-              <div style={{textAlign:"center",marginTop:16}}>
-                <div style={{fontSize:48,fontWeight:800,color:getScoreLabel(prediction).color}}>
+              <div style={{ textAlign: "center", marginTop: 22 }}>
+                <div style={{
+                  fontSize: 56, fontWeight: 400, color: predLabel.color,
+                  fontFamily: fontStack, letterSpacing: "-0.03em", lineHeight: 1,
+                }}>
                   {Math.round(prediction * 100)}%
                 </div>
-                <div style={{fontSize:16,color:getScoreLabel(prediction).color,fontWeight:600}}>
-                  {getScoreLabel(prediction).label}
+                <div style={{ fontSize: 16, color: predLabel.color, fontWeight: 600, marginTop: 6 }}>
+                  {predLabel.label}
                 </div>
-                <div style={{fontSize:14,color:"#64748b",marginTop:8}}>
-                  {getScoreLabel(prediction).desc}
+                <div style={{ ...S.muted, marginTop: 6, fontSize: 13 }}>
+                  {predLabel.desc}
                 </div>
               </div>
             </div>
 
-            <button 
+            <button
               onClick={submitPrediction}
-              style={{width:"100%",padding:16,borderRadius:12,background:"linear-gradient(90deg,#2563eb,#7c3aed)",color:"white",border:"none",fontSize:18,fontWeight:600,cursor:"pointer",boxShadow:"0 4px 12px rgba(37,99,235,0.3)"}}
+              style={{ ...S.btn, ...S.btnPrimary, width: "100%", padding: "16px", fontSize: 17 }}
             >
-              Submit Prediction
+              Lock in Prediction
             </button>
           </div>
         </div>
@@ -6088,177 +6914,316 @@ export default function App() {
     );
   }
 
-  // RESULT SCREEN
-  if (screen === "result" && subject) {
-    const cat = CATS[subject.cat];
-    const diff = Math.abs(prediction - subject.r);
-    const pts = Math.max(0, Math.round((1 - diff) * 100));
-    const correct = diff < 0.15;
-    const actualLabel = getScoreLabel(subject.r);
+  // ─────────────────────────────────────────────────────────────────────────
+  // INTERLUDE SCREEN — builds anticipation before reveal
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "interlude" && subject) {
+    const cat = CATS[subject.cat] || { label: subject.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+    const phases = getInterludePhases(subject);
+    const currentPhase = phases[Math.min(interludeStep, phases.length - 1)];
+    const progress = Math.min(((interludeStep + 1) / (phases.length + 1)) * 100, 100);
 
     return (
-      <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%)",color:"#1e293b",padding:20}}>
-        <div style={{maxWidth:650,margin:"0 auto"}}>
-          <div style={{background:"white",borderRadius:16,padding:24,boxShadow:"0 4px 12px rgba(0,0,0,0.08)"}}>
-            
-            {/* Result Header */}
-            <div style={{textAlign:"center",marginBottom:24}}>
-              <div style={{fontSize:48,marginBottom:8}}>{correct ? "🎯" : "📊"}</div>
-              <h2 style={{fontSize:28,fontWeight:700,marginBottom:8,color:"#1e293b"}}>{subject.name}</h2>
-              <p style={{color:"#64748b"}}>{cat.label}</p>
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={{ ...S.inner, maxWidth: 540, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "80vh" }}>
+          <div style={{
+            textAlign: "center", width: "100%",
+            animation: "fadeUp 0.4s ease both",
+          }}>
+            {/* Figure identity */}
+            <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+            <h2 style={{ ...S.h2, fontSize: 34, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
+            <p style={{ ...S.muted, marginBottom: 40 }}>{subject.field} · {formatLifespan(subject.born, subject.died)}</p>
+
+            {/* Central animation */}
+            <div style={{
+              width: 96, height: 96, borderRadius: "50%",
+              background: "linear-gradient(135deg, #f7f6f3, #e8e6e1)",
+              border: "2px solid #ddd9d0",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              margin: "0 auto 32px",
+              animation: "pulse 1.4s ease-in-out infinite",
+              fontSize: 40,
+            }}>
+              {currentPhase.icon}
+            </div>
+
+            {/* Phase text */}
+            <p key={interludeStep} style={{
+              fontSize: 16, color: "#4a4840", fontWeight: 500,
+              minHeight: 28, marginBottom: 32,
+              animation: "fadeUp 0.3s ease both",
+            }}>
+              {currentPhase.text}
+            </p>
+
+            {/* Progress bar */}
+            <div style={{
+              width: "100%", maxWidth: 320, height: 4,
+              background: "#e8e6e1", borderRadius: 2,
+              margin: "0 auto 16px", overflow: "hidden",
+            }}>
+              <div style={{
+                height: "100%", borderRadius: 2,
+                background: "linear-gradient(90deg, #b91c1c, #c2410c, #a16207, #15803d)",
+                width: `${progress}%`,
+                transition: "width 0.8s ease",
+              }} />
+            </div>
+
+            {/* User prediction reminder */}
+            <p style={{ fontSize: 13, color: "#9a9890" }}>
+              Your prediction: <strong style={{ color: "#1a1a1a" }}>{Math.round(prediction * 100)}% inevitable</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // RESULT SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "result" && subject) {
+    const cat = CATS[subject.cat] || { label: subject.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+    const r = subject.r ?? subject._r;
+    const diff = Math.abs(prediction - r);
+    const pts = lastPts;
+    const correct = diff < 0.15;
+    const actualLabel = getScoreLabel(r);
+    const feedback = getAccuracyFeedback(diff, pts);
+    const difficulty = getDifficultyLabel(r);
+    const isReplay = pts === 0 && diff >= 0.03; // distinguish replay from perfect score
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={{ ...S.inner, maxWidth: 680 }}>
+          <div style={{ ...S.card, padding: 32, animation: animateResult ? "scaleIn 0.3s ease both" : "none" }}>
+
+            {/* Feedback Banner */}
+            <div style={{
+              textAlign: "center", marginBottom: 28,
+              animation: animateResult ? "fadeUp 0.4s ease 0.1s both" : "none",
+            }}>
+              <div style={{ fontSize: 52, marginBottom: 8 }}>{feedback.emoji}</div>
+              <p style={{ fontSize: 17, color: "#3a3a3a", fontWeight: 500, margin: "0 0 6px", maxWidth: 400, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>
+                {feedback.msg}
+              </p>
+              <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+              <span style={{ ...S.tag(difficulty.color), marginLeft: 6 }}>{difficulty.label}</span>
+              <h2 style={{ ...S.h2, fontSize: 32, marginTop: 12 }}>{subject.name}</h2>
             </div>
 
             {/* Score Comparison */}
-            <div style={{display:"flex",justifyContent:"space-around",marginBottom:32,textAlign:"center"}}>
+            <div style={{
+              display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
+              marginBottom: 28, textAlign: "center", padding: "22px 0",
+              borderTop: "1px solid #e8e6e1", borderBottom: "1px solid #e8e6e1",
+              animation: animateResult ? "fadeUp 0.4s ease 0.2s both" : "none",
+            }}>
               <div>
-                <div style={{fontSize:14,color:"#64748b",marginBottom:4}}>Your Prediction</div>
-                <div style={{fontSize:36,fontWeight:700,color:"#2563eb"}}>{Math.round(prediction * 100)}%</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>You Said</div>
+                <div style={{ fontSize: 34, fontWeight: 400, color: "#1a1a1a", fontFamily: fontStack }}>{Math.round(prediction * 100)}%</div>
               </div>
               <div>
-                <div style={{fontSize:14,color:"#64748b",marginBottom:4}}>Actual Score</div>
-                <div style={{fontSize:36,fontWeight:700,color:actualLabel.color}}>{Math.round(subject.r * 100)}%</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Actual</div>
+                <div style={{ fontSize: 34, fontWeight: 400, color: actualLabel.color, fontFamily: fontStack }}>{Math.round(r * 100)}%</div>
               </div>
               <div>
-                <div style={{fontSize:14,color:"#64748b",marginBottom:4}}>Points Earned</div>
-                <div style={{fontSize:36,fontWeight:700,color:"#7c3aed"}}>+{pts}</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Points</div>
+                <div style={{ fontSize: 34, fontWeight: 400, color: pts > 0 ? "#6d28d9" : "#b0ada6", fontFamily: fontStack }}>
+                  {pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}
+                </div>
+                {isReplay && <div style={{ fontSize: 11, color: "#b0ada6", marginTop: 4 }}>Already played</div>}
               </div>
             </div>
 
-            {/* THE VERDICT - Always visible */}
-            <div style={{background:`${actualLabel.color}10`,borderRadius:12,padding:20,marginBottom:24,borderLeft:`4px solid ${actualLabel.color}`}}>
-              <h3 style={{color:actualLabel.color,marginBottom:8,fontSize:20,display:"flex",alignItems:"center",gap:8}}>
-                ⚖️ The Verdict: {actualLabel.label}
+            {/* Streak indicator */}
+            {streak >= 2 && !isReplay && (
+              <div style={{
+                textAlign: "center", marginBottom: 20, padding: "10px 16px",
+                background: "linear-gradient(135deg, #faf5ff, #f3e8ff)",
+                borderRadius: 10, border: "1px solid #e9d5ff",
+                animation: animateResult ? "fadeUp 0.3s ease 0.15s both" : "none",
+              }}>
+                <span style={{ fontSize: 15 }}>🔥 {streak}-round streak</span>
+                <span style={{ fontSize: 12, color: "#7c3aed", marginLeft: 8 }}>
+                  {streak >= 10 ? "Historian!" : streak >= 5 ? "On fire!" : "Keep it going!"}
+                </span>
+              </div>
+            )}
+
+            {/* The Verdict — with reasoning and directional insight */}
+            <div style={{
+              background: `${actualLabel.color}0a`, borderRadius: 14, padding: "18px 22px",
+              marginBottom: 22, borderLeft: `4px solid ${actualLabel.color}`,
+              animation: animateResult ? "fadeUp 0.4s ease 0.25s both" : "none",
+            }}>
+              <h3 style={{ ...S.sectionHeader, color: actualLabel.color, marginBottom: 4 }}>
+                <span>⚖️</span> The Verdict: {actualLabel.label}
               </h3>
-              <p style={{color:"#374151",lineHeight:1.6}}>{actualLabel.desc}</p>
+              <p style={{ color: actualLabel.color, fontSize: 12, margin: "0 0 10px", opacity: 0.8, fontWeight: 500 }}>{actualLabel.desc}</p>
+              <p style={{ color: "#4a4840", lineHeight: 1.7, fontSize: 14, margin: 0 }}>{subject.reasoning}</p>
+              {(() => {
+                const insight = getDirectionInsight(prediction, r, subject);
+                return insight ? (
+                  <p style={{
+                    color: prediction > r ? "#991b1b" : "#166534",
+                    fontSize: 13, lineHeight: 1.65, marginTop: 12, marginBottom: 0,
+                    padding: "10px 14px", borderRadius: 8,
+                    background: prediction > r ? "#fef2f2" : "#f0fdf4",
+                  }}>
+                    <span style={{ fontWeight: 700 }}>{prediction > r ? "↑ You overestimated" : "↓ You underestimated"} inevitability.</span>{" "}
+                    {insight}
+                  </p>
+                ) : null;
+              })()}
             </div>
 
             {/* Quote */}
             {subject.quote && (
-              <div style={{fontStyle:"italic",color:"#64748b",textAlign:"center",marginBottom:24,padding:"16px 20px",background:"#f8fafc",borderRadius:8,border:"1px solid #e2e8f0"}}>
+              <div style={{
+                fontStyle: "italic", color: "#6a6860", textAlign: "center",
+                padding: "14px 22px", background: "#faf9f6", borderRadius: 10,
+                marginBottom: 22, fontSize: 15, fontFamily: fontStack,
+                borderLeft: "3px solid #ddd9d0", lineHeight: 1.65,
+                animation: animateResult ? "fadeUp 0.4s ease 0.3s both" : "none",
+              }}>
                 "{subject.quote}"
               </div>
             )}
 
-            {/* COUNTERFACTUAL NARRATIVE - If available, show prominently */}
+            {/* The Counterfactual — with contributions underneath */}
             {subject.counterfactual && (
-              <div style={{marginBottom:24,background:"#fef3c7",borderRadius:12,padding:20,border:"1px solid #fcd34d"}}>
-                <h4 style={{color:"#92400e",fontWeight:600,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
-                  🔮 The Counterfactual
-                </h4>
-                <div style={{color:"#78350f",lineHeight:1.8,fontSize:15}}>
-                  {subject.counterfactual}
-                </div>
-              </div>
-            )}
-
-            {/* WHY THIS SCORE - Always visible */}
-            <div style={{marginBottom:24,background:"#f0f9ff",borderRadius:12,padding:20,border:"1px solid #bae6fd"}}>
-              <h4 style={{color:"#0369a1",fontWeight:600,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
-                🧠 Why This Score?
-              </h4>
-              <div style={{color:"#374151",lineHeight:1.7}}>
-                {subject.reasoning}
-              </div>
-            </div>
-
-            {/* WHAT THE WORLD WOULD LOSE - Always visible */}
-            {subject.impact && (
-              <div style={{marginBottom:24,background:"#faf5ff",borderRadius:12,padding:20,border:"1px solid #e9d5ff"}}>
-                <h4 style={{color:"#7c3aed",fontWeight:600,marginBottom:16,display:"flex",alignItems:"center",gap:8}}>
-                  🌍 What the World Would Lose
-                </h4>
-                <div style={{display:"grid",gap:12}}>
-                  <div style={{display:"flex",gap:8}}>
-                    <span style={{color:"#64748b",fontWeight:500,minWidth:80}}>Lives:</span>
-                    <span style={{color:"#374151"}}>{subject.impact.lives}</span>
-                  </div>
-                  <div style={{display:"flex",gap:8}}>
-                    <span style={{color:"#64748b",fontWeight:500,minWidth:80}}>Economy:</span>
-                    <span style={{color:"#374151"}}>{subject.impact.econ}</span>
-                  </div>
-                  <div style={{display:"flex",gap:8}}>
-                    <span style={{color:"#64748b",fontWeight:500,minWidth:80}}>Culture:</span>
-                    <span style={{color:"#374151"}}>{subject.impact.cultural}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* RIPPLE EFFECTS - Collapsible, uses rich data if available */}
-            <details style={{marginBottom:16}} open={!!subject.ripples}>
-              <summary style={{cursor:"pointer",padding:"14px 16px",background:"#f8fafc",borderRadius:10,border:"1px solid #e2e8f0",fontWeight:600,color:"#475569",listStyle:"none"}}>
-                🔗 Ripple Effects
-              </summary>
-              <div style={{padding:16,background:"#f8fafc",borderRadius:"0 0 10px 10px",marginTop:1}}>
-                {subject.ripples ? (
-                  <div style={{display:"grid",gap:16}}>
-                    {subject.ripples.map((ripple, i) => (
-                      <div key={i} style={{padding:16,background:"white",borderRadius:10,border:"1px solid #e2e8f0"}}>
-                        <div style={{fontSize:14,fontWeight:600,color:"#0369a1",marginBottom:8}}>{ripple.category}</div>
-                        <div style={{color:"#374151",lineHeight:1.6,fontSize:14}}>{ripple.detail}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{display:"grid",gap:12}}>
-                    <div style={{padding:12,background:"white",borderRadius:8,border:"1px solid #e2e8f0"}}>
-                      <div style={{fontSize:12,color:"#64748b",marginBottom:4}}>Reach</div>
-                      <div style={{color:"#374151",fontWeight:500}}>{subject.impact?.reach}</div>
-                    </div>
-                    <div style={{padding:12,background:"white",borderRadius:8,border:"1px solid #e2e8f0"}}>
-                      <div style={{fontSize:12,color:"#64748b",marginBottom:4}}>Key Contributions</div>
-                      <ul style={{margin:0,paddingLeft:20,color:"#374151"}}>
-                        {subject.contributions.map((c, i) => (
-                          <li key={i} style={{marginBottom:4}}>{c}</li>
-                        ))}
-                      </ul>
-                    </div>
+              <div style={{
+                background: "#fffbeb", borderRadius: 14, padding: "18px 22px",
+                marginBottom: 22, border: "1px solid #fde68a",
+                animation: animateResult ? "fadeUp 0.4s ease 0.35s both" : "none",
+              }}>
+                <h3 style={{ ...S.sectionHeader, color: "#92400e", marginBottom: 8 }}>
+                  <span>🔮</span> The Counterfactual
+                </h3>
+                <p style={{ color: "#78350f", lineHeight: 1.7, fontSize: 14, margin: 0 }}>{subject.counterfactual}</p>
+                {subject.contributions && subject.contributions.length > 0 && (
+                  <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #fde68a" }}>
+                    <h4 style={{ fontSize: 11, color: "#a16207", fontWeight: 700, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                      Key Contributions
+                    </h4>
+                    <ContributionTags items={subject.contributions} />
                   </div>
                 )}
               </div>
-            </details>
+            )}
 
-            {/* TIMELINE - Collapsible, only if timeline data exists */}
-            {subject.timeline ? (
-              <details style={{marginBottom:24}} open>
-                <summary style={{cursor:"pointer",padding:"14px 16px",background:"#f8fafc",borderRadius:10,border:"1px solid #e2e8f0",fontWeight:600,color:"#475569",listStyle:"none"}}>
-                  🔀 What Happened ↔ Alternate Timeline
+            {/* Impact - now always shown with graceful fallback */}
+            {subject.impact && (
+              <SectionBox bg="#faf5ff" border="#e9d5ff" titleColor="#6d28d9" textColor="#4a4840" icon="🌍" title="What the World Would Lose">
+                <div style={{ display: "grid", gap: 10 }}>
+                  {[
+                    ["Lives", subject.impact.lives],
+                    ["Economy", subject.impact.econ],
+                    ["Culture", subject.impact.cultural],
+                    ["Reach", subject.impact.reach],
+                  ].filter(([, val]) => val).map(([label, val]) => (
+                    <div key={label} style={{ display: "flex", gap: 12, fontSize: 14 }}>
+                      <span style={{ color: "#8b5cf6", fontWeight: 700, minWidth: 72, fontSize: 13 }}>{label}</span>
+                      <span style={{ color: "#4a4840" }}>{val}</span>
+                    </div>
+                  ))}
+                </div>
+              </SectionBox>
+            )}
+
+            {/* Ripple Effects - collapsible with chevron */}
+            {subject.ripples && subject.ripples.length > 0 && (
+              <details style={{ marginBottom: 18 }} open>
+                <summary style={S.collapsibleSummary}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span>🔗</span> Ripple Effects
+                  </span>
+                  <Chevron />
                 </summary>
-                <div style={{padding:16,background:"#f8fafc",borderRadius:"0 0 10px 10px",marginTop:1}}>
-                  <div style={{display:"grid",gap:16}}>
+                <div style={S.collapsibleBody}>
+                  <div style={{ display: "grid", gap: 10 }}>
+                    {subject.ripples.map((ripple, i) => (
+                      <div key={i} style={{
+                        padding: 14, background: "#fff", borderRadius: 10,
+                        border: "1px solid #e8e6e1",
+                      }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#1e40af", marginBottom: 6 }}>{ripple.category}</div>
+                        <div style={{ color: "#4a4840", lineHeight: 1.65, fontSize: 13 }}>{ripple.detail}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Timeline - collapsible with chevron, fixed alignment */}
+            {subject.timeline && subject.timeline.length > 0 && (
+              <details style={{ marginBottom: 24 }} open>
+                <summary style={S.collapsibleSummary}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span>🔀</span> What Happened vs. Alternate Timeline
+                  </span>
+                  <Chevron />
+                </summary>
+                <div style={S.collapsibleBody}>
+                  <div style={{ display: "grid", gap: 14 }}>
                     {subject.timeline.map((event, i) => (
-                      <div key={i} style={{display:"grid",gridTemplateColumns:"80px 1fr 1fr",gap:12,alignItems:"start"}}>
-                        <div style={{fontWeight:700,fontSize:18,color:"#1e293b",paddingTop:8}}>{event.year}</div>
-                        <div style={{padding:12,background:"#dcfce7",borderRadius:8,border:"1px solid #86efac"}}>
-                          <div style={{fontSize:11,fontWeight:600,color:"#166534",marginBottom:4}}>✓ WHAT HAPPENED</div>
-                          <div style={{fontSize:13,color:"#166534",lineHeight:1.5}}>{event.happened}</div>
+                      <div key={i}>
+                        <div style={{
+                          fontWeight: 700, fontSize: 15, color: "#1a1a1a",
+                          fontFamily: fontStack, marginBottom: 8,
+                        }}>
+                          {formatYear(event.year)}
                         </div>
-                        <div style={{padding:12,background:"#fef3c7",borderRadius:8,border:"1px solid #fcd34d"}}>
-                          <div style={{fontSize:11,fontWeight:600,color:"#92400e",marginBottom:4}}>⚡ ALTERNATE</div>
-                          <div style={{fontSize:13,color:"#92400e",lineHeight:1.5}}>{event.alternate}</div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                          <div style={{ padding: 12, background: "#dcfce7", borderRadius: 10, border: "1px solid #bbf7d0" }}>
+                            <div style={{ fontSize: 10, fontWeight: 800, color: "#166534", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                              ✓ What happened
+                            </div>
+                            <div style={{ fontSize: 13, color: "#166534", lineHeight: 1.55 }}>{event.happened}</div>
+                          </div>
+                          <div style={{ padding: 12, background: "#fef3c7", borderRadius: 10, border: "1px solid #fde68a" }}>
+                            <div style={{ fontSize: 10, fontWeight: 800, color: "#92400e", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                              ⚡ Alternate
+                            </div>
+                            <div style={{ fontSize: 13, color: "#92400e", lineHeight: 1.55 }}>{event.alternate}</div>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
               </details>
-            ) : subject.impact && (
-              <details style={{marginBottom:24}}>
-                <summary style={{cursor:"pointer",padding:"14px 16px",background:"#f8fafc",borderRadius:10,border:"1px solid #e2e8f0",fontWeight:600,color:"#475569",listStyle:"none"}}>
-                  🔀 What Happened ↔ Alternate Timeline
+            )}
+
+            {/* Fallback for entries with impact.timeline but no timeline array */}
+            {(!subject.timeline || subject.timeline.length === 0) && subject.impact?.timeline && (
+              <details style={{ marginBottom: 24 }}>
+                <summary style={S.collapsibleSummary}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span>🔀</span> What Happened vs. Alternate Timeline
+                  </span>
+                  <Chevron />
                 </summary>
-                <div style={{padding:16,background:"#f8fafc",borderRadius:"0 0 10px 10px",marginTop:1}}>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-                    <div style={{padding:16,background:"#dcfce7",borderRadius:10,border:"1px solid #86efac"}}>
-                      <div style={{fontSize:12,color:"#166534",fontWeight:600,marginBottom:8}}>✓ WHAT HAPPENED</div>
-                      <div style={{fontSize:14,color:"#166534"}}>
+                <div style={S.collapsibleBody}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div style={{ padding: 16, background: "#dcfce7", borderRadius: 10, border: "1px solid #bbf7d0" }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: "#166534", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>✓ What happened</div>
+                      <div style={{ fontSize: 14, color: "#166534", lineHeight: 1.6 }}>
                         {subject.contributions[0]}
-                        {subject.contributions[1] && <><br/><br/>{subject.contributions[1]}</>}
+                        {subject.contributions[1] && <><br /><br />{subject.contributions[1]}</>}
                       </div>
                     </div>
-                    <div style={{padding:16,background:"#fef3c7",borderRadius:10,border:"1px solid #fcd34d"}}>
-                      <div style={{fontSize:12,color:"#92400e",fontWeight:600,marginBottom:8}}>⚡ ALTERNATE TIMELINE</div>
-                      <div style={{fontSize:14,color:"#92400e"}}>
+                    <div style={{ padding: 16, background: "#fef3c7", borderRadius: 10, border: "1px solid #fde68a" }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: "#92400e", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>⚡ Alternate timeline</div>
+                      <div style={{ fontSize: 14, color: "#92400e", lineHeight: 1.6 }}>
                         {subject.impact.timeline}
                       </div>
                     </div>
@@ -6267,23 +7232,48 @@ export default function App() {
               </details>
             )}
 
+            {/* Rank progression */}
+            {(() => {
+              const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
+              const currentRank = getRank(avgPts, played.length);
+              return played.length >= 3 ? (
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  padding: "12px 16px", borderRadius: 10, marginBottom: 22,
+                  background: `${currentRank.color}06`, border: `1px solid ${currentRank.color}18`,
+                }}>
+                  <span style={{ fontSize: 22 }}>{currentRank.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: currentRank.color }}>{currentRank.title}</div>
+                    {currentRank.next && <div style={{ fontSize: 11, color: "#9a9890", marginTop: 2 }}>{currentRank.next}</div>}
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", fontFamily: fontStack }}>{score}</div>
+                    <div style={{ fontSize: 10, color: "#9a9890" }}>total pts</div>
+                  </div>
+                </div>
+              ) : null;
+            })()}
+
             {/* Actions */}
-            <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-              <button onClick={goHome} style={{flex:1,minWidth:120,padding:14,borderRadius:10,background:"#f1f5f9",color:"#475569",border:"1px solid #e2e8f0",cursor:"pointer",fontWeight:600}}>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 120 }}>
                 🏠 Home
               </button>
-              <button onClick={startRandom} style={{flex:1,minWidth:120,padding:14,borderRadius:10,background:"linear-gradient(90deg,#2563eb,#7c3aed)",color:"white",border:"none",cursor:"pointer",fontWeight:600,boxShadow:"0 4px 12px rgba(37,99,235,0.3)"}}>
+              <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120 }}>
                 Next Figure →
               </button>
             </div>
-            
-            <div style={{display:"flex",gap:12,marginTop:12}}>
-              <button onClick={shareResult} style={{flex:1,padding:12,borderRadius:10,background:"#f8fafc",color:"#64748b",border:"1px solid #e2e8f0",cursor:"pointer"}}>
-                📤 Share Result
+
+            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+              <button onClick={shareResult} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
+                📤 Share
               </button>
-              <button onClick={createChallenge} style={{flex:1,padding:12,borderRadius:10,background:"#f8fafc",color:"#64748b",border:"1px solid #e2e8f0",cursor:"pointer"}}>
-                🎯 Challenge Friends
-              </button>
+              {!subject._isCustom && (
+                <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
+                  🎯 Challenge Friends
+                </button>
+              )}
             </div>
           </div>
         </div>
