@@ -6180,7 +6180,15 @@ export default function App() {
       setBestStreak(saved.bestStreak || 0);
       setHasSeenIntro(saved.hasSeenIntro || false);
     }
-    setCustomCache(loadCustomCache());
+    // Load and clean custom cache — purge stale entries from when API was broken
+    const cached = loadCustomCache();
+    const cleaned = {};
+    Object.entries(cached).forEach(([key, val]) => {
+      const isStale = val.contributions && val.contributions[0] === "Primary achievement";
+      if (!isStale) cleaned[key] = val;
+    });
+    if (Object.keys(cleaned).length !== Object.keys(cached).length) saveCustomCache(cleaned);
+    setCustomCache(cleaned);
     const params = new URLSearchParams(window.location.search);
     const challenge = params.get("c");
     if (challenge) {
@@ -6320,9 +6328,14 @@ export default function App() {
       return;
     }
 
-    // Check cache
-    if (customCache[cacheKey]) {
-      setCustomResult(customCache[cacheKey]);
+    // Check cache (validate entry has real data, not stale fallback)
+    const cached = customCache[cacheKey];
+    const isValidCache = cached &&
+      cached.contributions && cached.contributions[0] !== "Primary achievement" &&
+      cached.reasoning && !cached.reasoning.startsWith("Analysis of") &&
+      cached.quote;
+    if (isValidCache) {
+      setCustomResult(cached);
       setScreen("custom_confirm");
       scrollTop();
       return;
@@ -6330,16 +6343,12 @@ export default function App() {
 
     setCustomLoading(true);
 
-    try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1500,
-          messages: [{
-            role: "user",
-            content: `Analyze the historical inevitability of "${customName}". The question: if this person/thing never existed, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
+    const apiBody = JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1500,
+      messages: [{
+        role: "user",
+        content: `Analyze the historical inevitability of "${customName}". The question: if this person/thing never existed, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
 {
   "name": "Full proper name",
   "born": year as number (negative for BCE, null if unknown),
@@ -6373,11 +6382,38 @@ export default function App() {
 }
 
 Be historically precise. The inevitability score should reflect genuine counterfactual analysis — was this contribution bound to happen, or did it require this specific person?`
-          }],
-        })
-      });
+      }],
+    });
 
-      const data = await response.json();
+    // Try serverless proxy first, fall back to direct API (works in artifact preview)
+    const tryFetch = async (url, opts) => {
+      const res = await fetch(url, opts);
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        throw new Error(`${res.status}: ${errBody.slice(0, 200)}`);
+      }
+      return res.json();
+    };
+
+    try {
+      let data;
+      try {
+        // Primary: Vercel serverless proxy (production)
+        data = await tryFetch("/api/claude", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: apiBody,
+        });
+      } catch (proxyErr) {
+        console.warn("Proxy failed, trying direct API:", proxyErr.message);
+        // Fallback: direct Anthropic API (works in Claude artifact environment)
+        data = await tryFetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: apiBody,
+        });
+      }
+
       const text = data.content.map(i => i.text || "").join("");
       const clean = text.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
@@ -6394,32 +6430,8 @@ Be historically precise. The inevitability score should reflect genuine counterf
       setCustomResult(parsed);
       setScreen("custom_confirm");
     } catch (err) {
-      const hashScore = getConsistentScore(customName);
-      const fallback = {
-        name: customName.trim(),
-        born: null, died: null,
-        field: "Historical Figure", cat: "science",
-        quote: "",
-        contributions: ["Primary achievement", "Secondary impact", "Legacy influence", "Broader effects"],
-        r: hashScore, _r: hashScore,
-        reasoning: `Analysis of ${customName}'s historical inevitability based on available alternatives, timing, and the uniqueness of their contributions.`,
-        counterfactual: `Without ${customName}, the developments they contributed to would likely have proceeded on a different timeline, with other figures potentially filling similar roles.`,
-        ripples: [
-          { category: "Timing", detail: "The specific timing of their contributions would shift, potentially by years or decades." },
-          { category: "Alternatives", detail: "Other figures in the field may have achieved similar results through different paths." },
-          { category: "Legacy", detail: "Cultural and institutional impact would take a different shape." }
-        ],
-        impact: { lives: "Affected many", econ: "Significant economic influence", cultural: "Left a lasting mark", reach: "Widespread", timeline: "Others would have contributed similarly" },
-        timeline: [],
-        id: "custom_" + cacheKey.replace(/\s/g, '_'),
-        _isCustom: true,
-      };
-
-      const newCache = { ...customCache, [cacheKey]: fallback };
-      setCustomCache(newCache);
-      saveCustomCache(newCache);
-      setCustomResult(fallback);
-      setScreen("custom_confirm");
+      console.error("Custom figure error:", err);
+      showToast("Analysis failed — check the debug steps below", 4000);
     }
 
     setCustomLoading(false);
