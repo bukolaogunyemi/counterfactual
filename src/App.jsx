@@ -6043,13 +6043,24 @@ const calculatePoints = (diff) => {
   return Math.round(100 * Math.pow(1 - diff * 2, 2));
 };
 
-const getAccuracyFeedback = (diff, pts) => {
-  if (diff < 0.03) return { emoji: "🎯", msg: "Near-perfect. That's serious historical knowledge.", tier: "perfect" };
-  if (diff < 0.08) return { emoji: "🔥", msg: "Very close. You've got strong intuition for this.", tier: "great" };
-  if (diff < 0.15) return { emoji: "✨", msg: "Solid read — you picked up on the right signals.", tier: "good" };
-  if (diff < 0.25) return { emoji: "🤔", msg: "Off by a bit. The verdict below might shift your thinking.", tier: "okay" };
-  if (diff < 0.40) return { emoji: "📚", msg: "Missed by a fair margin — but that's what makes this one interesting.", tier: "miss" };
-  return { emoji: "😮", msg: "Way off! This figure's story is full of surprises.", tier: "far" };
+const getAccuracyFeedback = (diff, pts, subject, prediction) => {
+  const name = subject ? subject.name : "this figure";
+  const r = subject ? (subject.r ?? subject._r ?? 0.5) : 0.5;
+  const over = prediction > r;
+  if (diff < 0.03) return { emoji: "🎯", msg: `Near-perfect read on ${name}. You saw right through this one.`, tier: "perfect" };
+  if (diff < 0.08) return { emoji: "🔥", msg: `Very close. You had a strong feel for ${name}'s place in history.`, tier: "great" };
+  if (diff < 0.15) return { emoji: "✨", msg: over
+    ? `Solid, though you gave history a bit too much credit for replacing ${name}.`
+    : `Solid, though ${name} was a touch more replaceable than you thought.`, tier: "good" };
+  if (diff < 0.25) return { emoji: "🤔", msg: over
+    ? `You thought ${name} was more replaceable than the analysis shows.`
+    : `You rated ${name} as more singular than the evidence supports.`, tier: "okay" };
+  if (diff < 0.40) return { emoji: "📚", msg: over
+    ? `${name}'s contribution was harder to replicate than you expected.`
+    : `More people were working on similar problems than you'd guess.`, tier: "miss" };
+  return { emoji: "😮", msg: over
+    ? `Way off — ${name} was far more singular than you guessed.`
+    : `Way off — this was far more inevitable than you thought.`, tier: "far" };
 };
 
 const getDifficultyLabel = (r) => {
@@ -6070,83 +6081,59 @@ const getRank = (avgPts, gamesPlayed) => {
   return { title: "Newcomer", icon: "🌱", color: "#94a3b8", next: "Play 5 rounds to earn a rank" };
 };
 
-// CONTEXTUAL INTERLUDE — category/era-aware loading phases
-const getInterludePhases = (subject) => {
+// CONTEXTUAL INTERLUDE — reveals actual analysis sentence by sentence
+const getInterludePhases = (subject, prediction) => {
   const name = subject.name;
-  const cat = subject.cat;
-  const era = subject.born < 0 ? "ancient" : subject.born < 500 ? "classical" : subject.born < 1500 ? "medieval" : subject.born < 1800 ? "early modern" : subject.born < 1900 ? "19th century" : "modern";
-
-  const catPhrases = {
-    science: [
-      `Scanning ${era} laboratories and academies for parallel research...`,
-      `Checking who else was close to ${name}'s breakthroughs...`,
-      "Tracing the chain of citations and influences...",
-    ],
-    politics: [
-      `Surveying the ${era} political landscape for alternative leaders...`,
-      `Asking: would the same movement have found a different champion?`,
-      "Weighing structural forces against individual will...",
-    ],
-    military: [
-      `Reviewing ${era} military capabilities and strategic alternatives...`,
-      `Would a different commander have made the same decisions?`,
-      "Mapping how battles reshape borders and populations...",
-    ],
-    arts: [
-      `Searching for ${era} artists working in similar directions...`,
-      `Can genius be replicated, or only approximated?`,
-      "Tracing the influence across generations of creators...",
-    ],
-    philosophy: [
-      `Examining the ${era} intellectual climate for converging ideas...`,
-      `Were these ideas waiting to be thought, or truly original?`,
-      "Measuring the distance between influence and originality...",
-    ],
-    medicine: [
-      `Reviewing ${era} medical knowledge and parallel discoveries...`,
-      `How many lives hinge on the timing of one breakthrough?`,
-      "Tracing the path from laboratory to bedside...",
-    ],
-    computing: [
-      "Checking concurrent developments in other labs and garages...",
-      "Was this innovation inevitable given the hardware?",
-      "Mapping how one tool rewires an entire industry...",
-    ],
-    finance: [
-      `Examining ${era} economic conditions and parallel innovations...`,
-      "Would the same market forces have produced the same outcome?",
-      "Tracing the flow of capital and influence...",
-    ],
-    exploration: [
-      `Reviewing who else was heading in the same direction...`,
-      "Separating the explorer from the conditions that made exploration possible...",
-      "Mapping what was found versus what was already known...",
-    ],
-    social: [
-      `Surveying the ${era} social landscape for parallel movements...`,
-      "Was this change being demanded by forces larger than any one person?",
-      "Tracing the ripples through communities and institutions...",
-    ],
-    institutions: [
-      "Examining the gap this institution filled...",
-      "Would other organizations have converged on the same model?",
-      "Measuring institutional impact against counterfactual alternatives...",
-    ],
-    inventions: [
-      "Checking patent offices and competing labs for parallel development...",
-      "Was the underlying science ready for anyone to find this?",
-      "Tracing how one invention rewires daily life...",
-    ],
-  };
-
-  const catSpecific = catPhrases[cat] || catPhrases.science;
-  return [
-    { icon: "🔍", text: catSpecific[0] },
-    { icon: "🌀", text: catSpecific[1] },
-    { icon: "⚖️", text: catSpecific[2] },
-    { icon: "🌊", text: "Tracing the ripple effects of absence..." },
-    { icon: "📐", text: "Rendering the verdict..." },
-  ];
+  const reasoning = subject.reasoning || "";
+  
+  // Split reasoning into sentences, clean up
+  const sentences = reasoning
+    .split(/(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 10 && s.length < 200);
+  
+  // Build phases: intro → reasoning sentences → verdict tease
+  const phases = [];
+  
+  // Opening: set the scene with what the player committed to
+  const predPct = Math.round(prediction * 100);
+  const predWord = predPct < 30 ? "singular" : predPct < 60 ? "somewhat replaceable" : "largely inevitable";
+  phases.push({
+    icon: "🎯",
+    text: `You called ${name} ${predWord} at ${predPct}%. Let's see...`,
+    style: "prediction",
+  });
+  
+  // Middle: reasoning sentences (take up to 3)
+  const icons = ["🔍", "⚖️", "🌀", "📐"];
+  const useSentences = sentences.slice(0, Math.min(3, sentences.length));
+  useSentences.forEach((s, i) => {
+    phases.push({ icon: icons[i] || "🔍", text: s, style: "analysis" });
+  });
+  
+  // If we got fewer than 2 reasoning sentences, add a category-specific filler
+  if (useSentences.length < 2) {
+    const catFillers = {
+      science: `Checking who else was close to ${name}'s breakthroughs...`,
+      politics: `Would the same movement have found a different champion?`,
+      military: `Would a different commander have made the same decisions?`,
+      arts: `Can genius be replicated, or only approximated?`,
+      philosophy: `Were these ideas waiting to be thought, or truly original?`,
+      medicine: `How many lives hinge on the timing of one breakthrough?`,
+      computing: "Was this innovation inevitable given the available hardware?",
+      finance: "Would the same market forces have produced the same outcome?",
+      exploration: "Separating the explorer from the conditions that made exploration possible...",
+      social: "Was this change being demanded by forces larger than any one person?",
+      institutions: "Would other organizations have converged on the same model?",
+      inventions: "Was the underlying science ready for anyone to find this?",
+    };
+    phases.push({ icon: "🌀", text: catFillers[subject.cat] || "Weighing the evidence...", style: "analysis" });
+  }
+  
+  // Closing: verdict incoming
+  phases.push({ icon: "📊", text: "Rendering the verdict...", style: "verdict" });
+  
+  return phases;
 };
 
 // DIRECTIONAL INSIGHT — explains why the player was off
@@ -6173,6 +6160,18 @@ const getDirectionInsight = (prediction, actual, subject) => {
         : "The individual contribution was real, but the underlying conditions were pushing toward this outcome."
     }`;
   }
+};
+
+// TENSION HOOK — extracts the debatable framing from reasoning for predict screen
+const getTensionHook = (subject) => {
+  if (!subject.reasoning) return null;
+  const sentences = subject.reasoning.match(/[^.!?]+[.!?]+/g) || [];
+  if (sentences.length < 2) return null;
+  // First two sentences typically frame the "on one hand / but on the other" tension
+  const hook = sentences.slice(0, 2).join('').trim();
+  // Only show if it's meaty enough to be interesting
+  if (hook.length < 40 || hook.length > 300) return null;
+  return hook;
 };
 
 const formatYear = (y) => {
@@ -6749,6 +6748,7 @@ export default function App() {
   const [challengeData, setChallengeData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [animateResult, setAnimateResult] = useState(false);
+  const [revealPhase, setRevealPhase] = useState(0);
   const [interludeStep, setInterludeStep] = useState(0);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
@@ -6839,6 +6839,21 @@ export default function App() {
       } catch(e) {}
     }
 
+    // Deep link: counterfactual.app/#figure-id
+    const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+    if (hash && !challenge) {
+      if (hash === 'daily') {
+        // Handled after state loads — just flag it
+        window.__deepLinkDaily = true;
+      } else {
+        const fig = ALL_SUBJECTS.find(s => s.id === hash);
+        if (fig) {
+          setSubject(fig);
+          setScreen("predict");
+        }
+      }
+    }
+
     // Head-to-head challenge link
     const h2hParam = params.get("h2h");
     if (h2hParam) {
@@ -6864,6 +6879,14 @@ export default function App() {
       } catch(e) {}
     }
   }, []);
+
+  // Handle daily deep link after state loads
+  useEffect(() => {
+    if (window.__deepLinkDaily && dailyState && !dailyState.completed) {
+      delete window.__deepLinkDaily;
+      startDaily();
+    }
+  }, [dailyState]);
 
   // Load fonts
   useEffect(() => {
@@ -6941,6 +6964,7 @@ export default function App() {
     setIsDaily(false);
     setStreakMilestone(null);
     setScreen("predict");
+    if (s.id && !s._isCustom) window.history.replaceState({}, '', `#${s.id}`);
     scrollTop();
   };
 
@@ -6953,6 +6977,7 @@ export default function App() {
     setIsDaily(true);
     setStreakMilestone(null);
     setScreen("predict");
+    window.history.replaceState({}, '', '#daily');
     scrollTop();
   };
 
@@ -7073,14 +7098,16 @@ export default function App() {
 
   // Interlude timer — cycle through steps, then reveal
   useEffect(() => {
-    if (screen !== "interlude") return;
-    const totalSteps = 5;
-    const stepDuration = 1000; // 1s per step
+    if (screen !== "interlude" || !subject) return;
+    const phases = getInterludePhases(subject, prediction);
+    const totalSteps = phases.length;
+    const stepDuration = 1200; // 1.2s per step — slightly longer for reading
     const timer = setInterval(() => {
       setInterludeStep(prev => {
         if (prev >= totalSteps) {
           clearInterval(timer);
           SFX.reveal(lastPts);
+          setRevealPhase(0);
           setScreen("result");
           scrollTop();
           return prev;
@@ -7091,6 +7118,17 @@ export default function App() {
     }, stepDuration);
     return () => clearInterval(timer);
   }, [screen, lastPts]);
+
+  // Progressive reveal — cascade result sections
+  useEffect(() => {
+    if (screen !== "result") return;
+    // Phase 0 = emoji/feedback (instant), 1 = scores (0.6s), 2 = verdict (1.4s), 3 = deep content (2.2s), 4 = actions (2.8s)
+    const delays = [0, 600, 1400, 2200, 2800];
+    const timers = delays.map((delay, phase) =>
+      setTimeout(() => setRevealPhase(phase), delay)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [screen]);
 
   const handleCustomSubmit = async () => {
     if (!customName.trim()) return;
@@ -7247,6 +7285,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
     setActiveCategory(null);
     setSearchQuery("");
     setH2hMode(null);
+    window.history.replaceState({}, '', window.location.pathname + window.location.search);
     scrollTop();
   };
 
@@ -7351,8 +7390,6 @@ Be historically precise. The inevitability score should reflect genuine counterf
     const diff = Math.abs(prediction - r);
     const pts = calculatePoints(diff);
     const userPct = Math.round(prediction * 100);
-    const actualPct = Math.round(r * 100);
-    const scoreLabel = getScoreLabel(r);
     const dayNum = isDaily ? getDayNumber() : null;
     const percentile = isDaily ? getDailyPercentile(diff, r) : null;
 
@@ -7393,7 +7430,6 @@ Be historically precise. The inevitability score should reflect genuine counterf
       ctx.fillStyle = color;
       ctx.textAlign = "center";
       if (maxWidth) {
-        // Truncate if needed
         let t = text;
         while (ctx.measureText(t).width > maxWidth && t.length > 3) t = t.slice(0, -4) + "...";
         ctx.fillText(t, W / 2, y);
@@ -7415,51 +7451,21 @@ Be historically precise. The inevitability score should reflect genuine counterf
       centerText(`🗓️  Daily #${dayNum}`, 140, "bold 20px 'Helvetica Neue', sans-serif", "#fff");
     }
 
-    const nameY = isDaily ? 220 : 180;
+    const nameY = isDaily ? 230 : 190;
 
-    // Figure name
-    centerText(subject.name, nameY, `48px Georgia, serif`, "#ffffff", W - 120);
+    // Figure name — hero element
+    centerText(subject.name, nameY, `56px Georgia, serif`, "#ffffff", W - 120);
 
     // Field + lifespan
     const fieldText = `${subject.field}  ·  ${formatLifespan(subject.born, subject.died)}`;
-    centerText(fieldText, nameY + 50, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.45)", W - 120);
+    centerText(fieldText, nameY + 55, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.45)", W - 120);
 
-    // ── Score comparison area ──
-    const boxY = nameY + 110;
-    const boxH = 260;
+    // The question — main hook
+    centerText(`How replaceable was ${subject.name.split(' ').pop()}?`, nameY + 120, "italic 32px Georgia, serif", "rgba(255,255,255,0.7)", W - 160);
 
-    // Score background
-    ctx.fillStyle = "rgba(255,255,255,0.04)";
-    ctx.beginPath();
-    ctx.roundRect(80, boxY, W - 160, boxH, 20);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Three columns: Your Guess | Actual | Points
-    const colW = (W - 160) / 3;
-    const cols = [
-      { label: "YOUR GUESS", value: `${userPct}%`, color: "#ffffff" },
-      { label: "ACTUAL", value: `${actualPct}%`, color: scoreLabel.color },
-      { label: "POINTS", value: pts > 0 ? `+${pts}` : "0", color: pts >= 64 ? "#22c55e" : pts >= 36 ? "#d97706" : "#ef4444" },
-    ];
-    cols.forEach((col, i) => {
-      const cx = 80 + colW * i + colW / 2;
-      ctx.font = "bold 14px 'Helvetica Neue', sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.35)";
-      ctx.textAlign = "center";
-      ctx.letterSpacing = "2px";
-      ctx.fillText(col.label, cx, boxY + 55);
-      ctx.letterSpacing = "0px";
-      ctx.font = "56px Georgia, serif";
-      ctx.fillStyle = col.color;
-      ctx.fillText(col.value, cx, boxY + 130);
-    });
-
-    // Gradient bar showing position
-    const barY = boxY + 170;
-    const barX = 120, barW = W - 240, barH = 20;
+    // ── Gradient bar — shows prediction position only, no answer ──
+    const barY = nameY + 180;
+    const barX = 120, barW = W - 240, barH = 24;
     const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
     barGrad.addColorStop(0, "#b91c1c");
     barGrad.addColorStop(0.35, "#c2410c");
@@ -7467,63 +7473,49 @@ Be historically precise. The inevitability score should reflect genuine counterf
     barGrad.addColorStop(1, "#15803d");
     ctx.fillStyle = barGrad;
     ctx.beginPath();
-    ctx.roundRect(barX, barY, barW, barH, 10);
+    ctx.roundRect(barX, barY, barW, barH, 12);
     ctx.fill();
 
-    // User guess marker on bar
+    // Player's prediction marker only — no actual score marker
     const markerX = barX + (userPct / 100) * barW;
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.arc(markerX, barY + barH / 2, 14, 0, Math.PI * 2);
+    ctx.arc(markerX, barY + barH / 2, 16, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#1a1a1a";
     ctx.beginPath();
-    ctx.arc(markerX, barY + barH / 2, 8, 0, Math.PI * 2);
+    ctx.arc(markerX, barY + barH / 2, 9, 0, Math.PI * 2);
     ctx.fill();
 
-    // Actual score marker on bar (diamond)
-    const actualX = barX + (actualPct / 100) * barW;
-    ctx.fillStyle = scoreLabel.color;
-    ctx.save();
-    ctx.translate(actualX, barY + barH / 2);
-    ctx.rotate(Math.PI / 4);
-    ctx.fillRect(-9, -9, 18, 18);
-    ctx.restore();
-
     // Labels under bar
-    ctx.font = "13px 'Helvetica Neue', sans-serif";
+    ctx.font = "14px 'Helvetica Neue', sans-serif";
     ctx.textAlign = "left";
     ctx.fillStyle = "rgba(255,255,255,0.35)";
-    ctx.fillText("Singular", barX, barY + barH + 22);
+    ctx.fillText("Singular", barX, barY + barH + 28);
     ctx.textAlign = "right";
-    ctx.fillText("Inevitable", barX + barW, barY + barH + 22);
+    ctx.fillText("Inevitable", barX + barW, barY + barH + 28);
 
-    // ── Bottom section ──
-    const bottomY = boxY + boxH + 50;
+    // "I predicted X% inevitable"
+    centerText(`I predicted ${userPct}% inevitable`, barY + barH + 80, "24px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.55)");
 
-    // Verdict label
-    centerText(scoreLabel.label, bottomY, "bold 28px 'Helvetica Neue', sans-serif", scoreLabel.color);
+    // ── Points — competitive element ──
+    const ptsY = barY + barH + 160;
+    const ptsColor = pts >= 80 ? "#22c55e" : pts >= 50 ? "#d97706" : "#ef4444";
+    centerText(`${pts}`, ptsY, "bold 96px Georgia, serif", ptsColor);
+    centerText("points", ptsY + 40, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)");
 
-    // Accuracy emoji + feedback
-    const feedbackMsg = diff < 0.05 ? "Nailed it." : diff < 0.10 ? "Impressively close." : diff < 0.15 ? "Good read." : diff < 0.25 ? "Not bad." : "Way off.";
-    centerText(feedbackMsg, bottomY + 40, "22px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.5)");
-
-    // Daily percentile
+    // Daily percentile or accuracy hint
     if (isDaily && percentile !== null) {
-      centerText(`Beat ${percentile}% of players`, bottomY + 80, "bold 22px 'Helvetica Neue', sans-serif", "#d97706");
+      centerText(`Beat ${percentile}% of players`, ptsY + 85, "bold 22px 'Helvetica Neue', sans-serif", "#d97706");
     }
 
     // Daily streak
     if (isDaily && dailyState?.dailyStreak >= 2) {
-      centerText(`🔥 ${dailyState.dailyStreak}-day streak`, bottomY + (percentile !== null ? 115 : 80), "20px 'Helvetica Neue', sans-serif", "#d97706");
+      centerText(`🔥 ${dailyState.dailyStreak}-day streak`, ptsY + (percentile !== null ? 120 : 85), "20px 'Helvetica Neue', sans-serif", "#d97706");
     }
 
-    // Rank badge for non-daily
-    if (!isDaily && played.length >= 5) {
-      const avgPts = Math.round(score / played.length);
-      const rank = getRank(avgPts, played.length);
-      centerText(`${rank.icon} ${rank.title}`, bottomY + 80, "22px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)");
-    }
+    // CTA
+    centerText("Can you beat my score?", H - 110, "bold 24px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.6)");
 
     // Bottom accent line
     const botLine = ctx.createLinearGradient(0, 0, W, 0);
@@ -7534,8 +7526,9 @@ Be historically precise. The inevitability score should reflect genuine counterf
     ctx.fillStyle = botLine;
     ctx.fillRect(0, H - 6, W, 6);
 
-    // URL
-    centerText("counterfactual.app", H - 36, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.3)");
+    // URL with deep link
+    const figLink = subject.id && !subject._isCustom ? `counterfactual.app/#${subject.id}` : "counterfactual.app";
+    centerText(figLink, H - 36, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.3)");
 
     // Convert to blob
     return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
@@ -7710,18 +7703,17 @@ Be historically precise. The inevitability score should reflect genuine counterf
     const pts = calculatePoints(diff);
     const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
     const rank = getRank(avgPts, played.length);
-    const emoji = diff < 0.15 ? "✅" : "❌";
-    const userPct = Math.round(prediction * 100);
-    const actualPct = Math.round(r * 100);
+    const figLink = subject.id && !subject._isCustom ? `https://counterfactual.app/#${subject.id}` : "https://counterfactual.app";
 
     let text;
     if (isDaily) {
       const dayNum = getDayNumber();
       const percentile = getDailyPercentile(diff, r);
-      const streakText = dailyState?.dailyStreak >= 2 ? ` · 🔥 ${dailyState.dailyStreak}-day streak` : "";
-      text = `🗓️ Counterfactual Daily #${dayNum}\n\n${subject.name}: I guessed ${userPct}% (actual: ${actualPct}%) ${emoji}\n${pts} points · Beat ${percentile}% of players${streakText}\n\nhttps://counterfactual.app`;
+      const streakText = dailyState?.dailyStreak >= 2 ? `\n🔥 ${dailyState.dailyStreak}-day streak` : "";
+      text = `🗓️ Counterfactual Daily #${dayNum}\n\nHow replaceable was ${subject.name}? I scored ${pts} points and beat ${percentile}% of players.${streakText}\n\nThink you know history better?\nhttps://counterfactual.app`;
     } else {
-      text = `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% inevitable (actual: ${actualPct}%) ${emoji}\n${pts} points${rank.title !== "Newcomer" ? ` · ${rank.icon} ${rank.title}` : ""}\n\nCan you do better?\nhttps://counterfactual.app`;
+      const scoreHint = pts >= 80 ? "Nailed it." : pts >= 50 ? "Got close." : "Totally wrong.";
+      text = `🎯 Counterfactual: ${subject.name}\n\nHow replaceable was ${subject.name}? ${scoreHint} (${pts} pts)\n\nMake your prediction:\n${figLink}`;
     }
 
     // Try to generate and share image card
@@ -7746,7 +7738,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
     } catch (e) {
       // Final fallback: text only
       if (navigator.share) {
-        try { await navigator.share({ text, url: "https://counterfactual.app" }); return; } catch(e2) {}
+        try { await navigator.share({ text, url: figLink }); return; } catch(e2) {}
       }
       navigator.clipboard?.writeText(text);
       showToast("📋 Copied to clipboard");
@@ -7780,6 +7772,62 @@ Be historically precise. The inevitability score should reflect genuine counterf
     </button>
   );
 
+  const ScrollRow = ({ children }) => {
+    const ref = useRef(null);
+    const [canLeft, setCanLeft] = useState(false);
+    const [canRight, setCanRight] = useState(false);
+
+    const checkScroll = () => {
+      const el = ref.current;
+      if (!el) return;
+      setCanLeft(el.scrollLeft > 4);
+      setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+    };
+
+    useEffect(() => {
+      checkScroll();
+      const el = ref.current;
+      if (!el) return;
+      el.addEventListener("scroll", checkScroll, { passive: true });
+      window.addEventListener("resize", checkScroll);
+      return () => { el.removeEventListener("scroll", checkScroll); window.removeEventListener("resize", checkScroll); };
+    }, [children]);
+
+    const scroll = (dir) => {
+      const el = ref.current;
+      if (!el) return;
+      el.scrollBy({ left: dir * 300, behavior: "smooth" });
+    };
+
+    const arrowStyle = (side) => ({
+      position: "absolute", top: "50%", [side]: -4,
+      transform: "translateY(-50%)", zIndex: 2,
+      width: 32, height: 32, borderRadius: "50%",
+      background: "#fff", border: "1px solid #e5e2db",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      cursor: "pointer", fontSize: 14, color: "#5a5850",
+      transition: "opacity 0.15s ease",
+    });
+
+    return (
+      <div style={{ position: "relative" }}>
+        {canLeft && (
+          <button onClick={() => scroll(-1)} style={arrowStyle("left")} aria-label="Scroll left">‹</button>
+        )}
+        <div ref={ref} className="collection-scroll" style={{
+          display: "flex", gap: 10, overflowX: "auto",
+          paddingBottom: 6, scrollSnapType: "x mandatory",
+        }}>
+          {children}
+        </div>
+        {canRight && (
+          <button onClick={() => scroll(1)} style={arrowStyle("right")} aria-label="Scroll right">›</button>
+        )}
+      </div>
+    );
+  };
+
   const ToastOverlay = () => toast ? (
     <div style={{
       position: "fixed", bottom: 32, left: "50%", transform: "translateX(-50%)",
@@ -7812,7 +7860,9 @@ Be historically precise. The inevitability score should reflect genuine counterf
     <div style={{
       marginBottom: 20, background: bg, borderRadius: 14,
       padding: "20px 22px", border: `1px solid ${border}`,
-      animation: animateResult ? "fadeUp 0.4s ease both" : "none",
+      opacity: revealPhase >= 3 ? 1 : 0,
+      transform: revealPhase >= 3 ? "translateY(0)" : "translateY(12px)",
+      transition: "opacity 0.5s ease, transform 0.5s ease",
     }}>
       <h4 style={{ ...S.sectionHeader, color: titleColor, marginBottom: 12 }}>
         <span>{icon}</span> {title}
@@ -8330,10 +8380,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               📂 Browse by Category
             </h3>
-            <div className="collection-scroll" style={{
-              display: "flex", gap: 10, overflowX: "auto",
-              paddingBottom: 6, scrollSnapType: "x mandatory",
-            }}>
+            <ScrollRow>
               {Object.entries(CATS).map(([key, cat]) => {
                 const catFigures = ALL_SUBJECTS.filter(s => s.cat === key);
                 const catPlayed = catFigures.filter(f => played.includes(f.id)).length;
@@ -8366,7 +8413,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
                   </div>
                 );
               })}
-            </div>
+            </ScrollRow>
           </div>
 
           {/* Themed Collections — compact */}
@@ -8374,10 +8421,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               📚 Collections
             </h3>
-            <div className="collection-scroll" style={{
-              display: "flex", gap: 10, overflowX: "auto",
-              paddingBottom: 6, scrollSnapType: "x mandatory",
-            }}>
+            <ScrollRow>
               {COLLECTIONS.map(col => {
                 const colFigures = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
                 const playedCount = colFigures.filter(f => played.includes(f.id)).length;
@@ -8409,7 +8453,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
                   </div>
                 );
               })}
-            </div>
+            </ScrollRow>
           </div>
 
           {/* Browse by Era — compact */}
@@ -8417,10 +8461,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               🕰️ Eras
             </h3>
-            <div className="collection-scroll" style={{
-              display: "flex", gap: 10, overflowX: "auto",
-              paddingBottom: 6, scrollSnapType: "x mandatory",
-            }}>
+            <ScrollRow>
               {ERAS.map(era => {
                 const eraFigures = ALL_SUBJECTS.filter(s => s.born >= era.min && s.born < era.max);
                 const eraPlayed = eraFigures.filter(f => played.includes(f.id)).length;
@@ -8453,7 +8494,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
                   </div>
                 );
               })}
-            </div>
+            </ScrollRow>
           </div>
 
           {/* Analyze Any Figure — compact */}
@@ -8597,6 +8638,71 @@ Be historically precise. The inevitability score should reflect genuine counterf
               </button>
             )}
           </div>
+
+          {/* Your Tendencies — only show with enough data */}
+          {totalGames >= 10 && (() => {
+            // Bias: average of (pred - actual), positive = overestimates inevitability
+            const biasSum = history.reduce((a, g) => a + (g.pred - g.r), 0);
+            const avgBias = biasSum / totalGames;
+            const biasDir = avgBias > 3 ? "over" : avgBias < -3 ? "under" : "balanced";
+            const biasAbs = Math.abs(Math.round(avgBias));
+
+            // Best & worst categories (min 3 games in category)
+            const catEntries = Object.entries(catStats)
+              .filter(([, s]) => s.played >= 3)
+              .map(([key, s]) => ({ key, avg: Math.round(s.totalPts / s.played), label: CATS[key]?.label || key }));
+            catEntries.sort((a, b) => b.avg - a.avg);
+            const bestCat = catEntries[0];
+            const worstCat = catEntries.length > 1 ? catEntries[catEntries.length - 1] : null;
+
+            // Improvement: first half vs second half
+            const half = Math.floor(totalGames / 2);
+            const firstHalf = history.slice(0, half);
+            const secondHalf = history.slice(half);
+            const firstAvg = Math.round(firstHalf.reduce((a, g) => a + g.pts, 0) / firstHalf.length);
+            const secondAvg = Math.round(secondHalf.reduce((a, g) => a + g.pts, 0) / secondHalf.length);
+            const improving = secondAvg - firstAvg;
+
+            // Build insight sentences
+            const insights = [];
+            if (biasDir === "over") {
+              insights.push({ icon: "📐", text: `You tend to overestimate inevitability by about ${biasAbs} points. You're giving history too much credit for finding another way.` });
+            } else if (biasDir === "under") {
+              insights.push({ icon: "📐", text: `You tend to overestimate singularity by about ${biasAbs} points. Many figures are more replaceable than your gut says.` });
+            } else {
+              insights.push({ icon: "📐", text: "Your predictions are well-calibrated — no consistent lean toward singular or inevitable." });
+            }
+            if (bestCat) {
+              insights.push({ icon: "💪", text: `Strongest category: ${bestCat.label} (${bestCat.avg} avg pts)${worstCat && worstCat.avg < bestCat.avg - 10 ? `. Weakest: ${worstCat.label} (${worstCat.avg} avg pts).` : "."}` });
+            }
+            if (improving > 5) {
+              insights.push({ icon: "📈", text: `You're improving — your recent games average ${secondAvg} pts, up from ${firstAvg} in your first ${half} games.` });
+            } else if (improving < -5) {
+              insights.push({ icon: "📉", text: `Your early games averaged ${firstAvg} pts, but recent ones dropped to ${secondAvg}. Harder figures, or getting overconfident?` });
+            } else {
+              insights.push({ icon: "📊", text: `Consistent performer — averaging ${firstAvg} pts early and ${secondAvg} pts recently.` });
+            }
+
+            return (
+              <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.05s both" }}>
+                <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 16 }}>
+                  🧠 Your Tendencies
+                </h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  {insights.map((ins, i) => (
+                    <div key={i} style={{
+                      display: "flex", gap: 12, alignItems: "flex-start",
+                      padding: "12px 14px", borderRadius: 10,
+                      background: "#fafaf9", border: "1px solid #f0efeb",
+                    }}>
+                      <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1.4 }}>{ins.icon}</span>
+                      <p style={{ fontSize: 14, color: "#4a4840", lineHeight: 1.55, margin: 0 }}>{ins.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Achievements */}
           <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.1s both" }}>
@@ -9560,6 +9666,25 @@ Be historically precise. The inevitability score should reflect genuine counterf
               <ContributionTags items={subject.contributions} />
             </div>
 
+            {/* Tension hook — frames why this figure is debatable */}
+            {(() => {
+              const hook = getTensionHook(subject);
+              if (!hook) return null;
+              return (
+                <div style={{
+                  padding: "14px 18px", borderRadius: 10, marginBottom: 24,
+                  background: "linear-gradient(135deg, #fefce8, #fef9ee)",
+                  border: "1px solid #fde68a",
+                  fontSize: 14, lineHeight: 1.6, color: "#78716c",
+                }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#b45309", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    ⚖️ The Debate
+                  </div>
+                  {hook}
+                </div>
+              );
+            })()}
+
             {challengeData && (
               <div style={{ background: "#faf5ff", padding: "12px 16px", borderRadius: 10, marginBottom: 24, border: "1px solid #e9d5ff", fontSize: 14 }}>
                 🎯 A friend said <strong>{challengeData.score}%</strong> inevitable. What's your call?
@@ -9621,9 +9746,9 @@ Be historically precise. The inevitability score should reflect genuine counterf
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "interlude" && subject) {
     const cat = CATS[subject.cat] || { label: subject.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
-    const phases = getInterludePhases(subject);
+    const phases = getInterludePhases(subject, prediction);
     const currentPhase = phases[Math.min(interludeStep, phases.length - 1)];
-    const progress = Math.min(((interludeStep + 1) / (phases.length + 1)) * 100, 100);
+    const isAnalysis = currentPhase.style === "analysis";
 
     return (
       <div style={S.page}>
@@ -9634,7 +9759,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             textAlign: "center", width: "100%",
             animation: "fadeUp 0.4s ease both",
           }}>
-            {/* Figure identity */}
+            {/* Figure identity — compact */}
             {isDaily && (
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
@@ -9645,50 +9770,61 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 🗓️ Daily #{getDayNumber()}
               </div>
             )}
-            <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
-            <h2 style={{ ...S.h2, fontSize: 34, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
-            <p style={{ ...S.muted, marginBottom: 40 }}>{subject.field} · {formatLifespan(subject.born, subject.died)}</p>
+            <h2 style={{ ...S.h2, fontSize: 28, marginBottom: 4 }}>{subject.name}</h2>
+            <p style={{ ...S.muted, marginBottom: 36, fontSize: 14 }}>{subject.field}</p>
 
-            {/* Central animation */}
+            {/* Central icon */}
             <div style={{
-              width: 96, height: 96, borderRadius: "50%",
-              background: "linear-gradient(135deg, #f7f6f3, #e8e6e1)",
-              border: "2px solid #ddd9d0",
+              width: 72, height: 72, borderRadius: "50%",
+              background: isAnalysis ? `${cat.color}08` : "linear-gradient(135deg, #f7f6f3, #e8e6e1)",
+              border: isAnalysis ? `2px solid ${cat.color}20` : "2px solid #ddd9d0",
               display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 32px",
+              margin: "0 auto 28px",
               animation: "pulse 1.4s ease-in-out infinite",
-              fontSize: 40,
+              fontSize: 32,
             }}>
               {currentPhase.icon}
             </div>
 
-            {/* Phase text */}
-            <p key={interludeStep} style={{
-              fontSize: 16, color: "#4a4840", fontWeight: 500,
-              minHeight: 28, marginBottom: 32,
-              animation: "fadeUp 0.3s ease both",
+            {/* Phase text — larger and more prominent for analysis */}
+            <div key={interludeStep} style={{
+              minHeight: 80, marginBottom: 32, padding: "0 16px",
+              animation: "fadeUp 0.35s ease both",
             }}>
-              {currentPhase.text}
-            </p>
-
-            {/* Progress bar */}
-            <div style={{
-              width: "100%", maxWidth: 320, height: 4,
-              background: "#e8e6e1", borderRadius: 2,
-              margin: "0 auto 16px", overflow: "hidden",
-            }}>
-              <div style={{
-                height: "100%", borderRadius: 2,
-                background: "linear-gradient(90deg, #b91c1c, #c2410c, #a16207, #15803d)",
-                width: `${progress}%`,
-                transition: "width 0.8s ease",
-              }} />
+              {isAnalysis ? (
+                <p style={{
+                  fontSize: 16, color: "#2a2a28", fontWeight: 400,
+                  lineHeight: 1.65, fontFamily: fontStack,
+                  fontStyle: "italic",
+                  maxWidth: 440, margin: "0 auto",
+                }}>
+                  {currentPhase.text}
+                </p>
+              ) : (
+                <p style={{
+                  fontSize: 15, color: currentPhase.style === "prediction" ? cat.color : "#6a6860",
+                  fontWeight: currentPhase.style === "prediction" ? 600 : 500,
+                  lineHeight: 1.5,
+                }}>
+                  {currentPhase.text}
+                </p>
+              )}
             </div>
 
-            {/* User prediction reminder */}
-            <p style={{ fontSize: 13, color: "#9a9890" }}>
-              Your prediction: <strong style={{ color: "#1a1a1a" }}>{Math.round(prediction * 100)}% inevitable</strong>
-            </p>
+            {/* Progress dots */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 20 }}>
+              {phases.map((_, i) => (
+                <div key={i} style={{
+                  width: i <= interludeStep ? 10 : 8,
+                  height: i <= interludeStep ? 10 : 8,
+                  borderRadius: "50%",
+                  background: i <= interludeStep
+                    ? i === interludeStep ? cat.color : `${cat.color}60`
+                    : "#e0ded8",
+                  transition: "all 0.3s ease",
+                }} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -9705,22 +9841,25 @@ Be historically precise. The inevitability score should reflect genuine counterf
     const pts = lastPts;
     const correct = diff < 0.15;
     const actualLabel = getScoreLabel(r);
-    const feedback = getAccuracyFeedback(diff, pts);
+    const feedback = getAccuracyFeedback(diff, pts, subject, prediction);
     const difficulty = getDifficultyLabel(r);
-    const isReplay = pts === 0 && diff >= 0.03; // distinguish replay from perfect score
+    const isReplay = pts === 0 && diff >= 0.03;
+    // Reveal helper: returns style that fades in at the given phase
+    const rp = (phase) => ({
+      opacity: revealPhase >= phase ? 1 : 0,
+      transform: revealPhase >= phase ? "translateY(0)" : "translateY(12px)",
+      transition: "opacity 0.5s ease, transform 0.5s ease",
+    });
 
     return (
       <div style={S.page}>
         <style>{globalCSS}</style>
         <ToastOverlay />
         <div style={{ ...S.inner, maxWidth: 680 }}>
-          <div style={{ ...S.card, padding: 32, animation: animateResult ? "scaleIn 0.3s ease both" : "none" }}>
+          <div style={{ ...S.card, padding: 32 }}>
 
-            {/* Feedback Banner */}
-            <div style={{
-              textAlign: "center", marginBottom: 28,
-              animation: animateResult ? "fadeUp 0.4s ease 0.1s both" : "none",
-            }}>
+            {/* Phase 0: Emoji + feedback + name */}
+            <div style={{ textAlign: "center", marginBottom: 28, ...rp(0) }}>
               {isDaily && (
                 <div style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
@@ -9731,21 +9870,21 @@ Be historically precise. The inevitability score should reflect genuine counterf
                   🗓️ Daily Challenge #{getDayNumber()}
                 </div>
               )}
-              <div style={{ fontSize: 52, marginBottom: 8 }}>{feedback.emoji}</div>
-              <p style={{ fontSize: 17, color: "#3a3a3a", fontWeight: 500, margin: "0 0 6px", maxWidth: 400, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>
+              <div style={{ fontSize: 56, marginBottom: 10 }}>{feedback.emoji}</div>
+              <h2 style={{ ...S.h2, fontSize: 30, marginBottom: 8 }}>{subject.name}</h2>
+              <p style={{ fontSize: 16, color: "#3a3a3a", fontWeight: 500, margin: "0 0 8px", maxWidth: 420, marginLeft: "auto", marginRight: "auto", lineHeight: 1.55 }}>
                 {feedback.msg}
               </p>
               <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
               <span style={{ ...S.tag(difficulty.color), marginLeft: 6 }}>{difficulty.label}</span>
-              <h2 style={{ ...S.h2, fontSize: 32, marginTop: 12 }}>{subject.name}</h2>
             </div>
 
-            {/* Score Comparison */}
+            {/* Phase 1: Score comparison — dramatic reveal */}
             <div style={{
               display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
               marginBottom: 28, textAlign: "center", padding: "22px 0",
               borderTop: "1px solid #e8e6e1", borderBottom: "1px solid #e8e6e1",
-              animation: animateResult ? "fadeUp 0.4s ease 0.2s both" : "none",
+              ...rp(1),
             }}>
               <div>
                 <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>You Said</div>
@@ -9778,7 +9917,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
                   : "linear-gradient(135deg, #faf5ff, #f3e8ff)",
                 borderRadius: 10,
                 border: streakMilestone ? "1px solid #fde68a" : "1px solid #e9d5ff",
-                animation: animateResult ? "fadeUp 0.3s ease 0.15s both" : "none",
+                ...rp(1),
               }}>
                 {streakMilestone ? (
                   <>
@@ -9823,7 +9962,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 <div style={{
                   background: "#fffbeb", borderRadius: 14, padding: "20px 22px",
                   marginBottom: 22, border: "2px solid #f59e0b",
-                  animation: animateResult ? "fadeUp 0.4s ease 0.18s both" : "none",
+                  ...rp(2),
                 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                     <h3 style={{ ...S.sectionHeader, color: "#d97706", margin: 0 }}>
@@ -9929,7 +10068,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             <div style={{
               background: `${actualLabel.color}0a`, borderRadius: 14, padding: "18px 22px",
               marginBottom: 22, borderLeft: `4px solid ${actualLabel.color}`,
-              animation: animateResult ? "fadeUp 0.4s ease 0.25s both" : "none",
+              ...rp(2),
             }}>
               <h3 style={{ ...S.sectionHeader, color: actualLabel.color, marginBottom: 4 }}>
                 <span>⚖️</span> The Verdict: {actualLabel.label}
@@ -9952,25 +10091,12 @@ Be historically precise. The inevitability score should reflect genuine counterf
               })()}
             </div>
 
-            {/* Quote */}
-            {subject.quote && (
-              <div style={{
-                fontStyle: "italic", color: "#6a6860", textAlign: "center",
-                padding: "14px 22px", background: "#faf9f6", borderRadius: 10,
-                marginBottom: 22, fontSize: 15, fontFamily: fontStack,
-                borderLeft: "3px solid #ddd9d0", lineHeight: 1.65,
-                animation: animateResult ? "fadeUp 0.4s ease 0.3s both" : "none",
-              }}>
-                "{subject.quote}"
-              </div>
-            )}
-
             {/* The Counterfactual — with contributions underneath */}
             {subject.counterfactual && (
               <div style={{
                 background: "#fffbeb", borderRadius: 14, padding: "18px 22px",
                 marginBottom: 22, border: "1px solid #fde68a",
-                animation: animateResult ? "fadeUp 0.4s ease 0.35s both" : "none",
+                ...rp(3),
               }}>
                 <h3 style={{ ...S.sectionHeader, color: "#92400e", marginBottom: 8 }}>
                   <span>🔮</span> The Counterfactual
@@ -10107,7 +10233,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
               return (
                 <div style={{
                   marginBottom: 22,
-                  animation: animateResult ? "fadeUp 0.4s ease 0.5s both" : "none",
+                  ...rp(3),
                 }}>
                   <div style={{
                     fontSize: 13, fontWeight: 700, color: "#9a9890",
@@ -10181,6 +10307,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             })()}
 
             {/* Actions */}
+            <div style={rp(4)}>
             {h2hMode ? (
               <>
                 {/* H2H running score */}
@@ -10240,6 +10367,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 )}
               </>
             )}
+            </div>
           </div>
         </div>
       </div>
