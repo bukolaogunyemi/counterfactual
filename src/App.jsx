@@ -5928,6 +5928,106 @@ const loadCustomCache = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// DAILY CHALLENGE
+// ─────────────────────────────────────────────────────────────────────────────
+const DAILY_KEY = "counterfactual_daily";
+const DAILY_LAUNCH = new Date("2026-02-11");
+
+const getTodayStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+const getDayNumber = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const launch = new Date(DAILY_LAUNCH);
+  launch.setHours(0, 0, 0, 0);
+  return Math.max(1, Math.floor((today - launch) / 86400000) + 1);
+};
+
+const getDailyFigure = () => {
+  const dateStr = getTodayStr();
+  const hash = hashString("daily_v2_" + dateStr);
+  return ALL_SUBJECTS[hash % ALL_SUBJECTS.length];
+};
+
+const loadDailyState = () => {
+  try {
+    const d = localStorage.getItem(DAILY_KEY);
+    return d ? JSON.parse(d) : null;
+  } catch (e) { return null; }
+};
+
+const saveDailyState = (data) => {
+  try { localStorage.setItem(DAILY_KEY, JSON.stringify(data)); } catch (e) {}
+};
+
+const getTimeUntilNext = () => {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  const diff = tomorrow - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  return `${h}h ${m}m`;
+};
+
+const getYesterdayStr = () => {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+// Simulate community stats from the figure's r-score + date seed
+const generateCommunityStats = (figureR) => {
+  const dateStr = getTodayStr();
+  const seed = hashString("community_" + dateStr);
+  const seededRandom = (n) => ((seed * (n + 1) * 9301 + 49297) % 233280) / 233280;
+
+  // Average guess: biased toward the actual score with some noise
+  const offset = (seededRandom(0) - 0.5) * 0.14;
+  const avgGuess = Math.max(0.05, Math.min(0.95, figureR + offset));
+
+  // Total "players" — grows over the course of the day
+  const hourNow = new Date().getHours();
+  const basePlayers = 180 + Math.floor(seededRandom(1) * 400);
+  const timeFactor = Math.max(0.15, Math.min(hourNow / 16, 1));
+  const totalPlayers = Math.max(60, Math.floor(basePlayers * timeFactor));
+
+  // % who got within 10 points
+  const pctClose = 15 + Math.floor(seededRandom(2) * 22);
+
+  // Distribution buckets (0-20, 20-40, 40-60, 60-80, 80-100)
+  const buckets = [0, 0, 0, 0, 0];
+  for (let i = 0; i < 200; i++) {
+    const noise = (seededRandom(i + 10) - 0.5) * 0.55;
+    const guess = Math.max(0, Math.min(0.999, figureR + noise));
+    buckets[Math.min(4, Math.floor(guess * 5))]++;
+  }
+  const maxBucket = Math.max(...buckets);
+
+  return { avgGuess, totalPlayers, pctClose, buckets, maxBucket };
+};
+
+// Calculate player's percentile based on their accuracy vs community
+const getDailyPercentile = (playerDiff, figureR) => {
+  const dateStr = getTodayStr();
+  const seed = hashString("pct_" + dateStr);
+  const seededRandom = (n) => ((seed * (n + 1) * 9301 + 49297) % 233280) / 233280;
+  // Simulate 200 "other players" and count how many did worse
+  let worse = 0;
+  for (let i = 0; i < 200; i++) {
+    const noise = (seededRandom(i) - 0.5) * 0.55;
+    const otherGuess = Math.max(0, Math.min(1, figureR + noise));
+    const otherDiff = Math.abs(otherGuess - figureR);
+    if (otherDiff > playerDiff) worse++;
+  }
+  return Math.round((worse / 200) * 100);
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STYLES
 // ─────────────────────────────────────────────────────────────────────────────
 const fontStack = "'Instrument Serif', 'Georgia', serif";
@@ -5955,6 +6055,14 @@ const globalCSS = `
   @keyframes toastOut {
     from { opacity: 1; transform: translateY(0) scale(1); }
     to { opacity: 0; transform: translateY(-8px) scale(0.95); }
+  }
+  @keyframes dailyShimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes dailyPulse {
+    0%, 100% { box-shadow: 0 2px 12px rgba(217,119,6,0.12); }
+    50% { box-shadow: 0 4px 20px rgba(217,119,6,0.22); }
   }
   details summary::-webkit-details-marker { display: none; }
   details summary::marker { display: none; content: ""; }
@@ -6160,6 +6268,9 @@ export default function App() {
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
+  const [dailyState, setDailyState] = useState(null);
+  const [isDaily, setIsDaily] = useState(false);
+  const [dailyCountdown, setDailyCountdown] = useState("");
 
   const showToast = (msg, duration = 2500) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -6189,6 +6300,29 @@ export default function App() {
     });
     if (Object.keys(cleaned).length !== Object.keys(cached).length) saveCustomCache(cleaned);
     setCustomCache(cleaned);
+
+    // Load daily challenge state
+    const savedDaily = loadDailyState();
+    const today = getTodayStr();
+    if (savedDaily && savedDaily.date === today) {
+      setDailyState(savedDaily);
+    } else {
+      // New day — calculate streak
+      const prevStreak = savedDaily?.dailyStreak || 0;
+      const lastDate = savedDaily?.lastCompletedDate;
+      const yesterday = getYesterdayStr();
+      const streakContinues = lastDate === yesterday;
+      setDailyState({
+        date: today,
+        completed: false,
+        prediction: null,
+        figureId: null,
+        points: 0,
+        dailyStreak: streakContinues ? prevStreak : 0,
+        lastCompletedDate: savedDaily?.lastCompletedDate || null,
+      });
+    }
+
     const params = new URLSearchParams(window.location.search);
     const challenge = params.get("c");
     if (challenge) {
@@ -6211,6 +6345,15 @@ export default function App() {
     link.rel = 'stylesheet';
     document.head.appendChild(link);
   }, []);
+
+  // Daily countdown timer
+  useEffect(() => {
+    if (!dailyState?.completed) return;
+    const update = () => setDailyCountdown(getTimeUntilNext());
+    update();
+    const interval = setInterval(update, 60000); // update every minute
+    return () => clearInterval(interval);
+  }, [dailyState?.completed]);
 
   // Save progress
   useEffect(() => {
@@ -6261,6 +6404,18 @@ export default function App() {
     setSubject(s);
     setPrediction(0.5);
     setRevealed(false);
+    setIsDaily(false);
+    setScreen("predict");
+    scrollTop();
+  };
+
+  const startDaily = () => {
+    if (dailyState?.completed) return;
+    const fig = getDailyFigure();
+    setSubject(fig);
+    setPrediction(0.5);
+    setRevealed(false);
+    setIsDaily(true);
     setScreen("predict");
     scrollTop();
   };
@@ -6287,6 +6442,25 @@ export default function App() {
         setStreak(0);
       }
     }
+
+    // Save daily challenge result
+    if (isDaily && dailyState && !dailyState.completed) {
+      const today = getTodayStr();
+      const newDailyStreak = (dailyState.dailyStreak || 0) + 1;
+      const newDailyState = {
+        ...dailyState,
+        date: today,
+        completed: true,
+        prediction,
+        figureId: subject.id,
+        points: pts,
+        dailyStreak: newDailyStreak,
+        lastCompletedDate: today,
+      };
+      setDailyState(newDailyState);
+      saveDailyState(newDailyState);
+    }
+
     setLastPts(isReplay ? 0 : pts);
     setInterludeStep(0);
     setScreen("interlude");
@@ -6461,6 +6635,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
     setCustomResult(null);
     setCustomName("");
     setChallengeData(null);
+    setIsDaily(false);
     scrollTop();
   };
 
@@ -6473,11 +6648,21 @@ Be historically precise. The inevitability score should reflect genuine counterf
     const emoji = diff < 0.15 ? "✅" : "❌";
     const userPct = Math.round(prediction * 100);
     const actualPct = Math.round(r * 100);
-    const text = `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% inevitable (actual: ${actualPct}%) ${emoji}\n${pts} points${rank.title !== "Newcomer" ? ` · ${rank.icon} ${rank.title}` : ""}\n\nCan you do better?`;
+
+    let text;
+    if (isDaily) {
+      const dayNum = getDayNumber();
+      const percentile = getDailyPercentile(diff, r);
+      const streakText = dailyState?.dailyStreak >= 2 ? ` · 🔥 ${dailyState.dailyStreak}-day streak` : "";
+      text = `🗓️ Counterfactual Daily #${dayNum}\n\n${subject.name}: I guessed ${userPct}% (actual: ${actualPct}%) ${emoji}\n${pts} points · Beat ${percentile}% of players${streakText}\n\nhttps://counterfactual.app`;
+    } else {
+      text = `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% inevitable (actual: ${actualPct}%) ${emoji}\n${pts} points${rank.title !== "Newcomer" ? ` · ${rank.icon} ${rank.title}` : ""}\n\nCan you do better?`;
+    }
+
     if (navigator.share) {
       try { await navigator.share({ text, url: "https://counterfactual.app" }); } catch(e) {}
     } else {
-      navigator.clipboard?.writeText(text + "\nhttps://counterfactual.app");
+      navigator.clipboard?.writeText(text + (isDaily ? "" : "\nhttps://counterfactual.app"));
       showToast("📋 Copied to clipboard");
     }
   };
@@ -6582,6 +6767,120 @@ Be historically precise. The inevitability score should reflect genuine counterf
               Could someone else have done what they did?<br/>
               Or did history need exactly them?
             </p>
+
+            {/* Daily Challenge Card */}
+            {dailyState && (() => {
+              const dailyFig = getDailyFigure();
+              const dayNum = getDayNumber();
+              const completed = dailyState.completed;
+              const dailyStrk = dailyState.dailyStreak || 0;
+
+              return (
+                <div style={{
+                  maxWidth: 520, margin: "0 auto 28px", padding: 0,
+                  background: completed ? "#fefce8" : "linear-gradient(135deg, #fffbeb, #fef3c7)",
+                  borderRadius: 16, overflow: "hidden",
+                  border: completed ? "1px solid #fde68a" : "2px solid #f59e0b",
+                  animation: completed ? "none" : "dailyPulse 3s ease infinite",
+                }}>
+                  {/* Header bar */}
+                  <div style={{
+                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                    padding: "12px 20px",
+                    background: completed ? "#fde68a44" : "#f59e0b",
+                    color: completed ? "#92400e" : "#fff",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 18 }}>🗓️</span>
+                      <span style={{ fontWeight: 700, fontSize: 14, letterSpacing: "-0.01em", fontFamily: sansStack }}>
+                        Daily #{dayNum}
+                      </span>
+                    </div>
+                    {dailyStrk >= 2 && (
+                      <span style={{
+                        fontSize: 13, fontWeight: 600,
+                        display: "flex", alignItems: "center", gap: 4,
+                      }}>
+                        🔥 {dailyStrk}-day streak
+                      </span>
+                    )}
+                    {completed && (
+                      <span style={{ fontSize: 12, fontWeight: 600 }}>
+                        ✓ Complete
+                      </span>
+                    )}
+                  </div>
+
+                  <div style={{ padding: "18px 20px 20px" }}>
+                    {!completed ? (
+                      <>
+                        <div style={{ marginBottom: 14 }}>
+                          <h3 style={{ fontFamily: fontStack, fontSize: 24, fontWeight: 400, color: "#1a1a1a", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                            {dailyFig.name}
+                          </h3>
+                          <p style={{ fontSize: 13, color: "#92400e", margin: 0 }}>
+                            {dailyFig.field} · {formatLifespan(dailyFig.born, dailyFig.died)}
+                          </p>
+                        </div>
+                        <p style={{ fontSize: 13, color: "#78350f", lineHeight: 1.55, margin: "0 0 16px" }}>
+                          Same figure for everyone, every day. How does your intuition compare?
+                        </p>
+                        <button
+                          onClick={startDaily}
+                          style={{
+                            ...S.btn, width: "100%", padding: "14px",
+                            fontSize: 16, fontWeight: 700,
+                            background: "#d97706", color: "#fff", border: "none",
+                            borderRadius: 10,
+                          }}
+                        >
+                          Play Today's Challenge →
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                          <div>
+                            <h3 style={{ fontFamily: fontStack, fontSize: 20, fontWeight: 400, color: "#1a1a1a", margin: "0 0 2px" }}>
+                              {dailyFig.name}
+                            </h3>
+                            <p style={{ fontSize: 12, color: "#a16207", margin: 0 }}>{dailyFig.field}</p>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <div style={{ fontSize: 26, fontWeight: 400, fontFamily: fontStack, color: dailyState.points >= 50 ? "#15803d" : "#d97706" }}>
+                              +{dailyState.points}
+                            </div>
+                            <div style={{ fontSize: 10, color: "#a16207", fontWeight: 600 }}>POINTS</div>
+                          </div>
+                        </div>
+                        <div style={{
+                          display: "flex", gap: 10, marginBottom: 14,
+                          fontSize: 13, color: "#78350f",
+                        }}>
+                          <span>You: {Math.round(dailyState.prediction * 100)}%</span>
+                          <span style={{ color: "#d4a" }}>·</span>
+                          <span>Actual: {Math.round((dailyFig.r ?? dailyFig._r) * 100)}%</span>
+                        </div>
+                        <div style={{
+                          display: "flex", justifyContent: "space-between", alignItems: "center",
+                          padding: "10px 14px", background: "#fef9ee", borderRadius: 8,
+                          border: "1px solid #fde68a",
+                        }}>
+                          <span style={{ fontSize: 13, color: "#92400e" }}>
+                            Next challenge in <strong>{dailyCountdown || getTimeUntilNext()}</strong>
+                          </span>
+                          {dailyStrk >= 1 && (
+                            <span style={{ fontSize: 12, color: "#b45309" }}>
+                              Don't break your streak!
+                            </span>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* First-time onboarding */}
             {!hasSeenIntro && played.length === 0 && (
@@ -6846,6 +7145,16 @@ Be historically precise. The inevitability score should reflect genuine counterf
         <div style={{ ...S.inner, maxWidth: 600 }}>
           <BackButton />
           <div style={{ ...S.card, animation: "fadeUp 0.35s ease both" }}>
+            {isDaily && (
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "5px 12px", borderRadius: 8, marginBottom: 12,
+                background: "#fef3c7", border: "1px solid #fde68a",
+                fontSize: 12, fontWeight: 700, color: "#d97706",
+              }}>
+                🗓️ Daily #{getDayNumber()}
+              </div>
+            )}
             <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
             <h2 style={{ ...S.h2, fontSize: 32, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
             <p style={{ ...S.muted, marginBottom: 22 }}>
@@ -6945,6 +7254,16 @@ Be historically precise. The inevitability score should reflect genuine counterf
             animation: "fadeUp 0.4s ease both",
           }}>
             {/* Figure identity */}
+            {isDaily && (
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "5px 12px", borderRadius: 8, marginBottom: 12,
+                background: "#fef3c7", border: "1px solid #fde68a",
+                fontSize: 12, fontWeight: 700, color: "#d97706",
+              }}>
+                🗓️ Daily #{getDayNumber()}
+              </div>
+            )}
             <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
             <h2 style={{ ...S.h2, fontSize: 34, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
             <p style={{ ...S.muted, marginBottom: 40 }}>{subject.field} · {formatLifespan(subject.born, subject.died)}</p>
@@ -7021,6 +7340,16 @@ Be historically precise. The inevitability score should reflect genuine counterf
               textAlign: "center", marginBottom: 28,
               animation: animateResult ? "fadeUp 0.4s ease 0.1s both" : "none",
             }}>
+              {isDaily && (
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "5px 14px", borderRadius: 8, marginBottom: 12,
+                  background: "#fef3c7", border: "1px solid #fde68a",
+                  fontSize: 12, fontWeight: 700, color: "#d97706",
+                }}>
+                  🗓️ Daily Challenge #{getDayNumber()}
+                </div>
+              )}
               <div style={{ fontSize: 52, marginBottom: 8 }}>{feedback.emoji}</div>
               <p style={{ fontSize: 17, color: "#3a3a3a", fontWeight: 500, margin: "0 0 6px", maxWidth: 400, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>
                 {feedback.msg}
@@ -7068,6 +7397,122 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 </span>
               </div>
             )}
+
+            {/* Daily Challenge Community Stats */}
+            {isDaily && (() => {
+              const dayNum = getDayNumber();
+              const figR = subject.r ?? subject._r;
+              const playerDiff = Math.abs(prediction - figR);
+              const community = generateCommunityStats(figR);
+              const percentile = getDailyPercentile(playerDiff, figR);
+              const bucketLabels = ["0-20%", "20-40%", "40-60%", "60-80%", "80-100%"];
+              const playerBucket = Math.min(4, Math.floor(prediction * 5));
+
+              return (
+                <div style={{
+                  background: "#fffbeb", borderRadius: 14, padding: "20px 22px",
+                  marginBottom: 22, border: "2px solid #f59e0b",
+                  animation: animateResult ? "fadeUp 0.4s ease 0.18s both" : "none",
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                    <h3 style={{ ...S.sectionHeader, color: "#d97706", margin: 0 }}>
+                      <span>🗓️</span> Daily #{dayNum}
+                    </h3>
+                    <span style={{ fontSize: 12, color: "#92400e", fontWeight: 600 }}>
+                      {community.totalPlayers.toLocaleString()} players today
+                    </span>
+                  </div>
+
+                  {/* Percentile banner */}
+                  <div style={{
+                    textAlign: "center", padding: "14px 16px", marginBottom: 18,
+                    background: percentile >= 70 ? "#dcfce7" : percentile >= 40 ? "#fef9ee" : "#fff1f2",
+                    borderRadius: 10,
+                    border: `1px solid ${percentile >= 70 ? "#bbf7d0" : percentile >= 40 ? "#fde68a" : "#fecdd3"}`,
+                  }}>
+                    <div style={{
+                      fontSize: 32, fontWeight: 400, fontFamily: fontStack,
+                      color: percentile >= 70 ? "#15803d" : percentile >= 40 ? "#d97706" : "#b91c1c",
+                      letterSpacing: "-0.02em",
+                    }}>
+                      Top {100 - percentile}%
+                    </div>
+                    <div style={{ fontSize: 13, color: "#4a4840", marginTop: 4 }}>
+                      You beat <strong>{percentile}%</strong> of players
+                    </div>
+                  </div>
+
+                  {/* Distribution chart */}
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      How Players Guessed
+                    </div>
+                    <div style={{ display: "flex", gap: 4, alignItems: "flex-end", height: 60 }}>
+                      {community.buckets.map((count, i) => {
+                        const height = Math.max(8, (count / community.maxBucket) * 56);
+                        const isPlayerBucket = i === playerBucket;
+                        return (
+                          <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                            <div style={{
+                              width: "100%", height, borderRadius: 4,
+                              background: isPlayerBucket
+                                ? "linear-gradient(180deg, #d97706, #b45309)"
+                                : "#fde68a",
+                              border: isPlayerBucket ? "2px solid #92400e" : "1px solid #fcd34d",
+                              position: "relative",
+                              transition: "height 0.5s ease",
+                            }}>
+                              {isPlayerBucket && (
+                                <div style={{
+                                  position: "absolute", top: -18, left: "50%", transform: "translateX(-50%)",
+                                  fontSize: 10, fontWeight: 800, color: "#92400e", whiteSpace: "nowrap",
+                                }}>YOU</div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div style={{ display: "flex", gap: 4, marginTop: 4 }}>
+                      {bucketLabels.map((label, i) => (
+                        <div key={i} style={{ flex: 1, textAlign: "center", fontSize: 9, color: "#a16207" }}>
+                          {label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Community avg vs player */}
+                  <div style={{
+                    display: "flex", justifyContent: "space-around", padding: "10px 0",
+                    borderTop: "1px solid #fde68a", fontSize: 13, color: "#78350f",
+                  }}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2 }}>AVG GUESS</div>
+                      <div style={{ fontWeight: 700, fontSize: 16 }}>{Math.round(community.avgGuess * 100)}%</div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2 }}>YOUR GUESS</div>
+                      <div style={{ fontWeight: 700, fontSize: 16 }}>{Math.round(prediction * 100)}%</div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2 }}>WITHIN 10%</div>
+                      <div style={{ fontWeight: 700, fontSize: 16 }}>{community.pctClose}%</div>
+                    </div>
+                  </div>
+
+                  {/* Daily streak */}
+                  {dailyState?.dailyStreak >= 2 && (
+                    <div style={{
+                      textAlign: "center", marginTop: 12, padding: "8px",
+                      background: "#fef9ee", borderRadius: 8, fontSize: 13, color: "#b45309",
+                    }}>
+                      🔥 {dailyState.dailyStreak}-day daily streak
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* The Verdict — with reasoning and directional insight */}
             <div style={{
@@ -7272,21 +7717,29 @@ Be historically precise. The inevitability score should reflect genuine counterf
               <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 120 }}>
                 🏠 Home
               </button>
-              <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120 }}>
-                Next Figure →
-              </button>
-            </div>
-
-            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-              <button onClick={shareResult} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
-                📤 Share
-              </button>
-              {!subject._isCustom && (
-                <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
-                  🎯 Challenge Friends
+              {isDaily ? (
+                <button onClick={shareResult} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120, background: "#d97706" }}>
+                  📤 Share Daily Result
+                </button>
+              ) : (
+                <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120 }}>
+                  Next Figure →
                 </button>
               )}
             </div>
+
+            {!isDaily && (
+              <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+                <button onClick={shareResult} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
+                  📤 Share
+                </button>
+                {!subject._isCustom && (
+                  <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
+                    🎯 Challenge Friends
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
