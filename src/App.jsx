@@ -5725,6 +5725,112 @@ const ALL_SUBJECTS = (() => {
 })();
 
 // ─────────────────────────────────────────────────────────────────────────────
+// THEMED COLLECTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+const COLLECTIONS = [
+  {
+    id: "cold_war",
+    title: "The Cold War",
+    subtitle: "Whose moves shaped the standoff?",
+    emoji: "🧊",
+    color: "#1e40af",
+    bg: "#eff6ff",
+    border: "#bfdbfe",
+    figures: ["jfk", "reagan", "gorbachev", "nato", "nuclearpower", "gagarin", "armstrong", "zhukov"],
+  },
+  {
+    id: "renaissance",
+    title: "Renaissance Minds",
+    subtitle: "Genius or zeitgeist?",
+    emoji: "🎨",
+    color: "#7c3aed",
+    bg: "#faf5ff",
+    border: "#e9d5ff",
+    figures: ["davinci", "michelangelo", "copernicus", "galileo", "shakespeare", "dante", "printingpress", "telescope"],
+  },
+  {
+    id: "almost_werent",
+    title: "Almost Weren't",
+    subtitle: "Inventions one accident away from never happening",
+    emoji: "⚡",
+    color: "#d97706",
+    bg: "#fffbeb",
+    border: "#fde68a",
+    figures: ["penicillin", "xray", "photography", "radio", "anesthesia", "vaccine", "refrigeration", "laser"],
+  },
+  {
+    id: "women_science",
+    title: "Women Who Changed Science",
+    subtitle: "Singular or inevitable — despite every obstacle?",
+    emoji: "🔬",
+    color: "#be185d",
+    bg: "#fdf2f8",
+    border: "#fbcfe8",
+    figures: ["curie", "rosalind", "leavitt", "goodall", "carson", "blackwell", "apgar", "nightingale"],
+  },
+  {
+    id: "empire_builders",
+    title: "Empire Builders",
+    subtitle: "Did they make history, or would someone else have conquered?",
+    emoji: "👑",
+    color: "#92400e",
+    bg: "#fef3c7",
+    border: "#fde68a",
+    figures: ["genghis", "napoleon", "charlemagne", "suleiman", "akbar", "elizabeth1", "tamerlane", "cortes"],
+  },
+  {
+    id: "digital_age",
+    title: "The Digital Age",
+    subtitle: "Could the information revolution have happened differently?",
+    emoji: "💻",
+    color: "#0d9488",
+    bg: "#f0fdfa",
+    border: "#99f6e4",
+    figures: ["turing", "internet", "wwweb", "smartphone", "jobs", "page_brin", "zuckerberg", "berners"],
+  },
+  {
+    id: "freedom_fighters",
+    title: "Freedom Fighters",
+    subtitle: "Was liberation inevitable, or did it need exactly them?",
+    emoji: "✊",
+    color: "#dc2626",
+    bg: "#fef2f2",
+    border: "#fecaca",
+    figures: ["mandela", "mlk", "gandhi", "tubman", "douglass", "toussaint", "bolivar", "emmeline"],
+  },
+  {
+    id: "medicine",
+    title: "Medicine's Turning Points",
+    subtitle: "Would we have found the cure without them?",
+    emoji: "💊",
+    color: "#059669",
+    bg: "#ecfdf5",
+    border: "#a7f3d0",
+    figures: ["penicillin", "vaccine", "fleming", "jenner", "pasteur", "salk", "antiseptic", "lister"],
+  },
+  {
+    id: "thinkers",
+    title: "The Thinkers",
+    subtitle: "Ideas that rewired how humans see themselves",
+    emoji: "🧠",
+    color: "#6d28d9",
+    bg: "#f5f3ff",
+    border: "#ddd6fe",
+    figures: ["kant", "marx", "darwin", "nietzsche", "simone", "foucault", "arendt", "wittgenstein"],
+  },
+  {
+    id: "sound",
+    title: "Sound & Fury",
+    subtitle: "Musicians who bent the arc of culture",
+    emoji: "🎵",
+    color: "#e11d48",
+    bg: "#fff1f2",
+    border: "#fecdd3",
+    figures: ["beethoven", "mozart", "bach", "coltrane", "marley", "hendrix", "bowie", "fela"],
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
 // UTILITY FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 const getScoreLabel = (score) => {
@@ -6154,6 +6260,8 @@ const globalCSS = `
     .filter-scroll::-webkit-scrollbar { display: none; }
     .filter-scroll button { flex-shrink: 0; }
   }
+  .collection-scroll { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .collection-scroll::-webkit-scrollbar { display: none; }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -6345,6 +6453,7 @@ export default function App() {
   const [dailyState, setDailyState] = useState(null);
   const [isDaily, setIsDaily] = useState(false);
   const [dailyCountdown, setDailyCountdown] = useState("");
+  const [activeCollection, setActiveCollection] = useState(null);
 
   const showToast = (msg, duration = 2500) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -6710,6 +6819,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
     setCustomName("");
     setChallengeData(null);
     setIsDaily(false);
+    setActiveCollection(null);
     scrollTop();
   };
 
@@ -7246,6 +7356,64 @@ Be historically precise. The inevitability score should reflect genuine counterf
             </button>
           </div>
 
+          {/* Themed Collections */}
+          <div style={{ marginBottom: 28 }}>
+            <h3 style={{ ...S.h3, fontSize: 15, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+              <span>📚</span> Themed Collections
+            </h3>
+            <div className="collection-scroll" style={{
+              display: "flex", gap: 12, overflowX: "auto",
+              paddingBottom: 8, scrollSnapType: "x mandatory",
+            }}>
+              {COLLECTIONS.map(col => {
+                const colFigures = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
+                const playedCount = colFigures.filter(f => played.includes(f.id)).length;
+                const total = colFigures.length;
+                const pct = total > 0 ? Math.round((playedCount / total) * 100) : 0;
+
+                return (
+                  <div
+                    key={col.id}
+                    onClick={() => { setActiveCollection(col); setScreen("collection"); scrollTop(); }}
+                    style={{
+                      flex: "0 0 220px", scrollSnapAlign: "start",
+                      padding: "16px 18px", borderRadius: 14,
+                      background: col.bg, border: `1px solid ${col.border}`,
+                      cursor: "pointer", transition: "all 0.15s ease",
+                      position: "relative", overflow: "hidden",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 6px 20px ${col.color}15`; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
+                    <div style={{ fontSize: 28, marginBottom: 8 }}>{col.emoji}</div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: col.color, marginBottom: 3, fontFamily: sansStack }}>
+                      {col.title}
+                    </div>
+                    <div style={{ fontSize: 12, color: `${col.color}aa`, lineHeight: 1.4, marginBottom: 10 }}>
+                      {col.subtitle}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{
+                        flex: 1, height: 4, borderRadius: 2,
+                        background: `${col.color}18`,
+                        overflow: "hidden",
+                      }}>
+                        <div style={{
+                          width: `${pct}%`, height: "100%", borderRadius: 2,
+                          background: col.color,
+                          transition: "width 0.3s ease",
+                        }} />
+                      </div>
+                      <span style={{ fontSize: 11, color: `${col.color}88`, fontWeight: 600, whiteSpace: "nowrap" }}>
+                        {playedCount}/{total}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Custom Input */}
           <div style={{ ...S.card, marginBottom: 28 }}>
             <h3 style={{ ...S.h3, marginBottom: 6 }}>🔍 Analyze Any Figure</h3>
@@ -7361,6 +7529,119 @@ Be historically precise. The inevitability score should reflect genuine counterf
               No figures found. Try a different search or category.
             </div>
           )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // COLLECTION SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "collection" && activeCollection) {
+    const col = activeCollection;
+    const colFigures = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
+    const playedCount = colFigures.filter(f => played.includes(f.id)).length;
+    const total = colFigures.length;
+    const allDone = playedCount === total;
+    const nextUnplayed = colFigures.find(f => !played.includes(f.id));
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={S.inner}>
+          <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "8px 16px", fontSize: 14, marginBottom: 20 }}>
+            ← Back
+          </button>
+
+          {/* Collection header */}
+          <div style={{
+            background: col.bg, borderRadius: 18, padding: "28px 28px 24px",
+            border: `2px solid ${col.border}`, marginBottom: 28,
+            animation: "fadeUp 0.35s ease both",
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 10 }}>{col.emoji}</div>
+            <h2 style={{ ...S.h2, fontSize: 30, color: col.color, marginBottom: 6 }}>{col.title}</h2>
+            <p style={{ fontSize: 15, color: `${col.color}bb`, margin: "0 0 20px", lineHeight: 1.5 }}>
+              {col.subtitle}
+            </p>
+
+            {/* Progress */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ flex: 1, height: 8, borderRadius: 4, background: `${col.color}15`, overflow: "hidden" }}>
+                <div style={{
+                  width: `${total > 0 ? (playedCount / total) * 100 : 0}%`,
+                  height: "100%", borderRadius: 4, background: col.color,
+                  transition: "width 0.5s ease",
+                }} />
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 700, color: col.color }}>
+                {playedCount}/{total}
+              </span>
+            </div>
+
+            {allDone ? (
+              <div style={{
+                padding: "12px 16px", background: `${col.color}12`,
+                borderRadius: 10, textAlign: "center",
+                fontSize: 14, fontWeight: 600, color: col.color,
+              }}>
+                🏆 Collection complete!
+              </div>
+            ) : (
+              <button
+                onClick={() => { if (nextUnplayed) selectSubject(nextUnplayed); }}
+                style={{
+                  ...S.btn, width: "100%", padding: "14px",
+                  fontSize: 15, fontWeight: 700,
+                  background: col.color, color: "#fff", border: "none",
+                }}
+              >
+                ▶ Play Next in Collection
+              </button>
+            )}
+          </div>
+
+          {/* Figures grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+            {colFigures.map((s, idx) => {
+              const cat = CATS[s.cat] || { label: s.cat, color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+              const wasPlayed = played.includes(s.id);
+              const diff = getDifficultyLabel(s.r);
+
+              return (
+                <div
+                  key={s.id}
+                  onClick={() => selectSubject(s)}
+                  style={{
+                    ...S.card, marginBottom: 0, padding: 20, cursor: "pointer",
+                    opacity: wasPlayed ? 0.55 : 1,
+                    borderLeft: wasPlayed ? `3px solid ${col.color}` : `3px solid ${col.border}`,
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = col.color; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <span style={{
+                        fontSize: 10, fontWeight: 800, color: col.color,
+                        background: `${col.color}10`, padding: "2px 8px", borderRadius: 6,
+                      }}>#{idx + 1}</span>
+                      <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: diff.color,
+                        background: `${diff.color}12`, padding: "2px 7px", borderRadius: 6,
+                      }}>{diff.label}</span>
+                    </div>
+                    {wasPlayed && <span style={{ fontSize: 11, color: col.color, fontWeight: 600 }}>✓</span>}
+                  </div>
+                  <h3 style={{ ...S.h3, fontSize: 17, marginBottom: 3 }}>{s.name}</h3>
+                  <p style={{ ...S.muted, fontSize: 13, marginBottom: 2 }}>{s.field}</p>
+                  <p style={{ fontSize: 12, color: "#b0ada5" }}>{formatLifespan(s.born, s.died)}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
