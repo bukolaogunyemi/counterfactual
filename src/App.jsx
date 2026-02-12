@@ -1,6 +1,120 @@
 import { useState, useEffect, useRef } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SOUND & HAPTICS ENGINE — Web Audio API, no external files
+// ─────────────────────────────────────────────────────────────────────────────
+const SFX_KEY = "counterfactual_sfx";
+const SFX = (() => {
+  let ctx = null;
+  let enabled = true;
+  try { enabled = localStorage.getItem(SFX_KEY) !== "off"; } catch(e) {}
+
+  const getCtx = () => {
+    if (!ctx || ctx.state === "closed") {
+      try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; }
+    }
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+    return ctx;
+  };
+
+  const tone = (freq, duration, vol = 0.12, type = "sine", delay = 0) => {
+    if (!enabled) return;
+    const c = getCtx(); if (!c) return;
+    const t = c.currentTime + delay;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    gain.gain.setValueAtTime(vol, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+    osc.connect(gain); gain.connect(c.destination);
+    osc.start(t); osc.stop(t + duration);
+  };
+
+  // Haptic helper — safe on all platforms
+  const vibrate = (pattern) => {
+    if (!enabled) return;
+    try { navigator?.vibrate?.(pattern); } catch(e) {}
+  };
+
+  return {
+    isEnabled: () => enabled,
+    toggle: () => { enabled = !enabled; try { localStorage.setItem(SFX_KEY, enabled ? "on" : "off"); } catch(e) {} return enabled; },
+    setEnabled: (v) => { enabled = v; try { localStorage.setItem(SFX_KEY, v ? "on" : "off"); } catch(e) {} },
+
+    // Slider tick — very short, very quiet
+    tick: (() => {
+      let last = 0;
+      return (val) => {
+        const now = Date.now();
+        if (now - last < 60) return; // throttle to ~16/sec max
+        last = now;
+        tone(800 + val * 4, 0.03, 0.04, "sine");
+        vibrate(5);
+      };
+    })(),
+
+    // Lock in prediction
+    lock: () => {
+      tone(440, 0.08, 0.15, "sine");
+      tone(660, 0.12, 0.15, "sine", 0.06);
+      vibrate(30);
+    },
+
+    // Interlude building tension — step 0-4
+    interludeStep: (step) => {
+      const freqs = [260, 330, 390, 440, 520];
+      const f = freqs[Math.min(step, 4)];
+      tone(f, 0.25, 0.06 + step * 0.02, "triangle");
+      vibrate(15);
+    },
+
+    // Result reveal — score-dependent
+    reveal: (pts) => {
+      if (pts >= 64) {
+        // Bright ascending chord
+        tone(523, 0.3, 0.12, "sine");
+        tone(659, 0.3, 0.10, "sine", 0.05);
+        tone(784, 0.4, 0.10, "sine", 0.10);
+        vibrate([30, 30, 50]);
+      } else if (pts >= 36) {
+        // Neutral two-tone
+        tone(440, 0.2, 0.10, "sine");
+        tone(523, 0.25, 0.08, "sine", 0.08);
+        vibrate(20);
+      } else {
+        // Soft descending
+        tone(350, 0.2, 0.08, "sine");
+        tone(280, 0.25, 0.06, "sine", 0.1);
+        vibrate(15);
+      }
+    },
+
+    // Streak milestone celebration
+    milestone: () => {
+      [523, 659, 784, 1047].forEach((f, i) => {
+        tone(f, 0.25, 0.12, "sine", i * 0.08);
+      });
+      vibrate([40, 40, 40, 40, 80]);
+    },
+
+    // Achievement unlocked
+    achievement: () => {
+      tone(660, 0.15, 0.10, "sine");
+      tone(880, 0.20, 0.12, "sine", 0.08);
+      tone(1100, 0.30, 0.10, "sine", 0.16);
+      vibrate([30, 50, 30]);
+    },
+
+    // Button click — subtle
+    click: () => {
+      tone(600, 0.04, 0.06, "sine");
+      vibrate(8);
+    },
+  };
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
 // CATEGORIES
 // ─────────────────────────────────────────────────────────────────────────────
 const CATS = {
@@ -16,6 +130,12 @@ const CATS = {
   social:{label:"Social Movements",color:"#db2777",bg:"rgba(219,39,119,0.06)"},
   institutions:{label:"Institutions",color:"#0891b2",bg:"rgba(8,145,178,0.06)"},
   inventions:{label:"Inventions",color:"#059669",bg:"rgba(5,150,105,0.06)"},
+};
+
+const CAT_ICONS = {
+  science: "🔬", politics: "🏛️", military: "⚔️", arts: "🎨",
+  philosophy: "📜", medicine: "⚕️", computing: "💻", finance: "💰",
+  exploration: "🧭", social: "✊", institutions: "🏢", inventions: "⚙️",
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -5831,6 +5951,80 @@ const COLLECTIONS = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ACHIEVEMENTS
+// ─────────────────────────────────────────────────────────────────────────────
+const ACHIEVEMENTS = [
+  { id: "first_play", icon: "🌱", title: "First Steps", desc: "Play your first figure", check: (h, p) => p.length >= 1 },
+  { id: "ten_played", icon: "📖", title: "History Student", desc: "Play 10 figures", check: (h, p) => p.length >= 10 },
+  { id: "fifty_played", icon: "📚", title: "Well Read", desc: "Play 50 figures", check: (h, p) => p.length >= 50 },
+  { id: "century", icon: "💯", title: "Century Club", desc: "Play 100 figures", check: (h, p) => p.length >= 100 },
+  { id: "completionist", icon: "🏆", title: "Completionist", desc: "Play all built-in figures", check: (h, p) => {
+    const builtIn = new Set(ALL_SUBJECTS.map(s => s.id));
+    return p.filter(id => builtIn.has(id)).length >= ALL_SUBJECTS.length;
+  }},
+  { id: "bullseye", icon: "🎯", title: "Bullseye", desc: "Guess within 3% of actual", check: (h) => h.some(g => g.diff <= 3) },
+  { id: "sharpshooter", icon: "🔫", title: "Sharpshooter", desc: "5 games within 5% accuracy", check: (h) => h.filter(g => g.diff <= 5).length >= 5 },
+  { id: "sniper", icon: "🎖️", title: "Sniper", desc: "10 games within 3% accuracy", check: (h) => h.filter(g => g.diff <= 3).length >= 10 },
+  { id: "perfect", icon: "💎", title: "Perfection", desc: "Score 100 points on a figure", check: (h) => h.some(g => g.pts === 100) },
+  { id: "high_roller", icon: "🔥", title: "High Roller", desc: "Score 80+ five times", check: (h) => h.filter(g => g.pts >= 80).length >= 5 },
+  { id: "all_cats", icon: "🌍", title: "Renaissance Mind", desc: "Play a figure in every category", check: (h, p) => {
+    const catSet = new Set(ALL_SUBJECTS.filter(s => p.includes(s.id)).map(s => s.cat));
+    return catSet.size >= Object.keys(CATS).length;
+  }},
+  { id: "hard_nail", icon: "🧊", title: "Hard Mode Hero", desc: "Score 70+ on a Hard figure", check: (h) => {
+    return h.some(g => {
+      const fig = ALL_SUBJECTS.find(s => s.id === g.id);
+      return fig && getDifficulty(fig.r) >= 0.25 && g.pts >= 70;
+    });
+  }},
+  { id: "streak5", icon: "⚡", title: "Hot Streak", desc: "5-game accuracy streak", check: (h) => {
+    let run = 0, max = 0;
+    h.forEach(g => { run = g.diff <= 15 ? run + 1 : 0; max = Math.max(max, run); });
+    return max >= 5;
+  }},
+  { id: "streak10", icon: "🔥", title: "Unstoppable", desc: "10-game accuracy streak", check: (h) => {
+    let run = 0, max = 0;
+    h.forEach(g => { run = g.diff <= 15 ? run + 1 : 0; max = Math.max(max, run); });
+    return max >= 10;
+  }},
+  { id: "collection_done", icon: "📦", title: "Collector", desc: "Complete any themed collection", check: (h, p) => {
+    return COLLECTIONS.some(col => {
+      const figs = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
+      return figs.length > 0 && figs.every(f => p.includes(f.id));
+    });
+  }},
+  { id: "three_collections", icon: "🗂️", title: "Curator", desc: "Complete 3 themed collections", check: (h, p) => {
+    const done = COLLECTIONS.filter(col => {
+      const figs = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
+      return figs.length > 0 && figs.every(f => p.includes(f.id));
+    });
+    return done.length >= 3;
+  }},
+  { id: "daily_7", icon: "📅", title: "Weekly Warrior", desc: "7-day daily challenge streak", check: (h, p, ds) => (ds?.dailyStreak || 0) >= 7 },
+];
+
+const ERAS = [
+  { id: "dawn", label: "Dawn of Civilization", range: "Prehistory – 500 BCE", min: -Infinity, max: -500, color: "#92400e", bg: "#fefce8", icon: "🔥" },
+  { id: "classical", label: "Classical World", range: "500 BCE – 500 CE", min: -500, max: 500, color: "#7c2d12", bg: "#fff7ed", icon: "🏛️" },
+  { id: "medieval", label: "Medieval Era", range: "500 – 1400", min: 500, max: 1400, color: "#6d28d9", bg: "#faf5ff", icon: "⚔️" },
+  { id: "renaissance", label: "Renaissance & Reform", range: "1400 – 1600", min: 1400, max: 1600, color: "#0d9488", bg: "#f0fdfa", icon: "🎨" },
+  { id: "reason", label: "Age of Reason", range: "1600 – 1800", min: 1600, max: 1800, color: "#1d4ed8", bg: "#eff6ff", icon: "🔭" },
+  { id: "industrial", label: "Industrial Age", range: "1800 – 1900", min: 1800, max: 1900, color: "#b45309", bg: "#fffbeb", icon: "⚙️" },
+  { id: "earlymodern", label: "Early Modern", range: "1900 – 1950", min: 1900, max: 1950, color: "#dc2626", bg: "#fef2f2", icon: "✈️" },
+  { id: "postwar", label: "Postwar & Digital", range: "1950 – Present", min: 1950, max: Infinity, color: "#4f46e5", bg: "#eef2ff", icon: "💻" },
+];
+
+// Streak milestones — bonus points awarded when crossing each threshold
+const STREAK_MILESTONES = [
+  { at: 3, bonus: 10, emoji: "⚡", label: "Getting warm" },
+  { at: 5, bonus: 25, emoji: "🔥", label: "On fire" },
+  { at: 7, bonus: 40, emoji: "💥", label: "Unstoppable" },
+  { at: 10, bonus: 60, emoji: "⭐", label: "Legendary run" },
+  { at: 15, bonus: 80, emoji: "👑", label: "Historian" },
+  { at: 20, bonus: 100, emoji: "🏛️", label: "Oracle streak" },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
 // UTILITY FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 const getScoreLabel = (score) => {
@@ -6085,9 +6279,112 @@ const getConnectionLabel = (current, other) => {
   return "Related";
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SMART RECOMMENDATIONS — personalized suggestions from play history
+// ─────────────────────────────────────────────────────────────────────────────
+const getRecommendations = (playedIds, history, allSubjects) => {
+  if (!history || history.length < 3) return [];
+  const recs = [];
+  const unplayed = allSubjects.filter(s => !playedIds.includes(s.id));
+  if (unplayed.length === 0) return [];
+
+  // Seeded shuffle for stability within a session (changes daily)
+  const daySeed = Math.floor(Date.now() / 86400000);
+  const seededShuffle = (arr) => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = ((daySeed * 31 + i * 17) >>> 0) % (i + 1);
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  // 1. "Because you played X" — connected figure from most recent game
+  const recentEntry = history[history.length - 1];
+  const recentFig = allSubjects.find(s => s.id === recentEntry?.id || s.name === recentEntry?.name);
+  if (recentFig) {
+    const connected = getConnectedFigures(recentFig, playedIds, 6)
+      .filter(f => !playedIds.includes(f.id));
+    if (connected.length > 0) {
+      const pick = connected[0];
+      const label = getConnectionLabel(recentFig, pick);
+      recs.push({
+        type: "connected",
+        label: `Because you played ${recentFig.name}`,
+        sublabel: label.toLowerCase(),
+        figure: pick,
+      });
+    }
+  }
+
+  // 2. "Weak spot" — category with lowest avg score (min 2 games in that cat)
+  const catStats = {};
+  history.forEach(g => {
+    if (!catStats[g.cat]) catStats[g.cat] = { total: 0, count: 0 };
+    catStats[g.cat].total += g.pts;
+    catStats[g.cat].count++;
+  });
+  const weakCats = Object.entries(catStats)
+    .filter(([, s]) => s.count >= 2)
+    .map(([cat, s]) => ({ cat, avg: s.total / s.count, count: s.count }))
+    .sort((a, b) => a.avg - b.avg);
+
+  if (weakCats.length > 0) {
+    const weakCat = weakCats[0];
+    const catUnplayed = seededShuffle(unplayed.filter(s => s.cat === weakCat.cat));
+    // Prefer medium difficulty for weak categories
+    const medium = catUnplayed.filter(s => getDifficulty(s.r) < 0.25);
+    const pick = medium[0] || catUnplayed[0];
+    if (pick && (!recs[0] || recs[0].figure.id !== pick.id)) {
+      const catLabel = CATS[weakCat.cat]?.label || weakCat.cat;
+      recs.push({
+        type: "weak",
+        label: `Sharpen your weak spot`,
+        sublabel: `${catLabel} — avg ${Math.round(weakCat.avg)} pts`,
+        figure: pick,
+      });
+    }
+  }
+
+  // 3. "Step up" — harder difficulty if recent accuracy is good
+  const recent10 = history.slice(-10);
+  const recentAvg = recent10.reduce((s, g) => s + g.pts, 0) / recent10.length;
+  if (recentAvg >= 55) {
+    const hardUnplayed = seededShuffle(
+      unplayed.filter(s => getDifficulty(s.r) >= 0.25 && !recs.some(r => r.figure.id === s.id))
+    );
+    const pick = hardUnplayed[0];
+    if (pick) {
+      recs.push({
+        type: "challenge",
+        label: "Step up the difficulty",
+        sublabel: `You're averaging ${Math.round(recentAvg)} pts lately`,
+        figure: pick,
+      });
+    }
+  } else if (recent10.length >= 5 && recentAvg < 40) {
+    // Struggling — suggest an easier one
+    const easyUnplayed = seededShuffle(
+      unplayed.filter(s => getDifficulty(s.r) < 0.10 && !recs.some(r => r.figure.id === s.id))
+    );
+    const pick = easyUnplayed[0];
+    if (pick) {
+      recs.push({
+        type: "comfort",
+        label: "Build some momentum",
+        sublabel: "Try an easier read to find your rhythm",
+        figure: pick,
+      });
+    }
+  }
+
+  return recs;
+};
+
 // Local storage
 const STORAGE_KEY = "counterfactual_progress";
 const CUSTOM_CACHE_KEY = "counterfactual_custom_cache";
+const HISTORY_KEY = "counterfactual_history";
 const saveProgress = (data) => {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
 };
@@ -6096,6 +6393,15 @@ const loadProgress = () => {
     const d = localStorage.getItem(STORAGE_KEY);
     return d ? JSON.parse(d) : null;
   } catch(e) { return null; }
+};
+const saveHistory = (data) => {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(data)); } catch(e) {}
+};
+const loadHistory = () => {
+  try {
+    const d = localStorage.getItem(HISTORY_KEY);
+    return d ? JSON.parse(d) : [];
+  } catch(e) { return []; }
 };
 const saveCustomCache = (data) => {
   try { localStorage.setItem(CUSTOM_CACHE_KEY, JSON.stringify(data)); } catch(e) {}
@@ -6446,14 +6752,24 @@ export default function App() {
   const [interludeStep, setInterludeStep] = useState(0);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
+  const [streakMilestone, setStreakMilestone] = useState(null);
+  const [sfxEnabled, setSfxEnabled] = useState(SFX.isEnabled());
+  const [newAchievement, setNewAchievement] = useState(null);
+  const prevEarnedRef = useRef(new Set());
   const [lastPts, setLastPts] = useState(0);
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
+  const [onboardStep, setOnboardStep] = useState(0);
+  const [onboardPred, setOnboardPred] = useState(50);
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
   const [dailyState, setDailyState] = useState(null);
   const [isDaily, setIsDaily] = useState(false);
   const [dailyCountdown, setDailyCountdown] = useState("");
   const [activeCollection, setActiveCollection] = useState(null);
+  const [h2hMode, setH2hMode] = useState(null); // { figures, currentIndex, myPredictions, myPoints, opponent? }
+  const [gameHistory, setGameHistory] = useState([]);
+  const [activeEra, setActiveEra] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(null);
 
   const showToast = (msg, duration = 2500) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -6483,6 +6799,9 @@ export default function App() {
     });
     if (Object.keys(cleaned).length !== Object.keys(cached).length) saveCustomCache(cleaned);
     setCustomCache(cleaned);
+
+    // Load game history
+    setGameHistory(loadHistory());
 
     // Load daily challenge state
     const savedDaily = loadDailyState();
@@ -6517,6 +6836,31 @@ export default function App() {
           setSubject(subj);
           setScreen("predict");
         }
+      } catch(e) {}
+    }
+
+    // Head-to-head challenge link
+    const h2hParam = params.get("h2h");
+    if (h2hParam) {
+      try {
+        const decoded = JSON.parse(atob(h2hParam));
+        if (decoded.figs && decoded.figs.length > 0) {
+          const figObjects = decoded.figs.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
+          if (figObjects.length === decoded.figs.length) {
+            setH2hMode({
+              figures: figObjects,
+              currentIndex: 0,
+              myPredictions: [],
+              myPoints: [],
+              opponentName: decoded.name || "Challenger",
+              opponentPredictions: decoded.preds || [],
+              opponentPoints: decoded.pts || [],
+            });
+            setScreen("h2h_lobby");
+          }
+        }
+        // Clean URL
+        window.history.replaceState({}, "", window.location.pathname);
       } catch(e) {}
     }
   }, []);
@@ -6554,40 +6898,48 @@ export default function App() {
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const startRandom = () => {
+    SFX.click();
     const unplayed = ALL_SUBJECTS.filter(s => !played.includes(s.id));
     if (unplayed.length === 0) {
       showToast("🔄 All subjects played! Resetting for another round...");
       setPlayed([]);
       setScore(0);
       setStreak(0);
-      // bestStreak persists — it's a lifetime achievement
       return;
     }
-    // Bucket by difficulty, then weighted random across buckets
-    // This ensures players see a mix — not all easy figures first
-    const hard = unplayed.filter(s => getDifficulty(s.r) >= 0.30);   // extreme scores
+    // Difficulty progression: weights shift as player gains experience
+    const n = played.length;
+    const hard = unplayed.filter(s => getDifficulty(s.r) >= 0.30);
     const medium = unplayed.filter(s => { const d = getDifficulty(s.r); return d >= 0.15 && d < 0.30; });
     const easy = unplayed.filter(s => getDifficulty(s.r) < 0.15);
-    // Weighted pick: 40% hard, 35% medium, 25% easy (biases toward more interesting figures)
+    // Early games lean easy; experienced players see harder figures
+    let wHard, wMed;
+    if (n < 5) { wHard = 0.10; wMed = 0.30; }       // 60% easy
+    else if (n < 15) { wHard = 0.25; wMed = 0.40; }  // 35% easy
+    else if (n < 30) { wHard = 0.35; wMed = 0.35; }  // 30% easy
+    else { wHard = 0.45; wMed = 0.35; }               // 20% easy — full mix
     const roll = Math.random();
     let pool;
-    if (roll < 0.40 && hard.length > 0) pool = hard;
-    else if (roll < 0.75 && medium.length > 0) pool = medium;
+    if (roll < wHard && hard.length > 0) pool = hard;
+    else if (roll < wHard + wMed && medium.length > 0) pool = medium;
     else if (easy.length > 0) pool = easy;
-    else pool = unplayed; // fallback if a bucket is empty
+    else pool = unplayed;
     const pick = pool[Math.floor(Math.random() * pool.length)];
     setSubject(pick);
     setPrediction(0.5);
     setRevealed(false);
+    setStreakMilestone(null);
     setScreen("predict");
     scrollTop();
   };
 
   const selectSubject = (s) => {
+    SFX.click();
     setSubject(s);
     setPrediction(0.5);
     setRevealed(false);
     setIsDaily(false);
+    setStreakMilestone(null);
     setScreen("predict");
     scrollTop();
   };
@@ -6599,11 +6951,13 @@ export default function App() {
     setPrediction(0.5);
     setRevealed(false);
     setIsDaily(true);
+    setStreakMilestone(null);
     setScreen("predict");
     scrollTop();
   };
 
   const submitPrediction = () => {
+    SFX.lock();
     setRevealed(true);
     const r = subject.r ?? subject._r;
     const diff = Math.abs(prediction - r);
@@ -6612,6 +6966,7 @@ export default function App() {
 
     // Only award points and track on first play
     if (!isReplay) {
+      let bonusPts = 0;
       setScore(prev => prev + pts);
       setPlayed(prev => [...prev, subject.id]);
       // Streak: within 15% counts as "good"
@@ -6619,10 +6974,21 @@ export default function App() {
         setStreak(prev => {
           const next = prev + 1;
           setBestStreak(best => Math.max(best, next));
+          // Check if we just crossed a milestone
+          const milestone = STREAK_MILESTONES.find(m => m.at === next);
+          if (milestone) {
+            setStreakMilestone(milestone);
+            bonusPts = milestone.bonus;
+            setScore(s => s + bonusPts);
+            setTimeout(() => SFX.milestone(), 300);
+          } else {
+            setStreakMilestone(null);
+          }
           return next;
         });
       } else {
         setStreak(0);
+        setStreakMilestone(null);
       }
     }
 
@@ -6644,11 +7010,66 @@ export default function App() {
       saveDailyState(newDailyState);
     }
 
+    // Record H2H result
+    if (h2hMode) {
+      setH2hMode(prev => ({
+        ...prev,
+        myPredictions: [...prev.myPredictions, Math.round(prediction * 100)],
+        myPoints: [...prev.myPoints, pts],
+      }));
+    }
+
+    // Record game history
+    if (!isReplay) {
+      const entry = {
+        id: subject.id || subject.name,
+        name: subject.name,
+        cat: subject.cat,
+        r: Math.round(r * 100),
+        pred: Math.round(prediction * 100),
+        pts,
+        diff: Math.round(diff * 100),
+        ts: Date.now(),
+      };
+      setGameHistory(prev => {
+        const updated = [...prev, entry];
+        saveHistory(updated);
+        return updated;
+      });
+    }
+
     setLastPts(isReplay ? 0 : pts);
     setInterludeStep(0);
     setScreen("interlude");
     scrollTop();
   };
+
+  // Detect newly earned achievements after each game
+  useEffect(() => {
+    if (played.length === 0) return;
+    const currentEarned = new Set(
+      ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).map(a => a.id)
+    );
+    const prev = prevEarnedRef.current;
+    // Find achievements that are new since last check
+    const fresh = ACHIEVEMENTS.filter(a => currentEarned.has(a.id) && !prev.has(a.id));
+    if (fresh.length > 0) {
+      // Show the most recent one (last in the list = harder = more impressive)
+      const show = fresh[fresh.length - 1];
+      setNewAchievement(show);
+      SFX.achievement();
+      showToast(`🏅 Achievement: ${show.title} — ${show.desc}`);
+      setTimeout(() => setNewAchievement(null), 5000);
+    }
+    prevEarnedRef.current = currentEarned;
+  }, [played.length, gameHistory.length]);
+
+  // Initialize prevEarnedRef on mount
+  useEffect(() => {
+    prevEarnedRef.current = new Set(
+      ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).map(a => a.id)
+    );
+  }, []);
 
   // Interlude timer — cycle through steps, then reveal
   useEffect(() => {
@@ -6659,15 +7080,17 @@ export default function App() {
       setInterludeStep(prev => {
         if (prev >= totalSteps) {
           clearInterval(timer);
+          SFX.reveal(lastPts);
           setScreen("result");
           scrollTop();
           return prev;
         }
+        SFX.interludeStep(prev);
         return prev + 1;
       });
     }, stepDuration);
     return () => clearInterval(timer);
-  }, [screen]);
+  }, [screen, lastPts]);
 
   const handleCustomSubmit = async () => {
     if (!customName.trim()) return;
@@ -6820,7 +7243,106 @@ Be historically precise. The inevitability score should reflect genuine counterf
     setChallengeData(null);
     setIsDaily(false);
     setActiveCollection(null);
+    setActiveEra(null);
+    setActiveCategory(null);
+    setSearchQuery("");
+    setH2hMode(null);
     scrollTop();
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // HEAD-TO-HEAD FUNCTIONS
+  // ─────────────────────────────────────────────────────────────────────────
+  const startH2H = () => {
+    const unplayed = ALL_SUBJECTS.filter(s => !played.includes(s.id) && !s._isCustom);
+    const pool = unplayed.length >= 5 ? unplayed : ALL_SUBJECTS.filter(s => !s._isCustom);
+    // Pick 5 figures with varied difficulty
+    const shuffled = [...pool].sort(() => Math.random() - 0.5);
+    const hard = shuffled.filter(s => getDifficulty(s.r) >= 0.25);
+    const med = shuffled.filter(s => { const d = getDifficulty(s.r); return d >= 0.10 && d < 0.25; });
+    const easy = shuffled.filter(s => getDifficulty(s.r) < 0.10);
+    const picks = [];
+    if (hard.length > 0) picks.push(hard[0]);
+    if (easy.length > 0) picks.push(easy[0]);
+    // Fill remaining from shuffled pool, avoiding duplicates
+    for (const s of shuffled) {
+      if (picks.length >= 5) break;
+      if (!picks.find(p => p.id === s.id)) picks.push(s);
+    }
+
+    setH2hMode({
+      figures: picks.slice(0, 5),
+      currentIndex: 0,
+      myPredictions: [],
+      myPoints: [],
+      opponentName: null,
+      opponentPredictions: null,
+      opponentPoints: null,
+    });
+    const first = picks[0];
+    setSubject(first);
+    setPrediction(0.5);
+    setRevealed(false);
+    setStreakMilestone(null);
+    setScreen("predict");
+    scrollTop();
+  };
+
+  const h2hAdvance = () => {
+    if (!h2hMode) return;
+    const nextIdx = h2hMode.currentIndex + 1;
+    if (nextIdx >= h2hMode.figures.length) {
+      // All done — show summary
+      setScreen("h2h_summary");
+      scrollTop();
+      return;
+    }
+    setH2hMode(prev => ({ ...prev, currentIndex: nextIdx }));
+    const nextFig = h2hMode.figures[nextIdx];
+    setSubject(nextFig);
+    setPrediction(0.5);
+    setRevealed(false);
+    setStreakMilestone(null);
+    setScreen("predict");
+    scrollTop();
+  };
+
+  const generateH2HLink = () => {
+    if (!h2hMode) return "";
+    const data = {
+      figs: h2hMode.figures.map(f => f.id),
+      name: "A challenger",
+      preds: h2hMode.myPredictions,
+      pts: h2hMode.myPoints,
+    };
+    return `${window.location.origin}?h2h=${btoa(JSON.stringify(data))}`;
+  };
+
+  const shareH2H = async () => {
+    const myTotal = h2hMode.myPoints.reduce((a, b) => a + b, 0);
+    const hasOpponent = h2hMode.opponentPoints && h2hMode.opponentPoints.length > 0;
+    let text;
+
+    if (hasOpponent) {
+      const oppTotal = h2hMode.opponentPoints.reduce((a, b) => a + b, 0);
+      const won = myTotal > oppTotal;
+      const tied = myTotal === oppTotal;
+      text = `⚔️ Counterfactual Head-to-Head\n\n${won ? "Victory!" : tied ? "Tied!" : "Defeated!"} ${myTotal} vs ${oppTotal} against ${h2hMode.opponentName}.\n\nhttps://counterfactual.app`;
+    } else {
+      const url = generateH2HLink();
+      text = `⚔️ Counterfactual Head-to-Head\n\nI scored ${myTotal} points across 5 figures. Think you can beat me?\n\n${url}`;
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Counterfactual Head-to-Head Challenge", text });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        showToast("⚔️ Challenge link copied!");
+      }
+    } catch(e) {
+      try { await navigator.clipboard.writeText(text); showToast("⚔️ Copied!"); } catch(e2) {}
+    }
   };
 
   // Generate a visual share card using Canvas API
@@ -7019,6 +7541,169 @@ Be historically precise. The inevitability score should reflect genuine counterf
     return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
   };
 
+  // Generate a profile/achievement share card
+  const generateMilestoneCard = async (opts = {}) => {
+    const { achievement, isRankUp, isProfile } = opts;
+    const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
+    const rank = getRank(avgPts, played.length);
+    const earnedCount = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).length;
+
+    const W = 1080, H = 1080;
+    const canvas = document.createElement("canvas");
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    // Background
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, "#1a1a18"); bg.addColorStop(0.5, "#222220"); bg.addColorStop(1, "#1a1a18");
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    // Grid
+    ctx.strokeStyle = "rgba(255,255,255,0.025)"; ctx.lineWidth = 1;
+    for (let i = 0; i < W; i += 60) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
+    }
+
+    // Accent lines
+    const topLine = ctx.createLinearGradient(0, 0, W, 0);
+    topLine.addColorStop(0, "#f59e0b"); topLine.addColorStop(1, "#16a34a");
+    ctx.fillStyle = topLine; ctx.fillRect(0, 0, W, 6);
+    ctx.fillRect(0, H - 6, W, 6);
+
+    const cText = (text, y, font, color) => {
+      ctx.font = font; ctx.fillStyle = color; ctx.textAlign = "center";
+      ctx.fillText(text, W / 2, y);
+    };
+
+    // Title
+    cText("Counterfactual", 80, "italic 38px Georgia, serif", "rgba(255,255,255,0.4)");
+
+    if (achievement) {
+      // Achievement unlocked card
+      cText("🏅 Achievement Unlocked", 160, "bold 28px 'Helvetica Neue', sans-serif", "#f59e0b");
+
+      // Achievement icon — large
+      cText(achievement.icon, 300, "120px serif", "#ffffff");
+
+      // Achievement title
+      cText(achievement.title, 410, "bold 52px 'Helvetica Neue', sans-serif", "#ffffff");
+
+      // Description
+      cText(achievement.desc, 470, "28px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.6)");
+
+      // Stats row
+      const statsY = 580;
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      ctx.beginPath(); ctx.roundRect(140, statsY - 40, W - 280, 120, 16); ctx.fill();
+
+      const cols = [{ v: `${played.length}`, l: "Figures" }, { v: `${avgPts}`, l: "Avg Pts" }, { v: `${earnedCount}/${ACHIEVEMENTS.length}`, l: "Badges" }];
+      cols.forEach((c, i) => {
+        const x = 240 + i * 240;
+        cText(c.v, statsY + 15, "bold 36px 'Helvetica Neue', sans-serif", "#ffffff");
+        cText(c.l, statsY + 50, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)");
+        // Reposition per column
+        ctx.textAlign = "center";
+        ctx.font = "bold 36px 'Helvetica Neue', sans-serif"; ctx.fillStyle = "#ffffff";
+        ctx.fillText(c.v, x, statsY + 15);
+        ctx.font = "18px 'Helvetica Neue', sans-serif"; ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText(c.l, x, statsY + 50);
+      });
+
+      // Rank
+      cText(`${rank.icon} ${rank.title}`, 780, "bold 34px 'Helvetica Neue', sans-serif", rank.color);
+
+    } else {
+      // Profile / rank card
+      const label = isRankUp ? "🎖️ Rank Up!" : "📊 Player Profile";
+      cText(label, 160, "bold 28px 'Helvetica Neue', sans-serif", isRankUp ? "#f59e0b" : "rgba(255,255,255,0.5)");
+
+      // Rank icon
+      cText(rank.icon, 310, "120px serif", "#ffffff");
+      cText(rank.title, 420, "bold 56px 'Helvetica Neue', sans-serif", rank.color);
+
+      // Stats grid
+      const statsY = 530;
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      ctx.beginPath(); ctx.roundRect(100, statsY - 40, W - 200, 130, 16); ctx.fill();
+
+      const cols2 = [
+        { v: `${played.length}`, l: "Played" },
+        { v: `${avgPts}`, l: "Avg Pts" },
+        { v: `${bestStreak}`, l: "Best Streak" },
+        { v: `${earnedCount}`, l: "Badges" },
+      ];
+      cols2.forEach((c, i) => {
+        const x = 200 + i * 190;
+        ctx.textAlign = "center";
+        ctx.font = "bold 34px 'Helvetica Neue', sans-serif"; ctx.fillStyle = "#ffffff";
+        ctx.fillText(c.v, x, statsY + 20);
+        ctx.font = "17px 'Helvetica Neue', sans-serif"; ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText(c.l, x, statsY + 55);
+      });
+
+      // Achievement showcase — top 3 earned
+      const topEarned = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).slice(-3);
+      if (topEarned.length > 0) {
+        const achY = 730;
+        cText("Recent Achievements", achY - 20, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.35)");
+        topEarned.forEach((a, i) => {
+          const x = W / 2 + (i - 1) * 180;
+          ctx.textAlign = "center";
+          ctx.font = "48px serif"; ctx.fillStyle = "#ffffff";
+          ctx.fillText(a.icon, x, achY + 40);
+          ctx.font = "16px 'Helvetica Neue', sans-serif"; ctx.fillStyle = "rgba(255,255,255,0.5)";
+          ctx.fillText(a.title, x, achY + 70);
+        });
+      }
+    }
+
+    // URL
+    cText("counterfactual.app", H - 36, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.3)");
+
+    return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+  };
+
+  // Share achievement or profile
+  const shareMilestone = async (opts = {}) => {
+    const { achievement, isRankUp } = opts;
+    const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
+    const rank = getRank(avgPts, played.length);
+    const earnedCount = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).length;
+
+    let text;
+    if (achievement) {
+      text = `🏅 Achievement Unlocked: ${achievement.title}\n${achievement.icon} ${achievement.desc}\n\n${rank.icon} ${rank.title} · ${played.length} figures · ${earnedCount}/${ACHIEVEMENTS.length} badges\n\nhttps://counterfactual.app`;
+    } else if (isRankUp) {
+      text = `🎖️ Ranked up to ${rank.icon} ${rank.title}!\n\n${played.length} figures played · ${avgPts} avg pts · ${earnedCount} badges\n\nhttps://counterfactual.app`;
+    } else {
+      text = `📊 My Counterfactual Profile\n\n${rank.icon} ${rank.title} · ${played.length} figures · ${avgPts} avg pts\n🔥 Best streak: ${bestStreak} · 🏅 ${earnedCount}/${ACHIEVEMENTS.length} badges\n\nhttps://counterfactual.app`;
+    }
+
+    try {
+      const blob = await generateMilestoneCard(opts);
+      const file = new File([blob], "counterfactual-milestone.png", { type: "image/png" });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ text, files: [file] });
+        return;
+      }
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "counterfactual-milestone.png"; a.click();
+      URL.revokeObjectURL(url);
+      navigator.clipboard?.writeText(text);
+      showToast("📋 Card downloaded + text copied");
+    } catch (e) {
+      if (navigator.share) {
+        try { await navigator.share({ text, url: "https://counterfactual.app" }); return; } catch(e2) {}
+      }
+      navigator.clipboard?.writeText(text);
+      showToast("📋 Copied to clipboard");
+    }
+  };
+
   const shareResult = async () => {
     const r = subject.r ?? subject._r;
     const diff = Math.abs(prediction - r);
@@ -7139,18 +7824,332 @@ Be historically precise. The inevitability score should reflect genuine counterf
   );
 
   // ─────────────────────────────────────────────────────────────────────────
+  // GUIDED ONBOARDING
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "home" && !hasSeenIntro && played.length === 0) {
+    const tutorialFig = ALL_SUBJECTS.find(s => s.id === "galileo");
+    const tutR = tutorialFig.r;
+    const tutPredNorm = onboardPred / 100;
+    const tutDiff = Math.abs(tutPredNorm - tutR);
+    const tutPts = calculatePoints(tutDiff);
+    const step = onboardStep;
+
+    const accentColor = "#92400e";
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <div style={{ ...S.inner, maxWidth: 520, paddingTop: 40 }}>
+
+          {/* Step 0: Welcome */}
+          {step === 0 && (
+            <div style={{ textAlign: "center", animation: "fadeUp 0.4s ease both" }}>
+              <h1 style={{ ...S.h1, fontSize: 44, marginBottom: 12 }}>
+                <span style={{ fontStyle: "italic" }}>Counterfactual</span>
+              </h1>
+              <p style={{ fontSize: 17, color: "#5a5750", lineHeight: 1.65, maxWidth: 400, margin: "0 auto 36px" }}>
+                History's biggest question, turned into a game: was this person truly irreplaceable, or would someone else have done what they did?
+              </p>
+
+              <div style={{
+                ...S.card, textAlign: "left", padding: "22px 26px", marginBottom: 32,
+                background: "#fffbeb", border: "1px solid #fde68a",
+              }}>
+                <div style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7 }}>
+                  <p style={{ margin: "0 0 12px" }}>
+                    You'll see a historical figure and learn what they did. Then you predict: on a scale of 0–100%, how <strong>inevitable</strong> was their contribution?
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <strong>0%</strong> = only they could've done it.
+                    <strong> 100%</strong> = it was happening no matter what.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setOnboardStep(1)}
+                style={{
+                  ...S.btn, padding: "16px 40px", fontSize: 17, fontWeight: 700,
+                  background: accentColor, color: "#fff", border: "none",
+                }}
+              >
+                Let's try one →
+              </button>
+            </div>
+          )}
+
+          {/* Step 1: Meet the figure */}
+          {step === 1 && (
+            <div style={{ animation: "fadeUp 0.4s ease both" }}>
+              <div style={{
+                fontSize: 11, fontWeight: 700, color: accentColor, letterSpacing: "0.08em",
+                textTransform: "uppercase", marginBottom: 16, textAlign: "center",
+              }}>
+                Step 1 of 3 · Read
+              </div>
+
+              <div style={{ ...S.card, padding: "28px", marginBottom: 20 }}>
+                <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+                  <span style={S.tag(CATS[tutorialFig.cat].color, CATS[tutorialFig.cat].bg)}>
+                    {CATS[tutorialFig.cat].label}
+                  </span>
+                </div>
+                <h2 style={{ ...S.h2, fontSize: 30, marginBottom: 4 }}>{tutorialFig.name}</h2>
+                <p style={{ ...S.muted, fontSize: 14, marginBottom: 16 }}>
+                  {tutorialFig.field} · {formatLifespan(tutorialFig.born, tutorialFig.died)}
+                </p>
+
+                {tutorialFig.quote && (
+                  <blockquote style={{
+                    margin: "0 0 18px", padding: "12px 18px",
+                    borderLeft: `3px solid ${accentColor}30`,
+                    fontStyle: "italic", color: "#7a7770", fontSize: 14, lineHeight: 1.55,
+                  }}>
+                    "{tutorialFig.quote}"
+                  </blockquote>
+                )}
+
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", marginBottom: 8 }}>
+                  Key contributions:
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 4 }}>
+                  {tutorialFig.contributions.map((c, i) => (
+                    <span key={i} style={{
+                      fontSize: 12, padding: "4px 10px", borderRadius: 6,
+                      background: "#f5f4f0", color: "#5a5750",
+                    }}>{c}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{
+                ...S.card, padding: "16px 20px", marginBottom: 24,
+                background: "#f0fdfa", border: "1px solid #ccfbf1",
+              }}>
+                <p style={{ margin: 0, fontSize: 14, color: "#115e59", lineHeight: 1.6 }}>
+                  📖 Now ask yourself: if Galileo had never been born, would someone else have made these same discoveries around the same time? Or did history need exactly him?
+                </p>
+              </div>
+
+              <button
+                onClick={() => setOnboardStep(2)}
+                style={{
+                  ...S.btn, width: "100%", padding: "16px", fontSize: 16, fontWeight: 700,
+                  background: accentColor, color: "#fff", border: "none",
+                }}
+              >
+                I'm ready to predict →
+              </button>
+            </div>
+          )}
+
+          {/* Step 2: Make prediction */}
+          {step === 2 && (
+            <div style={{ animation: "fadeUp 0.4s ease both" }}>
+              <div style={{
+                fontSize: 11, fontWeight: 700, color: accentColor, letterSpacing: "0.08em",
+                textTransform: "uppercase", marginBottom: 16, textAlign: "center",
+              }}>
+                Step 2 of 3 · Predict
+              </div>
+
+              <div style={{ ...S.card, padding: "28px", marginBottom: 20 }}>
+                <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 6, textAlign: "center" }}>
+                  {tutorialFig.name}
+                </h3>
+                <p style={{ fontSize: 13, color: "#9a9890", textAlign: "center", marginBottom: 28 }}>
+                  How inevitable was his contribution?
+                </p>
+
+                {/* Scale labels */}
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, padding: "0 4px" }}>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#b91c1c" }}>0%</div>
+                    <div style={{ fontSize: 10, color: "#9a9890" }}>Only Galileo</div>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#a16207" }}>50%</div>
+                    <div style={{ fontSize: 10, color: "#9a9890" }}>Debatable</div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#15803d" }}>100%</div>
+                    <div style={{ fontSize: 10, color: "#9a9890" }}>Someone else would've</div>
+                  </div>
+                </div>
+
+                {/* Slider */}
+                <input
+                  type="range" min="0" max="100" step="1"
+                  value={onboardPred}
+                  onChange={e => setOnboardPred(parseInt(e.target.value))}
+                  className="prediction-slider"
+                  style={{ width: "100%", marginBottom: 12 }}
+                />
+
+                <div style={{
+                  textAlign: "center", fontSize: 36, fontWeight: 300,
+                  color: "#1a1a1a", fontFamily: fontStack, letterSpacing: "-0.03em",
+                  marginBottom: 8,
+                }}>
+                  {onboardPred}%
+                </div>
+
+                <div style={{
+                  textAlign: "center", fontSize: 13, color: "#9a9890", marginBottom: 4,
+                }}>
+                  {onboardPred < 20 ? "Very singular — only Galileo could've done this"
+                    : onboardPred < 40 ? "Mostly singular — hard to replace"
+                    : onboardPred < 60 ? "Mixed — some parts were inevitable, some weren't"
+                    : onboardPred < 80 ? "Mostly inevitable — others were close"
+                    : "Highly inevitable — history finds another way"}
+                </div>
+              </div>
+
+              <div style={{
+                ...S.card, padding: "14px 18px", marginBottom: 24,
+                background: "#fffbeb", border: "1px solid #fde68a",
+              }}>
+                <p style={{ margin: 0, fontSize: 13, color: "#92400e", lineHeight: 1.5 }}>
+                  💡 There's no trick here — go with your gut. The closer you are to the expert analysis, the more points you score.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setOnboardStep(3)}
+                style={{
+                  ...S.btn, width: "100%", padding: "16px", fontSize: 16, fontWeight: 700,
+                  background: accentColor, color: "#fff", border: "none",
+                }}
+              >
+                Lock it in →
+              </button>
+            </div>
+          )}
+
+          {/* Step 3: Result reveal */}
+          {step === 3 && (
+            <div style={{ animation: "fadeUp 0.4s ease both" }}>
+              <div style={{
+                fontSize: 11, fontWeight: 700, color: accentColor, letterSpacing: "0.08em",
+                textTransform: "uppercase", marginBottom: 16, textAlign: "center",
+              }}>
+                Step 3 of 3 · Result
+              </div>
+
+              <div style={{ ...S.card, padding: "28px", marginBottom: 20, textAlign: "center" }}>
+                <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 20 }}>
+                  {tutorialFig.name}
+                </h3>
+
+                {/* Visual comparison */}
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{
+                    position: "relative", height: 40, background: "#f5f4f0",
+                    borderRadius: 8, overflow: "visible", marginBottom: 12,
+                  }}>
+                    {/* Actual marker */}
+                    <div style={{
+                      position: "absolute", left: `${tutR * 100}%`, top: -6,
+                      transform: "translateX(-50%)", zIndex: 2,
+                    }}>
+                      <div style={{
+                        width: 14, height: 52, borderRadius: 7,
+                        background: accentColor, opacity: 0.9,
+                      }} />
+                      <div style={{
+                        position: "absolute", top: -22, left: "50%", transform: "translateX(-50%)",
+                        fontSize: 11, fontWeight: 800, color: accentColor, whiteSpace: "nowrap",
+                      }}>
+                        Actual: {Math.round(tutR * 100)}%
+                      </div>
+                    </div>
+
+                    {/* Your prediction marker */}
+                    <div style={{
+                      position: "absolute", left: `${onboardPred}%`, top: -2,
+                      transform: "translateX(-50%)", zIndex: 1,
+                    }}>
+                      <div style={{
+                        width: 10, height: 44, borderRadius: 5,
+                        background: "#4f46e5", opacity: 0.7,
+                      }} />
+                      <div style={{
+                        position: "absolute", bottom: -20, left: "50%", transform: "translateX(-50%)",
+                        fontSize: 11, fontWeight: 800, color: "#4f46e5", whiteSpace: "nowrap",
+                      }}>
+                        You: {onboardPred}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Points earned */}
+                <div style={{
+                  fontSize: 56, fontWeight: 300, fontFamily: fontStack,
+                  color: tutPts >= 64 ? "#16a34a" : tutPts >= 36 ? "#ca8a04" : "#dc2626",
+                  letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 4,
+                }}>
+                  +{tutPts}
+                </div>
+                <div style={{ fontSize: 13, color: "#9a9890", marginBottom: 20 }}>
+                  {tutDiff < 0.05 ? "Incredible read!" : tutDiff < 0.15 ? "Solid intuition." : tutDiff < 0.25 ? "Not bad for your first try." : "Tough one — you'll calibrate quickly."}
+                </div>
+
+                {/* Brief reasoning */}
+                <div style={{
+                  textAlign: "left", padding: "16px 18px", borderRadius: 10,
+                  background: "#fafaf9", border: "1px solid #e5e2db",
+                  fontSize: 13, color: "#5a5750", lineHeight: 1.65,
+                }}>
+                  <div style={{ fontWeight: 700, color: "#1a1a1a", marginBottom: 6 }}>Why {Math.round(tutR * 100)}%?</div>
+                  {tutorialFig.reasoning.split('.').slice(0, 3).join('.') + '.'}
+                </div>
+              </div>
+
+              {/* Scoring explanation */}
+              <div style={{
+                ...S.card, padding: "18px 22px", marginBottom: 24,
+                background: "#f0fdf4", border: "1px solid #bbf7d0",
+              }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#166534", marginBottom: 8 }}>
+                  How scoring works
+                </div>
+                <div style={{ fontSize: 13, color: "#15803d", lineHeight: 1.6 }}>
+                  <p style={{ margin: "0 0 6px" }}>
+                    You were off by <strong>{Math.round(tutDiff * 100)}%</strong> from the analysis.
+                    Points = (100 − distance)². So being off by 10% scores 81 points, but off by 30% scores just 49.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Land within 15% to build streaks. Climb from History Student all the way to Oracle of Clio.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  setHasSeenIntro(true);
+                  setOnboardStep(0);
+                  setOnboardPred(50);
+                }}
+                style={{
+                  ...S.btn, width: "100%", padding: "16px", fontSize: 17, fontWeight: 700,
+                  background: "linear-gradient(135deg, #1a1a1a, #3a3a3a)",
+                  color: "#fff", border: "none",
+                }}
+              >
+                I'm ready — show me everything →
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
   // HOME SCREEN
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "home") {
-    const filteredSubjects = (() => {
-      let list = filterCat === "all" ? ALL_SUBJECTS : ALL_SUBJECTS.filter(s => s.cat === filterCat);
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        list = list.filter(s => s.name.toLowerCase().includes(q) || s.field.toLowerCase().includes(q));
-      }
-      return list;
-    })();
-
     const avgScore = played.length > 0 ? Math.round(score / played.length) : 0;
     const rank = getRank(avgScore, played.length);
 
@@ -7160,210 +8159,224 @@ Be historically precise. The inevitability score should reflect genuine counterf
         <ToastOverlay />
         <div style={S.inner}>
           {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: 36, paddingTop: 16 }}>
+          <div style={{ textAlign: "center", marginBottom: 28, paddingTop: 16, position: "relative" }}>
+            {/* Sound toggle */}
+            <button
+              onClick={() => { const next = SFX.toggle(); setSfxEnabled(next); if (next) SFX.click(); }}
+              style={{
+                position: "absolute", top: 16, right: 0,
+                background: "none", border: "1px solid #e5e2db", borderRadius: 8,
+                padding: "6px 10px", cursor: "pointer", fontSize: 16, lineHeight: 1,
+                color: sfxEnabled ? "#78716c" : "#d1cdc4",
+              }}
+              title={sfxEnabled ? "Sound on" : "Sound off"}
+            >
+              {sfxEnabled ? "🔊" : "🔇"}
+            </button>
             <h1 style={{ ...S.h1, fontSize: 48, marginBottom: 8 }}>
               <span style={{ fontStyle: "italic" }}>Counterfactual</span>
             </h1>
-            <p style={{ ...S.muted, fontSize: 16, maxWidth: 460, margin: "0 auto 28px", lineHeight: 1.55 }}>
+            <p style={{ ...S.muted, fontSize: 16, maxWidth: 460, margin: "0 auto", lineHeight: 1.55 }}>
               Could someone else have done what they did?<br/>
               Or did history need exactly them?
             </p>
+          </div>
 
-            {/* Daily Challenge Card */}
-            {dailyState && (() => {
-              const dailyFig = getDailyFigure();
-              const dayNum = getDayNumber();
-              const completed = dailyState.completed;
-              const dailyStrk = dailyState.dailyStreak || 0;
+          {/* Daily Challenge — Compact */}
+          {dailyState && (() => {
+            const dailyFig = getDailyFigure();
+            const dayNum = getDayNumber();
+            const completed = dailyState.completed;
+            const dailyStrk = dailyState.dailyStreak || 0;
 
-              return (
-                <div style={{
-                  maxWidth: 520, margin: "0 auto 28px", padding: 0,
-                  background: completed ? "#fefce8" : "linear-gradient(135deg, #fffbeb, #fef3c7)",
-                  borderRadius: 16, overflow: "hidden",
-                  border: completed ? "1px solid #fde68a" : "2px solid #f59e0b",
-                  animation: completed ? "none" : "dailyPulse 3s ease infinite",
-                }}>
-                  {/* Header bar */}
-                  <div style={{
-                    display: "flex", justifyContent: "space-between", alignItems: "center",
-                    padding: "12px 20px",
-                    background: completed ? "#fde68a44" : "#f59e0b",
-                    color: completed ? "#92400e" : "#fff",
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 18 }}>🗓️</span>
-                      <span style={{ fontWeight: 700, fontSize: 14, letterSpacing: "-0.01em", fontFamily: sansStack }}>
-                        Daily #{dayNum}
-                      </span>
-                    </div>
-                    {dailyStrk >= 2 && (
-                      <span style={{
-                        fontSize: 13, fontWeight: 600,
-                        display: "flex", alignItems: "center", gap: 4,
-                      }}>
-                        🔥 {dailyStrk}-day streak
-                      </span>
-                    )}
-                    {completed && (
-                      <span style={{ fontSize: 12, fontWeight: 600 }}>
-                        ✓ Complete
-                      </span>
-                    )}
-                  </div>
-
-                  <div style={{ padding: "18px 20px 20px" }}>
-                    {!completed ? (
-                      <>
-                        <div style={{ marginBottom: 14 }}>
-                          <h3 style={{ fontFamily: fontStack, fontSize: 24, fontWeight: 400, color: "#1a1a1a", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
-                            {dailyFig.name}
-                          </h3>
-                          <p style={{ fontSize: 13, color: "#92400e", margin: 0 }}>
-                            {dailyFig.field} · {formatLifespan(dailyFig.born, dailyFig.died)}
-                          </p>
-                        </div>
-                        <p style={{ fontSize: 13, color: "#78350f", lineHeight: 1.55, margin: "0 0 16px" }}>
-                          Same figure for everyone, every day. How does your intuition compare?
-                        </p>
-                        <button
-                          onClick={startDaily}
-                          style={{
-                            ...S.btn, width: "100%", padding: "14px",
-                            fontSize: 16, fontWeight: 700,
-                            background: "#d97706", color: "#fff", border: "none",
-                            borderRadius: 10,
-                          }}
-                        >
-                          Play Today's Challenge →
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                          <div>
-                            <h3 style={{ fontFamily: fontStack, fontSize: 20, fontWeight: 400, color: "#1a1a1a", margin: "0 0 2px" }}>
-                              {dailyFig.name}
-                            </h3>
-                            <p style={{ fontSize: 12, color: "#a16207", margin: 0 }}>{dailyFig.field}</p>
-                          </div>
-                          <div style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: 26, fontWeight: 400, fontFamily: fontStack, color: dailyState.points >= 50 ? "#15803d" : "#d97706" }}>
-                              +{dailyState.points}
-                            </div>
-                            <div style={{ fontSize: 10, color: "#a16207", fontWeight: 600 }}>POINTS</div>
-                          </div>
-                        </div>
-                        <div style={{
-                          display: "flex", gap: 10, marginBottom: 14,
-                          fontSize: 13, color: "#78350f",
-                        }}>
-                          <span>You: {Math.round(dailyState.prediction * 100)}%</span>
-                          <span style={{ color: "#d4a" }}>·</span>
-                          <span>Actual: {Math.round((dailyFig.r ?? dailyFig._r) * 100)}%</span>
-                        </div>
-                        <div style={{
-                          display: "flex", justifyContent: "space-between", alignItems: "center",
-                          padding: "10px 14px", background: "#fef9ee", borderRadius: 8,
-                          border: "1px solid #fde68a",
-                        }}>
-                          <span style={{ fontSize: 13, color: "#92400e" }}>
-                            Next challenge in <strong>{dailyCountdown || getTimeUntilNext()}</strong>
-                          </span>
-                          {dailyStrk >= 1 && (
-                            <span style={{ fontSize: 12, color: "#b45309" }}>
-                              Don't break your streak!
-                            </span>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* First-time onboarding */}
-            {!hasSeenIntro && played.length === 0 && (
+            return completed ? (
               <div style={{
-                maxWidth: 480, margin: "0 auto 28px", padding: "22px 24px",
-                background: "#fffbeb", borderRadius: 14, border: "1px solid #fde68a",
-                textAlign: "left", fontSize: 14, lineHeight: 1.7, color: "#78350f",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "12px 18px", marginBottom: 24, borderRadius: 12,
+                background: "#fefce8", border: "1px solid #fde68a",
               }}>
-                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: "#92400e" }}>How It Works</div>
-                <div style={{ marginBottom: 12 }}>
-                  Pick a historical figure, invention, or institution. You'll see who they are and what they did. Then make your call: was their contribution <strong>singular</strong> (only they could have done it) or <strong>inevitable</strong> (history would have found another way)?
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 16 }}>🗓️</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>
+                    Daily #{dayNum} ✓
+                  </span>
+                  <span style={{ fontSize: 13, color: "#a16207" }}>+{dailyState.points} pts</span>
+                  {dailyStrk >= 2 && <span style={{ fontSize: 12, color: "#b45309" }}>🔥 {dailyStrk}</span>}
                 </div>
-                <div style={{ marginBottom: 12 }}>
-                  The closer your prediction to the analysis, the more points you earn. Precision matters — being off by 10% scores 64 points, but off by 25% scores just 25.
-                </div>
-                <div style={{ fontSize: 13, color: "#a16207" }}>
-                  Build streaks by landing within 15%. Climb the ranks from History Student to Oracle of Clio.
-                </div>
-                <button
-                  onClick={() => setHasSeenIntro(true)}
-                  style={{ ...S.btn, marginTop: 14, fontSize: 13, padding: "8px 20px", background: "#92400e", color: "#fff", border: "none" }}
-                >
-                  Got it — let's play
-                </button>
+                <span style={{ fontSize: 12, color: "#a16207" }}>
+                  Next: {dailyCountdown || getTimeUntilNext()}
+                </span>
               </div>
-            )}
+            ) : (
+              <div
+                onClick={startDaily}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  padding: "14px 18px", marginBottom: 24, borderRadius: 12,
+                  background: "linear-gradient(135deg, #fffbeb, #fef3c7)",
+                  border: "2px solid #f59e0b", cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(245,158,11,0.15)"; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 18 }}>🗓️</span>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#92400e" }}>Daily #{dayNum}</div>
+                    <div style={{ fontSize: 13, color: "#a16207" }}>{dailyFig.name} · {dailyFig.field}</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  {dailyStrk >= 2 && <span style={{ fontSize: 12, color: "#b45309" }}>🔥 {dailyStrk}</span>}
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#d97706" }}>Play →</span>
+                </div>
+              </div>
+            );
+          })()}
 
-            {/* Rank Badge */}
-            {played.length >= 5 && (
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 10,
-                padding: "10px 20px", borderRadius: 12, marginBottom: 20,
-                background: `${rank.color}08`, border: `1px solid ${rank.color}22`,
-              }}>
-                <span style={{ fontSize: 24 }}>{rank.icon}</span>
-                <div style={{ textAlign: "left" }}>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: rank.color, letterSpacing: "-0.01em" }}>{rank.title}</div>
+          {/* Rank + Stats merged */}
+          {played.length > 0 && (
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "12px 18px", marginBottom: 24, borderRadius: 12,
+              background: `${rank.color}06`, border: `1px solid ${rank.color}18`,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 26 }}>{rank.icon}</span>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: rank.color }}>{rank.title}</div>
                   {rank.next && <div style={{ fontSize: 11, color: "#9a9890" }}>{rank.next}</div>}
                 </div>
               </div>
-            )}
-
-            {/* Stats */}
-            <div style={{ display: "flex", justifyContent: "center", gap: 20, marginBottom: 28, flexWrap: "wrap" }}>
-              {[
-                { val: score, label: "Score", color: "#1a1a1a" },
-                { val: played.length, label: "Played", color: "#6d28d9" },
-                { val: played.length > 0 ? `${avgScore}` : "—", label: "Avg Pts", color: "#0d9488" },
-                { val: streak > 0 ? `${streak}🔥` : "0", label: "Streak", color: streak >= 3 ? "#d97706" : "#94a3b8" },
-                { val: bestStreak > 0 ? bestStreak : "—", label: "Best", color: bestStreak >= 5 ? "#7c3aed" : "#94a3b8" },
-              ].map((s, i) => (
-                <div key={i} style={{ textAlign: "center", minWidth: 48 }}>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: s.color, fontFamily: fontStack, letterSpacing: "-0.02em" }}>{s.val}</div>
-                  <div style={{ fontSize: 10, color: "#9a9890", fontWeight: 500, marginTop: 2, letterSpacing: "0.02em" }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Milestone messages */}
-            {played.length > 0 && played.length % 10 === 0 && played.length <= 50 && (
-              <div style={{
-                marginBottom: 20, padding: "10px 16px", textAlign: "center",
-                background: "#fefce8", borderRadius: 10, border: "1px solid #fde68a",
-                fontSize: 14, color: "#92400e",
-              }}>
-                🏆 {played.length} figures analyzed! {played.length >= 50 ? "You're a counterfactual master." : played.length >= 30 ? "Deep into history now." : played.length >= 20 ? "Building real intuition." : "Keep going — patterns start to emerge."}
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                {[
+                  { val: score, label: "Pts" },
+                  { val: played.length, label: "Played" },
+                  { val: avgScore, label: "Avg" },
+                  ...(streak > 0 ? [{ val: `${streak}🔥`, label: "Streak" }] : []),
+                ].map((s, i) => (
+                  <div key={i} style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", fontFamily: fontStack }}>{s.val}</div>
+                    <div style={{ fontSize: 9, color: "#9a9890", fontWeight: 500, letterSpacing: "0.03em" }}>{s.label}</div>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
+          )}
 
-            <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, padding: "15px 44px", fontSize: 16 }}>
+          {/* Action buttons */}
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 24, flexWrap: "wrap" }}>
+            <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, padding: "14px 26px", fontSize: 16 }}>
               🎲 Play Random
             </button>
+            <button onClick={startH2H} style={{
+              ...S.btn, padding: "14px 26px", fontSize: 16, fontWeight: 700,
+              background: "linear-gradient(135deg, #dc2626, #ea580c)",
+              color: "#fff", border: "none",
+            }}>
+              ⚔️ Head-to-Head
+            </button>
+            {played.length >= 3 && (
+              <button onClick={() => { setScreen("stats"); scrollTop(); }} style={{
+                ...S.btn, ...S.btnSecondary, padding: "14px 20px", fontSize: 14,
+              }}>
+                📊 Stats
+              </button>
+            )}
           </div>
 
-          {/* Themed Collections */}
-          <div style={{ marginBottom: 28 }}>
-            <h3 style={{ ...S.h3, fontSize: 15, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
-              <span>📚</span> Themed Collections
+          {/* Smart Recommendations — compact */}
+          {(() => {
+            const recs = getRecommendations(played, gameHistory, ALL_SUBJECTS);
+            if (recs.length === 0) return null;
+            const typeIcons = { connected: "🔗", weak: "🎯", challenge: "⬆️", comfort: "💪" };
+            return (
+              <div style={{ marginBottom: 24 }}>
+                <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
+                  ✨ Recommended for You
+                </h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {recs.map((rec, i) => {
+                    const fig = rec.figure;
+                    const cat = CATS[fig.cat];
+                    return (
+                      <button key={i} onClick={() => selectSubject(fig)} style={{
+                        display: "flex", alignItems: "center", gap: 12,
+                        padding: "10px 14px", borderRadius: 10,
+                        background: "#fff", border: "1px solid #e5e2db",
+                        cursor: "pointer", textAlign: "left", width: "100%",
+                        transition: "all 0.15s ease",
+                      }}
+                        onMouseOver={e => { e.currentTarget.style.borderColor = "#d1cdc4"; e.currentTarget.style.background = "#fafaf9"; }}
+                        onMouseOut={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.background = "#fff"; }}
+                      >
+                        <span style={{ fontSize: 18, flexShrink: 0 }}>{typeIcons[rec.type] || "✨"}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{fig.name}</span>
+                          <span style={{ fontSize: 12, color: "#9a9890", marginLeft: 8 }}>{rec.label}</span>
+                        </div>
+                        <span style={{ fontSize: 14, color: "#ccc8c0", flexShrink: 0 }}>›</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Browse by Category — horizontal scroll (replaces grid) */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
+              📂 Browse by Category
             </h3>
             <div className="collection-scroll" style={{
-              display: "flex", gap: 12, overflowX: "auto",
-              paddingBottom: 8, scrollSnapType: "x mandatory",
+              display: "flex", gap: 10, overflowX: "auto",
+              paddingBottom: 6, scrollSnapType: "x mandatory",
+            }}>
+              {Object.entries(CATS).map(([key, cat]) => {
+                const catFigures = ALL_SUBJECTS.filter(s => s.cat === key);
+                const catPlayed = catFigures.filter(f => played.includes(f.id)).length;
+                const total = catFigures.length;
+                const pct = total > 0 ? Math.round((catPlayed / total) * 100) : 0;
+                if (total === 0) return null;
+
+                return (
+                  <div
+                    key={key}
+                    onClick={() => { setActiveCategory(key); setSearchQuery(""); setScreen("category"); scrollTop(); }}
+                    style={{
+                      flex: "0 0 180px", scrollSnapAlign: "start",
+                      padding: "14px 16px", borderRadius: 12,
+                      background: cat.bg, border: `1px solid ${cat.color}18`,
+                      cursor: "pointer", transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.color}12`; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
+                    <div style={{ fontSize: 22, marginBottom: 6 }}>{CAT_ICONS[key] || "📁"}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: cat.color, marginBottom: 2 }}>{cat.label}</div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 8 }}>{total} figures</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div style={{ flex: 1, height: 3, borderRadius: 2, background: `${cat.color}15`, overflow: "hidden" }}>
+                        <div style={{ width: `${pct}%`, height: "100%", borderRadius: 2, background: pct === 100 ? "#16a34a" : cat.color }} />
+                      </div>
+                      <span style={{ fontSize: 10, color: `${cat.color}88`, fontWeight: 600 }}>{catPlayed}/{total}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Themed Collections — compact */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
+              📚 Collections
+            </h3>
+            <div className="collection-scroll" style={{
+              display: "flex", gap: 10, overflowX: "auto",
+              paddingBottom: 6, scrollSnapType: "x mandatory",
             }}>
               {COLLECTIONS.map(col => {
                 const colFigures = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
@@ -7376,37 +8389,22 @@ Be historically precise. The inevitability score should reflect genuine counterf
                     key={col.id}
                     onClick={() => { setActiveCollection(col); setScreen("collection"); scrollTop(); }}
                     style={{
-                      flex: "0 0 220px", scrollSnapAlign: "start",
-                      padding: "16px 18px", borderRadius: 14,
+                      flex: "0 0 180px", scrollSnapAlign: "start",
+                      padding: "14px 16px", borderRadius: 12,
                       background: col.bg, border: `1px solid ${col.border}`,
                       cursor: "pointer", transition: "all 0.15s ease",
-                      position: "relative", overflow: "hidden",
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 6px 20px ${col.color}15`; }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 4px 14px ${col.color}12`; }}
                     onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
                   >
-                    <div style={{ fontSize: 28, marginBottom: 8 }}>{col.emoji}</div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: col.color, marginBottom: 3, fontFamily: sansStack }}>
-                      {col.title}
-                    </div>
-                    <div style={{ fontSize: 12, color: `${col.color}aa`, lineHeight: 1.4, marginBottom: 10 }}>
-                      {col.subtitle}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{
-                        flex: 1, height: 4, borderRadius: 2,
-                        background: `${col.color}18`,
-                        overflow: "hidden",
-                      }}>
-                        <div style={{
-                          width: `${pct}%`, height: "100%", borderRadius: 2,
-                          background: col.color,
-                          transition: "width 0.3s ease",
-                        }} />
+                    <div style={{ fontSize: 22, marginBottom: 6 }}>{col.emoji}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: col.color, marginBottom: 2 }}>{col.title}</div>
+                    <div style={{ fontSize: 11, color: `${col.color}aa`, marginBottom: 8 }}>{col.subtitle}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div style={{ flex: 1, height: 3, borderRadius: 2, background: `${col.color}15`, overflow: "hidden" }}>
+                        <div style={{ width: `${pct}%`, height: "100%", borderRadius: 2, background: col.color }} />
                       </div>
-                      <span style={{ fontSize: 11, color: `${col.color}88`, fontWeight: 600, whiteSpace: "nowrap" }}>
-                        {playedCount}/{total}
-                      </span>
+                      <span style={{ fontSize: 10, color: `${col.color}88`, fontWeight: 600 }}>{playedCount}/{total}</span>
                     </div>
                   </div>
                 );
@@ -7414,107 +8412,681 @@ Be historically precise. The inevitability score should reflect genuine counterf
             </div>
           </div>
 
-          {/* Custom Input */}
-          <div style={{ ...S.card, marginBottom: 28 }}>
-            <h3 style={{ ...S.h3, marginBottom: 6 }}>🔍 Analyze Any Figure</h3>
-            <p style={{ ...S.muted, marginBottom: 14 }}>
-              Enter anyone not in the database — they'll be analyzed and scored.
-            </p>
-            <div style={{ display: "flex", gap: 10 }}>
+          {/* Browse by Era — compact */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
+              🕰️ Eras
+            </h3>
+            <div className="collection-scroll" style={{
+              display: "flex", gap: 10, overflowX: "auto",
+              paddingBottom: 6, scrollSnapType: "x mandatory",
+            }}>
+              {ERAS.map(era => {
+                const eraFigures = ALL_SUBJECTS.filter(s => s.born >= era.min && s.born < era.max);
+                const eraPlayed = eraFigures.filter(f => played.includes(f.id)).length;
+                const total = eraFigures.length;
+                const pct = total > 0 ? Math.round((eraPlayed / total) * 100) : 0;
+                if (total === 0) return null;
+
+                return (
+                  <div
+                    key={era.id}
+                    onClick={() => { setActiveEra(era); setScreen("era"); scrollTop(); }}
+                    style={{
+                      flex: "0 0 180px", scrollSnapAlign: "start",
+                      padding: "14px 16px", borderRadius: 12,
+                      background: era.bg, border: `1px solid ${era.color}18`,
+                      cursor: "pointer", transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 4px 14px ${era.color}12`; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
+                    <div style={{ fontSize: 22, marginBottom: 6 }}>{era.icon}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: era.color, marginBottom: 2 }}>{era.label}</div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 8 }}>{era.range}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div style={{ flex: 1, height: 3, borderRadius: 2, background: `${era.color}15`, overflow: "hidden" }}>
+                        <div style={{ width: `${pct}%`, height: "100%", borderRadius: 2, background: pct === 100 ? "#16a34a" : era.color }} />
+                      </div>
+                      <span style={{ fontSize: 10, color: `${era.color}88`, fontWeight: 600 }}>{eraPlayed}/{total}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Analyze Any Figure — compact */}
+          <div style={{
+            padding: "14px 18px", borderRadius: 12, marginBottom: 24,
+            background: "#fff", border: "1px solid #e5e2db",
+          }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <span style={{ fontSize: 16, flexShrink: 0 }}>🔍</span>
               <input
                 type="text" value={customName}
                 onChange={e => setCustomName(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleCustomSubmit()}
-                placeholder="e.g., Genghis Khan, the compass, NATO..."
-                style={{ ...S.input, flex: 1 }}
+                placeholder="Analyze any figure not in the database..."
+                style={{ ...S.input, flex: 1, border: "none", background: "transparent", padding: "4px 0" }}
               />
               <button
                 onClick={handleCustomSubmit}
                 disabled={!customName.trim() || customLoading}
                 style={{
-                  ...S.btn, ...S.btnPrimary, whiteSpace: "nowrap",
+                  ...S.btn, ...S.btnPrimary, whiteSpace: "nowrap", padding: "8px 16px", fontSize: 13,
                   opacity: (!customName.trim() || customLoading) ? 0.4 : 1,
                   cursor: (!customName.trim() || customLoading) ? "not-allowed" : "pointer",
                 }}
               >
-                {customLoading ? "Analyzing..." : "Analyze →"}
+                {customLoading ? "..." : "Go →"}
               </button>
             </div>
             {customLoading && (
-              <div style={{ marginTop: 16, textAlign: "center", color: "#7a7770", fontSize: 14 }}>
-                <div style={{ display: "inline-block", width: 16, height: 16, border: "2px solid #ddd9d0", borderTopColor: "#1a1a1a", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 8, verticalAlign: "middle" }} />
+              <div style={{ marginTop: 10, textAlign: "center", color: "#7a7770", fontSize: 13 }}>
+                <div style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #ddd9d0", borderTopColor: "#1a1a1a", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 8, verticalAlign: "middle" }} />
                 Researching {customName}...
               </div>
             )}
           </div>
+        </div>
+      </div>
+    );
+  }
 
-          {/* Filters */}
-          <div style={{ marginBottom: 20 }}>
-            <input
-              type="text" value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name or field..."
-              style={{ ...S.input, marginBottom: 12 }}
-            />
-            <div className="filter-scroll" style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
-              {[{ key: "all", label: `All (${ALL_SUBJECTS.length})`, color: "#1a1a1a" },
-                ...Object.entries(CATS).map(([key, cat]) => ({
-                  key, label: `${cat.label} (${ALL_SUBJECTS.filter(s => s.cat === key).length})`, color: cat.color,
-                })).filter(c => {
-                  const cnt = ALL_SUBJECTS.filter(s => s.cat === c.key).length;
-                  return cnt > 0;
-                })
-              ].map(c => (
-                <button
-                  key={c.key}
-                  onClick={() => setFilterCat(c.key)}
-                  style={{
-                    ...S.btn, padding: "6px 14px", fontSize: 12, borderRadius: 8, fontWeight: 600,
-                    background: filterCat === c.key ? c.color : "#f2f1ed",
-                    color: filterCat === c.key ? "#fff" : "#5a5850",
-                    border: filterCat === c.key ? "none" : "1px solid #e0ded8",
-                  }}
-                >
-                  {c.label}
-                </button>
+  // ─────────────────────────────────────────────────────────────────────────
+  // STATS & ACHIEVEMENTS SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "stats") {
+    const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
+    const rank = getRank(avgPts, played.length);
+    const history = gameHistory;
+    const totalGames = history.length;
+
+    // Category breakdown
+    const catStats = {};
+    Object.keys(CATS).forEach(key => { catStats[key] = { played: 0, totalPts: 0, totalDiff: 0 }; });
+    history.forEach(g => {
+      if (catStats[g.cat]) {
+        catStats[g.cat].played++;
+        catStats[g.cat].totalPts += g.pts;
+        catStats[g.cat].totalDiff += g.diff;
+      }
+    });
+
+    // Best and worst games
+    const sortedByPts = [...history].sort((a, b) => b.pts - a.pts);
+    const bestGames = sortedByPts.slice(0, 5);
+    const worstGames = sortedByPts.slice(-5).reverse();
+
+    // Accuracy distribution
+    const distBuckets = [0, 0, 0, 0, 0]; // 90-100, 64-89, 36-63, 1-35, 0
+    history.forEach(g => {
+      if (g.pts >= 90) distBuckets[0]++;
+      else if (g.pts >= 64) distBuckets[1]++;
+      else if (g.pts >= 36) distBuckets[2]++;
+      else if (g.pts >= 1) distBuckets[3]++;
+      else distBuckets[4]++;
+    });
+    const distMax = Math.max(...distBuckets, 1);
+
+    // Recent performance (last 20 games)
+    const recent20 = history.slice(-20);
+    const recentAvg = recent20.length > 0 ? Math.round(recent20.reduce((a, g) => a + g.pts, 0) / recent20.length) : 0;
+
+    // Achievements
+    const earned = ACHIEVEMENTS.filter(a => a.check(history, played, dailyState));
+    const locked = ACHIEVEMENTS.filter(a => !a.check(history, played, dailyState));
+
+    // Collections progress
+    const colProgress = COLLECTIONS.map(col => {
+      const figs = col.figures.map(id => ALL_SUBJECTS.find(s => s.id === id)).filter(Boolean);
+      const done = figs.filter(f => played.includes(f.id)).length;
+      return { ...col, done, total: figs.length, complete: done === figs.length };
+    });
+
+    const distLabels = ["🎯 90-100", "🔥 64-89", "✨ 36-63", "🤔 1-35", "😮 0"];
+    const distColors = ["#16a34a", "#65a30d", "#ca8a04", "#ea580c", "#dc2626"];
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={S.inner}>
+          <BackButton />
+
+          {/* Profile card */}
+          <div style={{
+            ...S.card, textAlign: "center", marginBottom: 24,
+            background: "linear-gradient(180deg, #fafaf9, #f5f4f0)",
+            animation: "fadeUp 0.35s ease both",
+          }}>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>{rank.icon}</div>
+            <h2 style={{ ...S.h2, fontSize: 26, color: rank.color, marginBottom: 4 }}>{rank.title}</h2>
+            <p style={{ ...S.muted, fontSize: 14, marginBottom: 20 }}>
+              {played.length} figures · {score} total points · {avgPts} avg
+            </p>
+
+            {/* Key stats grid */}
+            <div style={{
+              display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1,
+              background: "#e5e2db", borderRadius: 12, overflow: "hidden",
+            }}>
+              {[
+                { label: "Best Streak", value: bestStreak, icon: "🔥" },
+                { label: "Accuracy", value: totalGames > 0 ? `${Math.round(history.reduce((a, g) => a + (100 - g.diff), 0) / totalGames)}%` : "—", icon: "🎯" },
+                { label: "Recent Avg", value: recentAvg || "—", icon: "📈" },
+              ].map((stat, i) => (
+                <div key={i} style={{
+                  background: "#fff", padding: "16px 8px",
+                  textAlign: "center",
+                }}>
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>{stat.icon}</div>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: "#1a1a1a" }}>{stat.value}</div>
+                  <div style={{ fontSize: 11, color: "#9a9890", fontWeight: 600 }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Share Profile */}
+            {played.length >= 5 && (
+              <button onClick={() => shareMilestone({ isProfile: true })} style={{
+                ...S.btn, ...S.btnSecondary, marginTop: 16, fontSize: 13, padding: "10px 20px",
+              }}>
+                📤 Share Profile Card
+              </button>
+            )}
+          </div>
+
+          {/* Achievements */}
+          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.1s both" }}>
+            <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 4 }}>
+              🏅 Achievements
+            </h3>
+            <p style={{ ...S.muted, fontSize: 13, marginBottom: 16 }}>
+              {earned.length} of {ACHIEVEMENTS.length} unlocked
+            </p>
+
+            {/* Progress bar */}
+            <div style={{
+              height: 6, borderRadius: 3, background: "#f0efeb", marginBottom: 18, overflow: "hidden",
+            }}>
+              <div style={{
+                width: `${(earned.length / ACHIEVEMENTS.length) * 100}%`,
+                height: "100%", borderRadius: 3,
+                background: "linear-gradient(90deg, #f59e0b, #16a34a)",
+                transition: "width 0.5s ease",
+              }} />
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
+              {earned.map(a => (
+                <div key={a.id} style={{
+                  padding: "12px", borderRadius: 10,
+                  background: "#fefce8", border: "1px solid #fde68a",
+                  position: "relative",
+                }}>
+                  <div style={{ fontSize: 24, marginBottom: 4 }}>{a.icon}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{a.title}</div>
+                  <div style={{ fontSize: 11, color: "#92400e", marginBottom: 6 }}>{a.desc}</div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); shareMilestone({ achievement: a }); }}
+                    style={{
+                      background: "none", border: "none", cursor: "pointer",
+                      fontSize: 11, color: "#b45309", fontWeight: 600,
+                      padding: "2px 0", opacity: 0.7,
+                    }}
+                    onMouseOver={e => e.currentTarget.style.opacity = "1"}
+                    onMouseOut={e => e.currentTarget.style.opacity = "0.7"}
+                  >
+                    📤 Share
+                  </button>
+                </div>
+              ))}
+              {locked.map(a => (
+                <div key={a.id} style={{
+                  padding: "12px", borderRadius: 10,
+                  background: "#fafaf9", border: "1px solid #e5e2db",
+                  opacity: 0.5,
+                }}>
+                  <div style={{ fontSize: 24, marginBottom: 4, filter: "grayscale(1)" }}>{a.icon}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#9a9890" }}>{a.title}</div>
+                  <div style={{ fontSize: 11, color: "#b0ada5" }}>{a.desc}</div>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Results count */}
-          <div style={{ ...S.muted, marginBottom: 12, fontSize: 13 }}>
-            {filteredSubjects.length} {filteredSubjects.length === 1 ? "result" : "results"}
-            {filterCat !== "all" && ` in ${CATS[filterCat]?.label}`}
-            {searchQuery.trim() && ` matching "${searchQuery}"`}
+          {/* Score Distribution */}
+          {totalGames > 0 && (
+            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.2s both" }}>
+              <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 16 }}>
+                📊 Score Distribution
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {distLabels.map((label, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "#7a7770", width: 72, textAlign: "right", flexShrink: 0 }}>
+                      {label}
+                    </span>
+                    <div style={{ flex: 1, height: 20, background: "#f5f4f0", borderRadius: 4, overflow: "hidden" }}>
+                      <div style={{
+                        width: `${(distBuckets[i] / distMax) * 100}%`,
+                        height: "100%", borderRadius: 4,
+                        background: distColors[i],
+                        transition: "width 0.5s ease",
+                        minWidth: distBuckets[i] > 0 ? 2 : 0,
+                      }} />
+                    </div>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#1a1a1a", width: 28, textAlign: "right" }}>
+                      {distBuckets[i]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Category Breakdown */}
+          {totalGames > 0 && (
+            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.3s both" }}>
+              <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 16 }}>
+                🗂️ Category Breakdown
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {Object.entries(catStats)
+                  .filter(([, s]) => s.played > 0)
+                  .sort((a, b) => b[1].played - a[1].played)
+                  .map(([key, stats]) => {
+                    const cat = CATS[key];
+                    if (!cat) return null;
+                    const avg = Math.round(stats.totalPts / stats.played);
+                    const total = ALL_SUBJECTS.filter(s => s.cat === key).length;
+                    return (
+                      <div key={key} style={{
+                        display: "flex", alignItems: "center", gap: 10,
+                        padding: "10px 14px", borderRadius: 10,
+                        background: cat.bg, border: `1px solid ${cat.color}15`,
+                      }}>
+                        <span style={{
+                          ...S.tag(cat.color, cat.bg), fontSize: 11, flexShrink: 0,
+                        }}>{cat.label}</span>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                            <span style={{ fontSize: 12, color: "#7a7770" }}>
+                              {stats.played}/{total} played
+                            </span>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: avg >= 64 ? "#16a34a" : avg >= 36 ? "#ca8a04" : "#dc2626" }}>
+                              {avg} avg pts
+                            </span>
+                          </div>
+                          <div style={{ height: 4, borderRadius: 2, background: `${cat.color}15`, overflow: "hidden" }}>
+                            <div style={{
+                              width: `${(stats.played / total) * 100}%`,
+                              height: "100%", borderRadius: 2,
+                              background: cat.color,
+                            }} />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+
+          {/* Best Calls */}
+          {bestGames.length > 0 && (
+            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.4s both" }}>
+              <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 14 }}>
+                🏆 Best Calls
+              </h3>
+              {bestGames.map((g, i) => (
+                <div key={i} style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "8px 0",
+                  borderBottom: i < bestGames.length - 1 ? "1px solid #f0efeb" : "none",
+                }}>
+                  <span style={{
+                    width: 24, height: 24, borderRadius: "50%",
+                    background: i === 0 ? "#fef3c7" : "#f5f4f0",
+                    color: i === 0 ? "#d97706" : "#9a9890",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 11, fontWeight: 800, flexShrink: 0,
+                  }}>{i + 1}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {g.name}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#9a9890" }}>
+                      Guessed {g.pred}% · Actual {g.r}%
+                    </div>
+                  </div>
+                  <span style={{
+                    fontSize: 14, fontWeight: 800,
+                    color: g.pts >= 90 ? "#16a34a" : g.pts >= 64 ? "#65a30d" : "#ca8a04",
+                  }}>{g.pts}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Collections Progress */}
+          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.5s both" }}>
+            <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 14 }}>
+              📚 Collections Progress
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {colProgress.map(col => (
+                <div key={col.id} onClick={() => { setActiveCollection(col); setScreen("collection"); scrollTop(); }} style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                  background: col.complete ? col.bg : "#fafaf9",
+                  border: `1px solid ${col.complete ? col.color + "40" : "#e5e2db"}`,
+                }}>
+                  <span style={{ fontSize: 22, flexShrink: 0 }}>{col.complete ? "✅" : col.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: col.complete ? col.color : "#1a1a1a" }}>
+                      {col.title}
+                    </div>
+                    <div style={{ height: 4, borderRadius: 2, background: `${col.color}15`, marginTop: 4, overflow: "hidden" }}>
+                      <div style={{
+                        width: `${col.total > 0 ? (col.done / col.total) * 100 : 0}%`,
+                        height: "100%", borderRadius: 2, background: col.color,
+                      }} />
+                    </div>
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: col.complete ? col.color : "#9a9890" }}>
+                    {col.done}/{col.total}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-            {filteredSubjects.map(s => {
+          {/* Rank progression */}
+          <div style={{ ...S.card, animation: "fadeUp 0.35s ease 0.6s both" }}>
+            <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 14 }}>
+              🎖️ Rank Ladder
+            </h3>
+            {[
+              { title: "Oracle of Clio", icon: "🏛️", req: "82+ avg, 40+ games", color: "#7c2d12" },
+              { title: "Senior Fellow", icon: "🎓", req: "72+ avg, 30+ games", color: "#6d28d9" },
+              { title: "Counterfactual Scholar", icon: "📜", req: "60+ avg, 20+ games", color: "#0d9488" },
+              { title: "Historical Analyst", icon: "🔍", req: "45+ avg, 10+ games", color: "#ca8a04" },
+              { title: "History Student", icon: "📖", req: "5+ games", color: "#64748b" },
+              { title: "Newcomer", icon: "🌱", req: "Start playing", color: "#94a3b8" },
+            ].map((r, i) => {
+              const isCurrent = r.title === rank.title;
+              return (
+                <div key={i} style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  padding: "10px 14px", borderRadius: 10, marginBottom: 4,
+                  background: isCurrent ? `${r.color}08` : "transparent",
+                  border: isCurrent ? `2px solid ${r.color}30` : "2px solid transparent",
+                }}>
+                  <span style={{ fontSize: 24, opacity: isCurrent ? 1 : 0.4 }}>{r.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{
+                      fontSize: 14, fontWeight: isCurrent ? 800 : 600,
+                      color: isCurrent ? r.color : "#9a9890",
+                    }}>{r.title}</div>
+                    <div style={{ fontSize: 11, color: "#b0ada5" }}>{r.req}</div>
+                  </div>
+                  {isCurrent && (
+                    <span style={{
+                      fontSize: 10, fontWeight: 800, color: r.color,
+                      background: `${r.color}12`, padding: "3px 8px", borderRadius: 6,
+                    }}>YOU</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // CATEGORY SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "category" && activeCategory) {
+    const catKey = activeCategory;
+    const cat = CATS[catKey] || { label: catKey, color: "#64748b", bg: "#f5f4f0" };
+    const catFigures = ALL_SUBJECTS.filter(s => s.cat === catKey);
+    const playedCount = catFigures.filter(f => played.includes(f.id)).length;
+    const total = catFigures.length;
+    const allDone = playedCount === total;
+    const nextUnplayed = catFigures.find(f => !played.includes(f.id));
+
+    const filtered = searchQuery.trim()
+      ? catFigures.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()) || s.field.toLowerCase().includes(searchQuery.toLowerCase()))
+      : catFigures;
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={S.inner}>
+          <BackButton />
+
+          {/* Category header */}
+          <div style={{
+            background: cat.bg, borderRadius: 18, padding: "24px 24px 20px",
+            border: `2px solid ${cat.color}25`, marginBottom: 24,
+            animation: "fadeUp 0.35s ease both",
+          }}>
+            <div style={{ fontSize: 36, marginBottom: 8 }}>{CAT_ICONS[catKey] || "📁"}</div>
+            <h2 style={{ ...S.h2, fontSize: 28, color: cat.color, marginBottom: 6 }}>{cat.label}</h2>
+            <p style={{ fontSize: 14, color: `${cat.color}bb`, margin: "0 0 18px" }}>
+              {total} figures
+            </p>
+
+            {/* Progress */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+              <div style={{ flex: 1, height: 8, borderRadius: 4, background: `${cat.color}15`, overflow: "hidden" }}>
+                <div style={{
+                  width: `${total > 0 ? (playedCount / total) * 100 : 0}%`,
+                  height: "100%", borderRadius: 4, background: allDone ? "#16a34a" : cat.color,
+                  transition: "width 0.5s ease",
+                }} />
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 700, color: cat.color }}>
+                {playedCount}/{total}
+              </span>
+            </div>
+
+            {allDone ? (
+              <div style={{
+                padding: "10px 16px", background: `${cat.color}12`,
+                borderRadius: 10, textAlign: "center",
+                fontSize: 14, fontWeight: 600, color: cat.color,
+              }}>
+                🏆 Category complete!
+              </div>
+            ) : (
+              <button
+                onClick={() => { if (nextUnplayed) selectSubject(nextUnplayed); }}
+                style={{
+                  ...S.btn, width: "100%", padding: "14px",
+                  fontSize: 15, fontWeight: 700,
+                  background: cat.color, color: "#fff", border: "none",
+                }}
+              >
+                ▶ Play Next
+              </button>
+            )}
+          </div>
+
+          {/* Search within category */}
+          {total > 8 && (
+            <input
+              type="text" value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder={`Search ${cat.label}...`}
+              style={{ ...S.input, marginBottom: 16 }}
+            />
+          )}
+
+          {/* Figures grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+            {filtered.map(s => {
+              const wasPlayed = played.includes(s.id);
+              const diff = getDifficultyLabel(s.r);
+              const histEntry = gameHistory.find(g => g.id === s.id);
+
+              return (
+                <div
+                  key={s.id}
+                  onClick={() => selectSubject(s)}
+                  style={{
+                    ...S.card, marginBottom: 0, padding: 18, cursor: "pointer",
+                    opacity: wasPlayed ? 0.55 : 1,
+                    borderLeft: wasPlayed ? `3px solid ${cat.color}` : `3px solid ${cat.color}20`,
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = cat.color; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, color: diff.color,
+                      background: `${diff.color}12`, padding: "2px 7px", borderRadius: 6,
+                    }}>{diff.label}</span>
+                    {wasPlayed && histEntry && (
+                      <span style={{
+                        fontSize: 12, fontWeight: 800,
+                        color: histEntry.pts >= 64 ? "#16a34a" : histEntry.pts >= 36 ? "#ca8a04" : "#dc2626",
+                      }}>{histEntry.pts} pts</span>
+                    )}
+                    {wasPlayed && !histEntry && <span style={{ fontSize: 11, color: cat.color, fontWeight: 600 }}>✓</span>}
+                  </div>
+                  <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 3 }}>{s.name}</h3>
+                  <p style={{ ...S.muted, fontSize: 13, marginBottom: 2 }}>{s.field}</p>
+                  <p style={{ fontSize: 12, color: "#b0ada5" }}>{formatLifespan(s.born, s.died)}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          {filtered.length === 0 && (
+            <div style={{ textAlign: "center", padding: 40, color: "#9a9890" }}>
+              No matches found.
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // ERA SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "era" && activeEra) {
+    const era = activeEra;
+    const eraFigures = ALL_SUBJECTS
+      .filter(s => s.born >= era.min && s.born < era.max)
+      .sort((a, b) => a.born - b.born);
+    const playedCount = eraFigures.filter(f => played.includes(f.id)).length;
+    const total = eraFigures.length;
+    const allDone = playedCount === total;
+    const nextUnplayed = eraFigures.find(f => !played.includes(f.id));
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={S.inner}>
+          <BackButton />
+
+          {/* Era header */}
+          <div style={{
+            background: era.bg, borderRadius: 18, padding: "28px 28px 24px",
+            border: `2px solid ${era.color}25`, marginBottom: 28,
+            animation: "fadeUp 0.35s ease both",
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 10 }}>{era.icon}</div>
+            <h2 style={{ ...S.h2, fontSize: 30, color: era.color, marginBottom: 6 }}>{era.label}</h2>
+            <p style={{ fontSize: 15, color: `${era.color}bb`, margin: "0 0 20px", lineHeight: 1.5 }}>
+              {era.range} · {total} figures
+            </p>
+
+            {/* Progress */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ flex: 1, height: 8, borderRadius: 4, background: `${era.color}15`, overflow: "hidden" }}>
+                <div style={{
+                  width: `${total > 0 ? (playedCount / total) * 100 : 0}%`,
+                  height: "100%", borderRadius: 4, background: allDone ? "#16a34a" : era.color,
+                  transition: "width 0.5s ease",
+                }} />
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 700, color: era.color }}>
+                {playedCount}/{total}
+              </span>
+            </div>
+
+            {allDone ? (
+              <div style={{
+                padding: "12px 16px", background: `${era.color}12`,
+                borderRadius: 10, textAlign: "center",
+                fontSize: 14, fontWeight: 600, color: era.color,
+              }}>
+                🏆 Era complete!
+              </div>
+            ) : (
+              <button
+                onClick={() => { if (nextUnplayed) selectSubject(nextUnplayed); }}
+                style={{
+                  ...S.btn, width: "100%", padding: "14px",
+                  fontSize: 15, fontWeight: 700,
+                  background: era.color, color: "#fff", border: "none",
+                }}
+              >
+                ▶ Play Next in Era
+              </button>
+            )}
+          </div>
+
+          {/* Figures grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+            {eraFigures.map((s, idx) => {
               const cat = CATS[s.cat] || { label: s.cat, color: "#64748b", bg: "rgba(100,116,139,0.06)" };
               const wasPlayed = played.includes(s.id);
               const diff = getDifficultyLabel(s.r);
+              const histEntry = gameHistory.find(g => g.id === s.id);
+
               return (
                 <div
                   key={s.id}
                   onClick={() => selectSubject(s)}
                   style={{
                     ...S.card, marginBottom: 0, padding: 20, cursor: "pointer",
-                    opacity: wasPlayed ? 0.55 : 1, position: "relative",
+                    opacity: wasPlayed ? 0.55 : 1,
+                    borderLeft: wasPlayed ? `3px solid ${era.color}` : `3px solid ${era.color}20`,
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#c0bdb5"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.07)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = S.card.boxShadow; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = era.color; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                     <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <span style={{
+                        fontSize: 10, fontWeight: 800, color: "#9a9890",
+                        background: "#f5f4f0", padding: "2px 8px", borderRadius: 6,
+                        fontFamily: fontStack,
+                      }}>{s.born < 0 ? `${Math.abs(s.born)} BC` : s.born}</span>
                       <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 700, color: diff.color,
                         background: `${diff.color}12`, padding: "2px 7px", borderRadius: 6,
-                        letterSpacing: "0.02em",
                       }}>{diff.label}</span>
                     </div>
-                    {wasPlayed && <span style={{ fontSize: 11, color: "#a09e96" }}>✓ Played</span>}
+                    {wasPlayed && histEntry && (
+                      <span style={{
+                        fontSize: 12, fontWeight: 800,
+                        color: histEntry.pts >= 64 ? "#16a34a" : histEntry.pts >= 36 ? "#ca8a04" : "#dc2626",
+                      }}>{histEntry.pts} pts</span>
+                    )}
+                    {wasPlayed && !histEntry && <span style={{ fontSize: 11, color: era.color, fontWeight: 600 }}>✓</span>}
                   </div>
                   <h3 style={{ ...S.h3, fontSize: 17, marginBottom: 3 }}>{s.name}</h3>
                   <p style={{ ...S.muted, fontSize: 13, marginBottom: 2 }}>{s.field}</p>
@@ -7523,12 +9095,6 @@ Be historically precise. The inevitability score should reflect genuine counterf
               );
             })}
           </div>
-
-          {filteredSubjects.length === 0 && (
-            <div style={{ textAlign: "center", padding: 48, color: "#9a9890" }}>
-              No figures found. Try a different search or category.
-            </div>
-          )}
         </div>
       </div>
     );
@@ -7648,6 +9214,239 @@ Be historically precise. The inevitability score should reflect genuine counterf
   }
 
   // ─────────────────────────────────────────────────────────────────────────
+  // HEAD-TO-HEAD LOBBY SCREEN (when opening a challenge link)
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "h2h_lobby" && h2hMode) {
+    const oppTotal = h2hMode.opponentPoints ? h2hMode.opponentPoints.reduce((a, b) => a + b, 0) : 0;
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={{ ...S.inner, maxWidth: 600 }}>
+          <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "8px 16px", fontSize: 14, marginBottom: 20 }}>
+            ← Back
+          </button>
+
+          <div style={{
+            ...S.card, animation: "fadeUp 0.35s ease both", textAlign: "center",
+            background: "linear-gradient(180deg, #fef2f2, #fff7ed, #fffbeb)",
+            border: "2px solid #fecaca",
+          }}>
+            <div style={{ fontSize: 52, marginBottom: 12 }}>⚔️</div>
+            <h2 style={{ ...S.h2, fontSize: 28, marginBottom: 6 }}>Head-to-Head Challenge</h2>
+            <p style={{ fontSize: 15, color: "#7a7770", marginBottom: 24 }}>
+              <strong>{h2hMode.opponentName}</strong> scored <strong>{oppTotal} points</strong> across 5 figures.
+              <br />Can you beat them?
+            </p>
+
+            {/* Figure preview */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24, textAlign: "left" }}>
+              {h2hMode.figures.map((fig, i) => {
+                const cat = CATS[fig.cat] || { label: fig.cat, color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+                return (
+                  <div key={fig.id} style={{
+                    display: "flex", alignItems: "center", gap: 12,
+                    padding: "10px 14px", background: "#fff", borderRadius: 10,
+                    border: "1px solid #e5e2db",
+                  }}>
+                    <span style={{
+                      width: 28, height: 28, borderRadius: "50%",
+                      background: "#fef2f2", color: "#dc2626",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 13, fontWeight: 800, flexShrink: 0,
+                    }}>{i + 1}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a1a" }}>{fig.name}</div>
+                      <div style={{ fontSize: 12, color: "#9a9890" }}>{fig.field}</div>
+                    </div>
+                    <span style={{ ...S.tag(cat.color, cat.bg), fontSize: 10 }}>{cat.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <button onClick={() => {
+              const first = h2hMode.figures[0];
+              setSubject(first);
+              setPrediction(0.5);
+              setRevealed(false);
+              setScreen("predict");
+              scrollTop();
+            }} style={{
+              ...S.btn, width: "100%", padding: "16px", fontSize: 17, fontWeight: 700,
+              background: "linear-gradient(135deg, #dc2626, #ea580c)",
+              color: "#fff", border: "none",
+            }}>
+              Accept Challenge →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // HEAD-TO-HEAD SUMMARY SCREEN
+  // ─────────────────────────────────────────────────────────────────────────
+  if (screen === "h2h_summary" && h2hMode) {
+    const myTotal = h2hMode.myPoints.reduce((a, b) => a + b, 0);
+    const hasOpponent = h2hMode.opponentPoints && h2hMode.opponentPoints.length > 0;
+    const oppTotal = hasOpponent ? h2hMode.opponentPoints.reduce((a, b) => a + b, 0) : 0;
+    const iWon = hasOpponent && myTotal > oppTotal;
+    const tied = hasOpponent && myTotal === oppTotal;
+    const myRoundsWon = hasOpponent ? h2hMode.myPoints.filter((p, i) => p > h2hMode.opponentPoints[i]).length : 0;
+    const oppRoundsWon = hasOpponent ? h2hMode.opponentPoints.filter((p, i) => p > h2hMode.myPoints[i]).length : 0;
+
+    return (
+      <div style={S.page}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <div style={{ ...S.inner, maxWidth: 600 }}>
+          <div style={{
+            ...S.card, animation: "fadeUp 0.35s ease both", textAlign: "center",
+            background: "linear-gradient(180deg, #fef2f2, #fff7ed, #fffbeb)",
+            border: "2px solid #fecaca",
+          }}>
+            <div style={{ fontSize: 52, marginBottom: 12 }}>
+              {hasOpponent ? (iWon ? "🏆" : tied ? "🤝" : "😤") : "⚔️"}
+            </div>
+            <h2 style={{ ...S.h2, fontSize: 26, marginBottom: 6 }}>
+              {hasOpponent
+                ? (iWon ? "You Win!" : tied ? "It's a Tie!" : `${h2hMode.opponentName} Wins!`)
+                : "Challenge Complete!"
+              }
+            </h2>
+
+            {hasOpponent && (
+              <p style={{ fontSize: 14, color: "#7a7770", marginBottom: 20 }}>
+                {iWon
+                  ? `You beat ${h2hMode.opponentName} by ${myTotal - oppTotal} points.`
+                  : tied
+                    ? "Perfectly matched — same total score."
+                    : `${h2hMode.opponentName} beat you by ${oppTotal - myTotal} points.`
+                }
+                {' '}{myRoundsWon > oppRoundsWon ? `Won ${myRoundsWon} of 5 rounds.` : oppRoundsWon > myRoundsWon ? `Won ${myRoundsWon} of 5 rounds.` : ''}
+              </p>
+            )}
+
+            {/* Score comparison header */}
+            {hasOpponent && (
+              <div style={{
+                display: "flex", justifyContent: "space-around", padding: "16px 0",
+                borderTop: "1px solid #e5e2db", borderBottom: "1px solid #e5e2db",
+                marginBottom: 16,
+              }}>
+                <div>
+                  <div style={{ fontSize: 12, color: "#9a9890", fontWeight: 600, marginBottom: 4 }}>YOU</div>
+                  <div style={{ fontSize: 32, fontWeight: 800, color: iWon || tied ? "#16a34a" : "#dc2626" }}>{myTotal}</div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", fontSize: 20, color: "#ddd9d0" }}>vs</div>
+                <div>
+                  <div style={{ fontSize: 12, color: "#9a9890", fontWeight: 600, marginBottom: 4 }}>{h2hMode.opponentName?.toUpperCase()}</div>
+                  <div style={{ fontSize: 32, fontWeight: 800, color: !iWon && !tied ? "#16a34a" : "#dc2626" }}>{oppTotal}</div>
+                </div>
+              </div>
+            )}
+
+            {!hasOpponent && (
+              <div style={{
+                fontSize: 36, fontWeight: 800, color: "#1a1a1a", marginBottom: 20,
+                padding: "12px 0", borderTop: "1px solid #e5e2db", borderBottom: "1px solid #e5e2db",
+              }}>
+                {myTotal} points
+              </div>
+            )}
+
+            {/* Round-by-round breakdown */}
+            <div style={{ textAlign: "left", marginBottom: 20 }}>
+              {h2hMode.figures.map((fig, i) => {
+                const myPts = h2hMode.myPoints[i] || 0;
+                const oppPts = hasOpponent ? (h2hMode.opponentPoints[i] || 0) : null;
+                const myPred = h2hMode.myPredictions[i];
+                const oppPred = hasOpponent ? h2hMode.opponentPredictions[i] : null;
+                const r = fig.r;
+                const actualPct = Math.round(r * 100);
+                const roundWon = oppPts !== null ? myPts > oppPts : null;
+                const roundTied = oppPts !== null ? myPts === oppPts : null;
+
+                return (
+                  <div key={fig.id} style={{
+                    display: "flex", alignItems: "center", gap: 10,
+                    padding: "12px 14px", borderRadius: 10, marginBottom: 6,
+                    background: roundWon ? "#f0fdf4" : roundTied ? "#fafaf9" : (oppPts !== null ? "#fef2f2" : "#fafaf9"),
+                    border: `1px solid ${roundWon ? "#bbf7d0" : roundTied ? "#e5e2db" : (oppPts !== null ? "#fecaca" : "#e5e2db")}`,
+                  }}>
+                    <span style={{
+                      width: 24, height: 24, borderRadius: "50%",
+                      background: roundWon ? "#dcfce7" : "#f5f5f4",
+                      color: roundWon ? "#16a34a" : "#9a9890",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 12, fontWeight: 800, flexShrink: 0,
+                    }}>{i + 1}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {fig.name}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#9a9890" }}>
+                        Actual: {actualPct}%
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>
+                        {myPred}% → <span style={{ color: myPts >= 64 ? "#16a34a" : myPts >= 36 ? "#ca8a04" : "#dc2626" }}>{myPts}pts</span>
+                      </div>
+                      {oppPts !== null && (
+                        <div style={{ fontSize: 11, color: "#9a9890" }}>
+                          vs {oppPred}% → {oppPts}pts
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 100 }}>
+                🏠 Home
+              </button>
+              {!hasOpponent && (
+                <button onClick={shareH2H} style={{
+                  ...S.btn, flex: 2, padding: "14px", fontSize: 15, fontWeight: 700,
+                  background: "linear-gradient(135deg, #dc2626, #ea580c)",
+                  color: "#fff", border: "none",
+                }}>
+                  ⚔️ Send Challenge
+                </button>
+              )}
+              {hasOpponent && (
+                <button onClick={() => {
+                  // Play again with new figures
+                  startH2H();
+                }} style={{
+                  ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 100,
+                }}>
+                  Rematch ⚔️
+                </button>
+              )}
+            </div>
+
+            {hasOpponent && (
+              <button onClick={shareH2H} style={{
+                ...S.btn, ...S.btnSecondary, width: "100%", marginTop: 10,
+                padding: "10px", fontSize: 13,
+              }}>
+                📤 Share Result
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
   // CUSTOM CONFIRM SCREEN
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "custom_confirm" && customResult) {
@@ -7727,6 +9526,16 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 🗓️ Daily #{getDayNumber()}
               </div>
             )}
+            {h2hMode && (
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "5px 12px", borderRadius: 8, marginBottom: 12,
+                background: "#fef2f2", border: "1px solid #fecaca",
+                fontSize: 12, fontWeight: 700, color: "#dc2626",
+              }}>
+                ⚔️ Round {h2hMode.currentIndex + 1} of {h2hMode.figures.length}
+              </div>
+            )}
             <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
             <h2 style={{ ...S.h2, fontSize: 32, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
             <p style={{ ...S.muted, marginBottom: 22 }}>
@@ -7771,7 +9580,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
               <input
                 type="range" min="0" max="100" step="5"
                 value={Math.round(prediction * 100)}
-                onChange={e => setPrediction(parseInt(e.target.value) / 100)}
+                onChange={e => { const v = parseInt(e.target.value); setPrediction(v / 100); SFX.tick(v); }}
                 style={{
                   width: "100%", height: 8, borderRadius: 4,
                   appearance: "none", WebkitAppearance: "none",
@@ -7951,22 +9760,52 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 <div style={{ fontSize: 34, fontWeight: 400, color: pts > 0 ? "#6d28d9" : "#b0ada6", fontFamily: fontStack }}>
                   {pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}
                 </div>
+                {streakMilestone && !isReplay && (
+                  <div style={{ fontSize: 12, color: "#92400e", fontWeight: 700, marginTop: 2 }}>
+                    +{streakMilestone.bonus} streak
+                  </div>
+                )}
                 {isReplay && <div style={{ fontSize: 11, color: "#b0ada6", marginTop: 4 }}>Already played</div>}
               </div>
             </div>
 
-            {/* Streak indicator */}
+            {/* Streak indicator + milestone celebration */}
             {streak >= 2 && !isReplay && (
               <div style={{
-                textAlign: "center", marginBottom: 20, padding: "10px 16px",
-                background: "linear-gradient(135deg, #faf5ff, #f3e8ff)",
-                borderRadius: 10, border: "1px solid #e9d5ff",
+                textAlign: "center", marginBottom: 20, padding: streakMilestone ? "16px 20px" : "10px 16px",
+                background: streakMilestone
+                  ? "linear-gradient(135deg, #fffbeb, #fef3c7)"
+                  : "linear-gradient(135deg, #faf5ff, #f3e8ff)",
+                borderRadius: 10,
+                border: streakMilestone ? "1px solid #fde68a" : "1px solid #e9d5ff",
                 animation: animateResult ? "fadeUp 0.3s ease 0.15s both" : "none",
               }}>
-                <span style={{ fontSize: 15 }}>🔥 {streak}-round streak</span>
-                <span style={{ fontSize: 12, color: "#7c3aed", marginLeft: 8 }}>
-                  {streak >= 10 ? "Historian!" : streak >= 5 ? "On fire!" : "Keep it going!"}
-                </span>
+                {streakMilestone ? (
+                  <>
+                    <div style={{ fontSize: 28, marginBottom: 6 }}>{streakMilestone.emoji}</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: "#92400e", marginBottom: 4 }}>
+                      {streak}-Round Streak — {streakMilestone.label}!
+                    </div>
+                    <div style={{
+                      display: "inline-block", padding: "6px 16px", borderRadius: 8,
+                      background: "#92400e", color: "#fff", fontSize: 14, fontWeight: 700,
+                      marginTop: 4,
+                    }}>
+                      +{streakMilestone.bonus} bonus points
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span style={{ fontSize: 15 }}>🔥 {streak}-round streak</span>
+                    <span style={{ fontSize: 12, color: "#7c3aed", marginLeft: 8 }}>
+                      {(() => {
+                        const nextMilestone = STREAK_MILESTONES.find(m => m.at > streak);
+                        if (nextMilestone) return `${nextMilestone.at - streak} more for +${nextMilestone.bonus} bonus!`;
+                        return "Maximum streak!";
+                      })()}
+                    </span>
+                  </>
+                )}
               </div>
             )}
 
@@ -8262,7 +10101,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
             )}
 
             {/* Connected Figures */}
-            {!subject._isCustom && (() => {
+            {!subject._isCustom && !h2hMode && (() => {
               const connected = getConnectedFigures(subject, played);
               if (connected.length === 0) return null;
               return (
@@ -8342,32 +10181,64 @@ Be historically precise. The inevitability score should reflect genuine counterf
             })()}
 
             {/* Actions */}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 120 }}>
-                🏠 Home
-              </button>
-              {isDaily ? (
-                <button onClick={shareResult} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120, background: "#d97706" }}>
-                  📤 Share Daily Result
-                </button>
-              ) : (
-                <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120 }}>
-                  Next Figure →
-                </button>
-              )}
-            </div>
-
-            {!isDaily && (
-              <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-                <button onClick={shareResult} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
-                  📤 Share
-                </button>
-                {!subject._isCustom && (
-                  <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
-                    🎯 Challenge Friends
+            {h2hMode ? (
+              <>
+                {/* H2H running score */}
+                <div style={{
+                  padding: "12px 16px", background: "#fef2f2", borderRadius: 10,
+                  border: "1px solid #fecaca", marginBottom: 12,
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#dc2626" }}>
+                    ⚔️ Round {h2hMode.myPoints.length} of {h2hMode.figures.length}
+                  </span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a" }}>
+                    Running total: {h2hMode.myPoints.reduce((a, b) => a + b, 0)} pts
+                  </span>
+                </div>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "12px 16px", fontSize: 13 }}>
+                    Quit
                   </button>
+                  <button onClick={h2hAdvance} style={{
+                    ...S.btn, flex: 1, padding: "14px", fontSize: 16, fontWeight: 700,
+                    background: "linear-gradient(135deg, #dc2626, #ea580c)",
+                    color: "#fff", border: "none",
+                  }}>
+                    {h2hMode.myPoints.length >= h2hMode.figures.length ? "See Results ⚔️" : `Next Round →`}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 120 }}>
+                    🏠 Home
+                  </button>
+                  {isDaily ? (
+                    <button onClick={shareResult} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120, background: "#d97706" }}>
+                      📤 Share Daily Result
+                    </button>
+                  ) : (
+                    <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120 }}>
+                      Next Figure →
+                    </button>
+                  )}
+                </div>
+
+                {!isDaily && (
+                  <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+                    <button onClick={shareResult} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
+                      📤 Share
+                    </button>
+                    {!subject._isCustom && (
+                      <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, flex: 1, padding: "10px 16px", fontSize: 13 }}>
+                        🎯 Challenge Friends
+                      </button>
+                    )}
+                  </div>
                 )}
-              </div>
+              </>
             )}
           </div>
         </div>
