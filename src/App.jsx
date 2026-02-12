@@ -5905,6 +5905,80 @@ const getConsistentScore = (name) => {
   return 0.10 + (hash % 800) / 1000;
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// CONNECTED FIGURES
+// ─────────────────────────────────────────────────────────────────────────────
+const fieldKeywords = (field) => field.toLowerCase().replace(/[&,]/g, ' ').split(/\s+/).filter(w => w.length > 2);
+
+const getConnectedFigures = (current, playedIds = [], count = 4) => {
+  if (!current || current._isCustom) return [];
+
+  const curKeys = fieldKeywords(current.field);
+  const curBorn = current.born || 0;
+  const curDied = current.died || (curBorn + 70);
+
+  const scored = ALL_SUBJECTS
+    .filter(s => s.id !== current.id)
+    .map(s => {
+      let score = 0;
+      const sBorn = s.born || 0;
+      const sDied = s.died || (sBorn + 70);
+
+      // Same category: strong signal
+      if (s.cat === current.cat) score += 4;
+
+      // Field keyword overlap
+      const sKeys = fieldKeywords(s.field);
+      const overlap = curKeys.filter(k => sKeys.includes(k)).length;
+      score += overlap * 3;
+
+      // Contemporaries: lifetimes overlap
+      if (sBorn <= curDied && sDied >= curBorn) score += 2;
+
+      // Close era: born within 50 years
+      if (Math.abs(sBorn - curBorn) < 50) score += 1;
+
+      // Similar inevitability score (interesting comparison)
+      if (Math.abs(s.r - current.r) < 0.12) score += 1;
+
+      // Slight bias toward unplayed figures
+      if (!playedIds.includes(s.id)) score += 1;
+
+      // Break ties with a deterministic hash so results are stable
+      const tiebreak = (hashString(current.id + s.id) % 100) / 1000;
+
+      return { figure: s, score: score + tiebreak };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, count)
+    .map(s => s.figure);
+
+  return scored;
+};
+
+// Connection label — why these figures are related
+const getConnectionLabel = (current, other) => {
+  const sameCat = current.cat === other.cat;
+  const curKeys = fieldKeywords(current.field);
+  const otherKeys = fieldKeywords(other.field);
+  const fieldOverlap = curKeys.some(k => otherKeys.includes(k));
+  const curBorn = current.born || 0;
+  const curDied = current.died || (curBorn + 70);
+  const oBorn = other.born || 0;
+  const oDied = other.died || (oBorn + 70);
+  const contemporary = oBorn <= curDied && oDied >= curBorn;
+  const similarR = Math.abs(other.r - current.r) < 0.12;
+
+  if (fieldOverlap && contemporary) return "Same field, same era";
+  if (fieldOverlap) return "Same field";
+  if (sameCat && contemporary) return "Contemporary";
+  if (sameCat && similarR) return "Similarly inevitable";
+  if (sameCat) return CATS[current.cat]?.label || "Related";
+  if (contemporary) return "Same era";
+  if (similarR) return "Similar score";
+  return "Related";
+};
+
 // Local storage
 const STORAGE_KEY = "counterfactual_progress";
 const CUSTOM_CACHE_KEY = "counterfactual_custom_cache";
@@ -6639,6 +6713,202 @@ Be historically precise. The inevitability score should reflect genuine counterf
     scrollTop();
   };
 
+  // Generate a visual share card using Canvas API
+  const generateShareCard = async () => {
+    const r = subject.r ?? subject._r;
+    const diff = Math.abs(prediction - r);
+    const pts = calculatePoints(diff);
+    const userPct = Math.round(prediction * 100);
+    const actualPct = Math.round(r * 100);
+    const scoreLabel = getScoreLabel(r);
+    const dayNum = isDaily ? getDayNumber() : null;
+    const percentile = isDaily ? getDailyPercentile(diff, r) : null;
+
+    const W = 1080, H = 1080;
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    // Background — warm dark gradient
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, "#1a1a18");
+    bg.addColorStop(0.5, "#222220");
+    bg.addColorStop(1, "#1a1a18");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle grid lines for texture
+    ctx.strokeStyle = "rgba(255,255,255,0.025)";
+    ctx.lineWidth = 1;
+    for (let i = 0; i < W; i += 60) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
+    }
+
+    // Accent line at top
+    const topLine = ctx.createLinearGradient(0, 0, W, 0);
+    topLine.addColorStop(0, "#b91c1c");
+    topLine.addColorStop(0.35, "#c2410c");
+    topLine.addColorStop(0.6, "#d97706");
+    topLine.addColorStop(1, "#15803d");
+    ctx.fillStyle = topLine;
+    ctx.fillRect(0, 0, W, 6);
+
+    // Helper: draw centered text
+    const centerText = (text, y, font, color, maxWidth) => {
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textAlign = "center";
+      if (maxWidth) {
+        // Truncate if needed
+        let t = text;
+        while (ctx.measureText(t).width > maxWidth && t.length > 3) t = t.slice(0, -4) + "...";
+        ctx.fillText(t, W / 2, y);
+      } else {
+        ctx.fillText(text, W / 2, y);
+      }
+    };
+
+    // "Counterfactual" title
+    centerText("Counterfactual", 90, "italic 42px Georgia, serif", "rgba(255,255,255,0.5)");
+
+    // Daily badge
+    if (isDaily) {
+      ctx.fillStyle = "#d97706";
+      const badgeW = 220, badgeH = 40, badgeX = (W - badgeW) / 2, badgeY = 112;
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
+      ctx.fill();
+      centerText(`🗓️  Daily #${dayNum}`, 140, "bold 20px 'Helvetica Neue', sans-serif", "#fff");
+    }
+
+    const nameY = isDaily ? 220 : 180;
+
+    // Figure name
+    centerText(subject.name, nameY, `48px Georgia, serif`, "#ffffff", W - 120);
+
+    // Field + lifespan
+    const fieldText = `${subject.field}  ·  ${formatLifespan(subject.born, subject.died)}`;
+    centerText(fieldText, nameY + 50, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.45)", W - 120);
+
+    // ── Score comparison area ──
+    const boxY = nameY + 110;
+    const boxH = 260;
+
+    // Score background
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.beginPath();
+    ctx.roundRect(80, boxY, W - 160, boxH, 20);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Three columns: Your Guess | Actual | Points
+    const colW = (W - 160) / 3;
+    const cols = [
+      { label: "YOUR GUESS", value: `${userPct}%`, color: "#ffffff" },
+      { label: "ACTUAL", value: `${actualPct}%`, color: scoreLabel.color },
+      { label: "POINTS", value: pts > 0 ? `+${pts}` : "0", color: pts >= 64 ? "#22c55e" : pts >= 36 ? "#d97706" : "#ef4444" },
+    ];
+    cols.forEach((col, i) => {
+      const cx = 80 + colW * i + colW / 2;
+      ctx.font = "bold 14px 'Helvetica Neue', sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.textAlign = "center";
+      ctx.letterSpacing = "2px";
+      ctx.fillText(col.label, cx, boxY + 55);
+      ctx.letterSpacing = "0px";
+      ctx.font = "56px Georgia, serif";
+      ctx.fillStyle = col.color;
+      ctx.fillText(col.value, cx, boxY + 130);
+    });
+
+    // Gradient bar showing position
+    const barY = boxY + 170;
+    const barX = 120, barW = W - 240, barH = 20;
+    const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+    barGrad.addColorStop(0, "#b91c1c");
+    barGrad.addColorStop(0.35, "#c2410c");
+    barGrad.addColorStop(0.6, "#d97706");
+    barGrad.addColorStop(1, "#15803d");
+    ctx.fillStyle = barGrad;
+    ctx.beginPath();
+    ctx.roundRect(barX, barY, barW, barH, 10);
+    ctx.fill();
+
+    // User guess marker on bar
+    const markerX = barX + (userPct / 100) * barW;
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(markerX, barY + barH / 2, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#1a1a1a";
+    ctx.beginPath();
+    ctx.arc(markerX, barY + barH / 2, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Actual score marker on bar (diamond)
+    const actualX = barX + (actualPct / 100) * barW;
+    ctx.fillStyle = scoreLabel.color;
+    ctx.save();
+    ctx.translate(actualX, barY + barH / 2);
+    ctx.rotate(Math.PI / 4);
+    ctx.fillRect(-9, -9, 18, 18);
+    ctx.restore();
+
+    // Labels under bar
+    ctx.font = "13px 'Helvetica Neue', sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.fillText("Singular", barX, barY + barH + 22);
+    ctx.textAlign = "right";
+    ctx.fillText("Inevitable", barX + barW, barY + barH + 22);
+
+    // ── Bottom section ──
+    const bottomY = boxY + boxH + 50;
+
+    // Verdict label
+    centerText(scoreLabel.label, bottomY, "bold 28px 'Helvetica Neue', sans-serif", scoreLabel.color);
+
+    // Accuracy emoji + feedback
+    const feedbackMsg = diff < 0.05 ? "Nailed it." : diff < 0.10 ? "Impressively close." : diff < 0.15 ? "Good read." : diff < 0.25 ? "Not bad." : "Way off.";
+    centerText(feedbackMsg, bottomY + 40, "22px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.5)");
+
+    // Daily percentile
+    if (isDaily && percentile !== null) {
+      centerText(`Beat ${percentile}% of players`, bottomY + 80, "bold 22px 'Helvetica Neue', sans-serif", "#d97706");
+    }
+
+    // Daily streak
+    if (isDaily && dailyState?.dailyStreak >= 2) {
+      centerText(`🔥 ${dailyState.dailyStreak}-day streak`, bottomY + (percentile !== null ? 115 : 80), "20px 'Helvetica Neue', sans-serif", "#d97706");
+    }
+
+    // Rank badge for non-daily
+    if (!isDaily && played.length >= 5) {
+      const avgPts = Math.round(score / played.length);
+      const rank = getRank(avgPts, played.length);
+      centerText(`${rank.icon} ${rank.title}`, bottomY + 80, "22px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)");
+    }
+
+    // Bottom accent line
+    const botLine = ctx.createLinearGradient(0, 0, W, 0);
+    botLine.addColorStop(0, "#b91c1c");
+    botLine.addColorStop(0.35, "#c2410c");
+    botLine.addColorStop(0.6, "#d97706");
+    botLine.addColorStop(1, "#15803d");
+    ctx.fillStyle = botLine;
+    ctx.fillRect(0, H - 6, W, 6);
+
+    // URL
+    centerText("counterfactual.app", H - 36, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.3)");
+
+    // Convert to blob
+    return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+  };
+
   const shareResult = async () => {
     const r = subject.r ?? subject._r;
     const diff = Math.abs(prediction - r);
@@ -6656,13 +6926,34 @@ Be historically precise. The inevitability score should reflect genuine counterf
       const streakText = dailyState?.dailyStreak >= 2 ? ` · 🔥 ${dailyState.dailyStreak}-day streak` : "";
       text = `🗓️ Counterfactual Daily #${dayNum}\n\n${subject.name}: I guessed ${userPct}% (actual: ${actualPct}%) ${emoji}\n${pts} points · Beat ${percentile}% of players${streakText}\n\nhttps://counterfactual.app`;
     } else {
-      text = `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% inevitable (actual: ${actualPct}%) ${emoji}\n${pts} points${rank.title !== "Newcomer" ? ` · ${rank.icon} ${rank.title}` : ""}\n\nCan you do better?`;
+      text = `🎯 Counterfactual: ${subject.name}\n\nI guessed ${userPct}% inevitable (actual: ${actualPct}%) ${emoji}\n${pts} points${rank.title !== "Newcomer" ? ` · ${rank.icon} ${rank.title}` : ""}\n\nCan you do better?\nhttps://counterfactual.app`;
     }
 
-    if (navigator.share) {
-      try { await navigator.share({ text, url: "https://counterfactual.app" }); } catch(e) {}
-    } else {
-      navigator.clipboard?.writeText(text + (isDaily ? "" : "\nhttps://counterfactual.app"));
+    // Try to generate and share image card
+    try {
+      const blob = await generateShareCard();
+      const file = new File([blob], "counterfactual.png", { type: "image/png" });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ text, files: [file] });
+        return;
+      }
+
+      // Desktop fallback: download image + copy text
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `counterfactual-${subject.name.replace(/\s+/g, "-").toLowerCase()}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      navigator.clipboard?.writeText(text);
+      showToast("📋 Card downloaded + text copied");
+    } catch (e) {
+      // Final fallback: text only
+      if (navigator.share) {
+        try { await navigator.share({ text, url: "https://counterfactual.app" }); return; } catch(e2) {}
+      }
+      navigator.clipboard?.writeText(text);
       showToast("📋 Copied to clipboard");
     }
   };
@@ -7688,6 +7979,63 @@ Be historically precise. The inevitability score should reflect genuine counterf
                 </div>
               </details>
             )}
+
+            {/* Connected Figures */}
+            {!subject._isCustom && (() => {
+              const connected = getConnectedFigures(subject, played);
+              if (connected.length === 0) return null;
+              return (
+                <div style={{
+                  marginBottom: 22,
+                  animation: animateResult ? "fadeUp 0.4s ease 0.5s both" : "none",
+                }}>
+                  <div style={{
+                    fontSize: 13, fontWeight: 700, color: "#9a9890",
+                    textTransform: "uppercase", letterSpacing: "0.06em",
+                    marginBottom: 12,
+                  }}>
+                    🔗 In the Same Orbit
+                  </div>
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+                    gap: 10,
+                  }}>
+                    {connected.map(fig => {
+                      const cat = CATS[fig.cat] || { label: fig.cat, color: "#64748b", bg: "rgba(100,116,139,0.06)" };
+                      const wasPlayed = played.includes(fig.id);
+                      const label = getConnectionLabel(subject, fig);
+                      return (
+                        <div
+                          key={fig.id}
+                          onClick={() => { selectSubject(fig); }}
+                          style={{
+                            padding: "14px 16px", background: "#faf9f6",
+                            borderRadius: 12, border: "1px solid #e5e2db",
+                            cursor: "pointer", transition: "all 0.15s ease",
+                            opacity: wasPlayed ? 0.6 : 1,
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = "#c0bdb5"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; }}
+                        >
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                            <span style={{
+                              fontSize: 9, fontWeight: 700, color: "#9a9890",
+                              textTransform: "uppercase", letterSpacing: "0.05em",
+                            }}>{label}</span>
+                            {wasPlayed && <span style={{ fontSize: 10, color: "#b0ada5" }}>✓</span>}
+                          </div>
+                          <div style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", fontFamily: fontStack, marginBottom: 3 }}>
+                            {fig.name}
+                          </div>
+                          <div style={{ fontSize: 12, color: "#9a9890" }}>{fig.field}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Rank progression */}
             {(() => {
