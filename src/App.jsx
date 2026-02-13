@@ -9622,6 +9622,16 @@ Be historically precise. The inevitability score should reflect genuine counterf
         <div style={{ ...S.inner, maxWidth: 600 }}>
           <BackButton />
           <div style={{ ...S.card, animation: "fadeUp 0.35s ease both" }}>
+            {/* First-visit explainer for deep link arrivals */}
+            {played.length === 0 && !hasSeenIntro && (
+              <div style={{
+                padding: "12px 16px", borderRadius: 10, marginBottom: 16,
+                background: "linear-gradient(135deg, #f0f9ff, #eff6ff)",
+                border: "1px solid #bfdbfe", fontSize: 13, lineHeight: 1.6, color: "#1e40af",
+              }}>
+                <strong>How to play:</strong> Predict how replaceable this historical figure was — would their contributions have happened without them (inevitable), or were they truly one-of-a-kind (singular)?
+              </div>
+            )}
             {isDaily && (
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
@@ -10134,7 +10144,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
 
             {/* Ripple Effects - collapsible with chevron */}
             {subject.ripples && subject.ripples.length > 0 && (
-              <details style={{ marginBottom: 18 }} open>
+              <details style={{ marginBottom: 18, ...rp(3) }}>
                 <summary style={S.collapsibleSummary}>
                   <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span>🔗</span> Ripple Effects
@@ -10159,7 +10169,7 @@ Be historically precise. The inevitability score should reflect genuine counterf
 
             {/* Timeline - collapsible with chevron, fixed alignment */}
             {subject.timeline && subject.timeline.length > 0 && (
-              <details style={{ marginBottom: 24 }} open>
+              <details style={{ marginBottom: 24, ...rp(3) }}>
                 <summary style={S.collapsibleSummary}>
                   <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span>🔀</span> What Happened vs. Alternate Timeline
@@ -10226,63 +10236,6 @@ Be historically precise. The inevitability score should reflect genuine counterf
               </details>
             )}
 
-            {/* Connected Figures */}
-            {!subject._isCustom && !h2hMode && (() => {
-              const connected = getConnectedFigures(subject, played);
-              if (connected.length === 0) return null;
-              return (
-                <div style={{
-                  marginBottom: 22,
-                  ...rp(3),
-                }}>
-                  <div style={{
-                    fontSize: 13, fontWeight: 700, color: "#9a9890",
-                    textTransform: "uppercase", letterSpacing: "0.06em",
-                    marginBottom: 12,
-                  }}>
-                    🔗 In the Same Orbit
-                  </div>
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                    gap: 10,
-                  }}>
-                    {connected.map(fig => {
-                      const cat = CATS[fig.cat] || { label: fig.cat, color: "#64748b", bg: "rgba(100,116,139,0.06)" };
-                      const wasPlayed = played.includes(fig.id);
-                      const label = getConnectionLabel(subject, fig);
-                      return (
-                        <div
-                          key={fig.id}
-                          onClick={() => { selectSubject(fig); }}
-                          style={{
-                            padding: "14px 16px", background: "#faf9f6",
-                            borderRadius: 12, border: "1px solid #e5e2db",
-                            cursor: "pointer", transition: "all 0.15s ease",
-                            opacity: wasPlayed ? 0.6 : 1,
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.borderColor = "#c0bdb5"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                          onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.transform = "none"; }}
-                        >
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                            <span style={{
-                              fontSize: 9, fontWeight: 700, color: "#9a9890",
-                              textTransform: "uppercase", letterSpacing: "0.05em",
-                            }}>{label}</span>
-                            {wasPlayed && <span style={{ fontSize: 10, color: "#b0ada5" }}>✓</span>}
-                          </div>
-                          <div style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", fontFamily: fontStack, marginBottom: 3 }}>
-                            {fig.name}
-                          </div>
-                          <div style={{ fontSize: 12, color: "#9a9890" }}>{fig.field}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })()}
-
             {/* Rank progression */}
             {(() => {
               const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
@@ -10338,8 +10291,64 @@ Be historically precise. The inevitability score should reflect genuine counterf
               </>
             ) : (
               <>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 120 }}>
+                {/* Smart next suggestions */}
+                {!isDaily && !subject._isCustom && (() => {
+                  const suggestions = [];
+                  const connected = getConnectedFigures(subject, played);
+                  const unplayedConnected = connected.filter(f => !played.includes(f.id));
+                  if (unplayedConnected.length > 0) {
+                    const pick = unplayedConnected[0];
+                    const label = getConnectionLabel(subject, pick);
+                    suggestions.push({ figure: pick, reason: label, icon: "🔗" });
+                  }
+                  if (gameHistory.length >= 3) {
+                    const recs = getRecommendations(played, gameHistory, ALL_SUBJECTS);
+                    const rec = recs.find(r => !suggestions.some(s => s.figure.id === r.figure.id));
+                    if (rec) {
+                      const icons = { connected: "🔗", weak: "🎯", challenge: "⬆️", comfort: "💪" };
+                      suggestions.push({ figure: rec.figure, reason: rec.label, icon: icons[rec.type] || "→" });
+                    }
+                  }
+                  if (suggestions.length === 0) return null;
+                  return (
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#9a9890", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        Play Next
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {suggestions.map((s, i) => {
+                          const cat = CATS[s.figure.cat] || { color: "#64748b" };
+                          return (
+                            <button
+                              key={s.figure.id}
+                              onClick={() => selectSubject(s.figure)}
+                              style={{
+                                display: "flex", alignItems: "center", gap: 12,
+                                padding: "14px 16px", borderRadius: 12,
+                                background: i === 0 ? "linear-gradient(135deg, #fafaf9, #f5f4f0)" : "#fafaf9",
+                                border: i === 0 ? `2px solid ${cat.color}30` : "1px solid #e5e2db",
+                                cursor: "pointer", width: "100%", textAlign: "left",
+                                transition: "all 0.15s ease",
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)"; }}
+                              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                            >
+                              <span style={{ fontSize: 20 }}>{s.icon}</span>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", fontFamily: fontStack }}>{s.figure.name}</div>
+                                <div style={{ fontSize: 12, color: "#9a9890", marginTop: 2 }}>{s.reason}</div>
+                              </div>
+                              <span style={{ fontSize: 14, color: "#b0ada5" }}>→</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 100 }}>
                     🏠 Home
                   </button>
                   {isDaily ? (
@@ -10347,8 +10356,8 @@ Be historically precise. The inevitability score should reflect genuine counterf
                       📤 Share Daily Result
                     </button>
                   ) : (
-                    <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, flex: 1, minWidth: 120 }}>
-                      Next Figure →
+                    <button onClick={startRandom} style={{ ...S.btn, ...S.btnSecondary, flex: 1, minWidth: 100 }}>
+                      🎲 Random
                     </button>
                   )}
                 </div>
