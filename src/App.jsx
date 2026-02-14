@@ -128,6 +128,8 @@ const CATS = {
   finance:{label:"Finance & Economics",color:"#ca8a04",bg:"rgba(202,138,4,0.06)"},
   exploration:{label:"Exploration",color:"#ea580c",bg:"rgba(234,88,12,0.06)"},
   social:{label:"Social Movements",color:"#db2777",bg:"rgba(219,39,119,0.06)"},
+  sports:{label:"Sports",color:"#e11d48",bg:"rgba(225,29,72,0.06)"},
+  events:{label:"Events",color:"#7c3aed",bg:"rgba(124,58,237,0.06)"},
   institutions:{label:"Institutions",color:"#0891b2",bg:"rgba(8,145,178,0.06)"},
   inventions:{label:"Inventions",color:"#059669",bg:"rgba(5,150,105,0.06)"},
 };
@@ -135,16 +137,21 @@ const CATS = {
 const CAT_ICONS = {
   science: "🔬", politics: "🏛️", military: "⚔️", arts: "🎨",
   philosophy: "📜", medicine: "⚕️", computing: "💻", finance: "💰",
-  exploration: "🧭", social: "✊", institutions: "🏢", inventions: "⚙️",
+  exploration: "🧭", social: "✊", sports: "🏆", events: "📅",
+  institutions: "🏢", inventions: "⚙️",
 };
 
+
+// Helper: check if figure matches a category (primary or secondary)
+const figInCat = (fig, catKey) => fig.cat === catKey || fig.cat2 === catKey;
 // ─────────────────────────────────────────────────────────────────────────────
 // HISTORICAL WEIGHT SCALE (internal r values: 0=singular, 1=inevitable)
 // Display as weight = 1 - r: higher weight = more impactful
-// 80-100%: History-Defining — without them, the world is unrecognizable
-// 50-79%: High Weight — shaped history in ways others couldn't easily replicate
-// 20-49%: Moderate Weight — contributed, but others were converging
-// 0-19%: Low Weight — this was happening regardless of any one person
+// Descriptions are category-aware: people, events, inventions, institutions
+// 80-100%: History-Defining
+// 50-79%: High Weight
+// 20-49%: Moderate Weight
+// 0-19%: Low Weight
 // ─────────────────────────────────────────────────────────────────────────────
 const toWeight = (r) => 1 - r;
 
@@ -4197,7 +4204,7 @@ const INSTITUTIONS = [
       {year:2024,happened:"195 member countries",alternate:"Police cooperation more fragmented"}
     ],
     impact:{lives:"Crime prevention globally",econ:"Law enforcement efficiency",cultural:"International policing norm",reach:"195 member countries",timeline:"Police cooperation more bilateral"}},
-  {id:"fifa",name:"FIFA",born:1904,died:null,cat:"institutions",field:"Sports",
+  {id:"fifa",name:"FIFA",born:1904,died:null,cat:"institutions",cat2:"sports",field:"Sports",
     quote:"For the Game. For the World.",
     contributions:["World Cup organization","Football rules standardization","Global sport governance","Economic impact"],
     r:0.60,reasoning:"Football was globalizing. Some governing body was needed. FIFA's specific structure emerged from European origins. A different organization would have formed.",
@@ -4215,7 +4222,7 @@ const INSTITUTIONS = [
       {year:2024,happened:"FIFA governs world's most popular sport",alternate:"Different body governs football; similar global reach"}
     ],
     impact:{lives:"Billions of fans",econ:"$5B+ annual revenue",cultural:"Football as global culture",reach:"211 member associations",timeline:"Football governance different"}},
-  {id:"olympics",name:"Int'l Olympic Committee",born:1894,died:null,cat:"institutions",field:"Sports",
+  {id:"olympics",name:"Int'l Olympic Committee",born:1894,died:null,cat:"institutions",cat2:"sports",field:"Sports",
     quote:"Faster, Higher, Stronger – Together.",
     contributions:["Modern Olympics revival","International athletic competition","Olympic movement values","Cultural exchange"],
     r:0.50,reasoning:"Athletic competition existed. Coubertin revived Olympics specifically. Without him, some international games would have emerged, but the specific form and brand might differ.",
@@ -5846,6 +5853,469 @@ const INVENTIONS = [
       {year:2024,happened:"Concrete foundation of modern infrastructure",alternate:"Identical outcome; different patent history"}
     ],
     impact:{lives:"Modern cities for billions",econ:"Construction: $10T+ global",cultural:"Urban density possible",reach:"Global construction",timeline:"Reinforced concrete within 10-20 years"}}
+];
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HISTORICAL EVENTS
+// ─────────────────────────────────────────────────────────────────────────────
+const EVENTS = [
+
+  {id:"french_revolution",name:"French Revolution",born:1789,died:null,cat:"events",cat2:"politics",field:"Political Revolution",
+    quote:"Liberty, equality, fraternity.",
+    contributions:["End of absolute monarchy","Declaration of Rights of Man","Rise of nationalism","Modern republican ideals"],
+    r:0.55,reasoning:"Social and economic pressures made some form of upheaval near-certain. The Estates-General crisis, bread prices, and Enlightenment ideas were all converging. But the specific form — the Terror, the Republic, Napoleon's rise — was contingent on dozens of individual decisions and accidents.",
+    counterfactual:"Without 1789 specifically, France likely sees reform or revolution within a decade anyway — the fiscal crisis was terminal. But a delayed or differently-triggered revolt might have produced a constitutional monarchy rather than a republic. The Terror might never happen. Napoleon might remain an obscure artillery officer. The entire template for modern revolution changes.",
+    impact:{lives:"Tens of millions across Europe",econ:"Destroyed feudal economic system across Western Europe",cultural:"Template for every subsequent revolution",reach:"Global — inspired revolutions from Haiti to Russia",timeline:"Some form of French political crisis within 5-10 years regardless"},
+    timeline:[
+      {year:1789,happened:"Storming of the Bastille triggers revolution",alternate:"Reform attempts continue, slower political transformation"},
+      {year:1793,happened:"Reign of Terror, execution of Louis XVI",alternate:"Constitutional monarchy possible under different revolutionary path"},
+      {year:1799,happened:"Napoleon seizes power in coup",alternate:"Different strongman or continued republic without the revolutionary chaos"},
+      {year:1815,happened:"Congress of Vienna redraws Europe",alternate:"Europe's borders redrawn differently without Napoleonic Wars"}
+    ],
+    cascade:[
+      {event:"No storming of the Bastille",consequence:"The symbolic moment that made revolution feel unstoppable doesn't happen. Reform efforts continue but lack popular energy.",delay:"Immediate",severity:"high",icon:"🏰"},
+      {event:"No Reign of Terror",consequence:"The concept of revolutionary purges as necessary never enters the political imagination. Future revolutions may be less violent.",delay:"~4 years",severity:"high",icon:"⚖️"},
+      {event:"No Napoleonic Wars",consequence:"Without the revolutionary army and Napoleon, Europe's borders stay roughly the same for decades longer. No spread of civil code across continent.",delay:"~10 years",severity:"high",icon:"⚔️"},
+      {event:"Different template for revolution",consequence:"The Russian Revolution, Chinese Revolution, and dozens of others looked to 1789 as a model. Without it, revolutionary movements develop different playbooks.",delay:"~100 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Minimal direct tech impact, though the revolutionary government did promote metric system adoption.",
+      culture:"The idea that people can overthrow their government and start over — that's a French Revolution inheritance. Without it, political change might feel slower, more incremental everywhere.",
+      politics:"Constitutional republics might develop later or differently. The specific left-right political spectrum (literally named for French Revolutionary seating) wouldn't exist.",
+      daily:"The metric system might not be universal. National flags and anthems as symbols of popular sovereignty might look very different."}},
+
+  {id:"fall_of_rome",name:"Fall of Rome",born:476,died:null,cat:"events",cat2:"military",field:"Civilizational Collapse",
+    quote:"The city which had taken the whole world was itself taken.",
+    contributions:["End of classical antiquity","Birth of medieval Europe","Fragmentation of Mediterranean unity","Preservation crisis for knowledge"],
+    r:0.75,reasoning:"Rome had been declining for centuries. Economic strain, military overextension, plague, administrative decay, and migration pressures made collapse near-inevitable. The specific date of 476 is somewhat arbitrary — the Western Empire had been a shell for decades. The Eastern Empire continued for another millennium.",
+    counterfactual:"Without the specific 476 collapse, Rome still fragments — the forces are too large to stop. But a slower, more managed decline might preserve more institutional continuity. The 'Dark Ages' knowledge gap might be shallower. Latin administrative traditions might persist longer in the West. The specific Germanic kingdoms that emerged might have different borders and cultures.",
+    impact:{lives:"Hundreds of millions over centuries",econ:"Trade networks collapsed, GDP per capita wouldn't recover for 1000 years in some regions",cultural:"Loss of classical knowledge, rise of Christianity as organizing force",reach:"All of Europe, North Africa, Middle East",timeline:"Decline was already centuries old by 476"},
+    timeline:[
+      {year:376,happened:"Goths cross the Danube, beginning of mass migrations",alternate:"Without specific military defeats, migrations might be absorbed more gradually"},
+      {year:410,happened:"Visigoths sack Rome under Alaric",alternate:"Rome remains symbolically inviolate, morale holds longer"},
+      {year:476,happened:"Last Western emperor deposed by Odoacer",alternate:"Puppet emperors continue for decades, slower institutional decay"},
+      {year:527,happened:"Justinian attempts reconquest from Constantinople",alternate:"Without clear break, reconquest framing doesn't exist"}
+    ],
+    cascade:[
+      {event:"No symbolic fall in 476",consequence:"The narrative of 'Rome fell' doesn't crystallize. Instead a gradual fading makes it harder to periodize history.",delay:"Immediate",severity:"medium",icon:"🏛️"},
+      {event:"More institutional continuity",consequence:"Roman law, road maintenance, and trade networks degrade slower. The economic collapse is less severe.",delay:"~50 years",severity:"high",icon:"📜"},
+      {event:"Shallower knowledge gap",consequence:"More texts survive. The monasteries still preserve knowledge but there's more to preserve and more readers.",delay:"~200 years",severity:"high",icon:"📚"},
+      {event:"Different medieval Europe",consequence:"Feudalism might still emerge but in a less fragmented form. The church might have less relative power if secular institutions persist.",delay:"~500 years",severity:"high",icon:"🏰"}
+    ],
+    modernDay:{
+      tech:"If more classical knowledge survived, the Scientific Revolution might have come earlier — though this is speculative.",
+      culture:"The 'fall of civilization' narrative that haunts Western culture might not exist in the same form. Less anxiety about decline.",
+      politics:"European nation-states might have different borders if Roman provinces persisted longer as administrative units.",
+      daily:"Hard to trace specific daily impacts, but the thousand-year gap in development means everything from infrastructure to literacy was set back."}},
+
+  {id:"black_death",name:"Black Death",born:1347,died:null,cat:"events",cat2:"medicine",field:"Pandemic",
+    quote:"So many died that all believed it was the end of the world.",
+    contributions:["Killed 30-60% of Europe's population","Ended feudal labor systems","Accelerated social mobility","Transformed European economy"],
+    r:0.40,reasoning:"Plague was endemic in Central Asia and had reached Europe before. But the specific 1347 pandemic — arriving via Genoese trading ships from Caffa — hit at a particular moment of European vulnerability. Overpopulation, poor nutrition, and the Little Ice Age amplified the death toll. A plague would have come eventually, but this specific catastrophe at this specific scale was not guaranteed.",
+    counterfactual:"Without the Black Death's specific timing and severity, feudalism persists longer in Europe. The labor shortage that gave peasants bargaining power doesn't materialize as quickly. The Renaissance might be delayed — the wealth redistribution and social disruption that enabled it wouldn't happen on the same timeline. Europe's economic and demographic trajectory shifts by a century or more.",
+    impact:{lives:"75-200 million dead worldwide",econ:"Wages doubled for survivors, land prices collapsed, feudal economics permanently disrupted",cultural:"Transformed art, religion, and philosophy — death became central to European culture",reach:"Europe, Middle East, North Africa, Central Asia",timeline:"Some plague event likely within 50 years, but scale was contingent"},
+    timeline:[
+      {year:1347,happened:"Plague reaches Sicily via Genoese ships",alternate:"Trade routes still carry disease but possibly slower spread"},
+      {year:1349,happened:"Peak mortality across Western Europe",alternate:"Without this specific strain at this scale, population loss is 10-20% rather than 30-60%"},
+      {year:1381,happened:"Peasants' Revolt in England — labor scarcity empowers workers",alternate:"Without massive depopulation, feudal labor relations persist"},
+      {year:1450,happened:"European population begins recovery, economy transformed",alternate:"Slower economic transformation, feudalism remains dominant"}
+    ],
+    cascade:[
+      {event:"No massive labor shortage",consequence:"Peasants remain bound to land. Wages stay low. The feudal system that was already cracking holds together for another century.",delay:"Immediate",severity:"high",icon:"⚰️"},
+      {event:"No crisis of faith",consequence:"The church's inability to explain or stop the plague shook authority. Without that crisis, the Reformation's ground is less fertile.",delay:"~150 years",severity:"high",icon:"⛪"},
+      {event:"Slower economic transformation",consequence:"The wealth redistribution that funded the Renaissance doesn't happen as fast. Merchant classes rise more gradually.",delay:"~100 years",severity:"high",icon:"💰"},
+      {event:"Different colonial timeline",consequence:"A more populated, more feudal Europe might colonize the Americas later or differently. More people at home means less pressure to emigrate.",delay:"~200 years",severity:"medium",icon:"🚢"}
+    ],
+    modernDay:{
+      tech:"The labor shortage drove innovation in labor-saving technology. Without it, mechanization comes later.",
+      culture:"The 'memento mori' tradition in Western art — skulls, dances of death — doesn't develop the same way. European culture has a different relationship with mortality.",
+      politics:"Without the collapse of feudalism accelerated by the plague, democratic movements might emerge on a different timeline.",
+      daily:"Europe's population geography would look different. Cities that grew because survivors concentrated there might be smaller."}},
+
+  {id:"moon_landing",name:"Moon Landing",born:1969,died:null,cat:"events",cat2:"exploration",field:"Space Exploration",
+    quote:"That's one small step for man, one giant leap for mankind.",
+    contributions:["First humans on another world","Proved space travel possible","Cold War propaganda victory","Inspired generations of scientists"],
+    r:0.45,reasoning:"The Space Race made a moon landing very likely by the 1970s — the US and USSR were both racing toward it. But Apollo 11 landing in July 1969 specifically was contingent on Kennedy's assassination galvanizing NASA funding, on specific technical decisions, and on the Soviets' N1 rocket failing. The landing was likely; the exact timing and American victory were not.",
+    counterfactual:"Without Apollo 11, someone reaches the Moon by the mid-1970s — the technology was converging. If the Soviets got there first, the geopolitical symbolism flips entirely. American prestige takes a different path. The 'if we can put a man on the Moon' idiom doesn't exist. NASA's post-Apollo decline might not happen because the mission hadn't yet been 'accomplished.'",
+    impact:{lives:"Inspired millions directly; satellite technology affects billions",econ:"$25.4 billion Apollo program ($200B+ adjusted); spawned aerospace industry",cultural:"Became defining symbol of human achievement",reach:"Global — watched by 600 million people live",timeline:"Moon landing by mid-1970s regardless of Apollo 11"},
+    timeline:[
+      {year:1961,happened:"Kennedy commits US to Moon before decade's end",alternate:"Without JFK's assassination boosting NASA funding, timeline slips"},
+      {year:1969,happened:"Apollo 11 lands on the Moon",alternate:"US or Soviet landing happens 3-6 years later"},
+      {year:1972,happened:"Apollo 17 — last Moon mission, public interest fading",alternate:"If landing happens later, the program might sustain longer"},
+      {year:1975,happened:"Apollo-Soyuz marks end of Space Race",alternate:"Competition continues longer if race isn't decisively won"}
+    ],
+    cascade:[
+      {event:"No July 1969 landing",consequence:"The Space Race continues at full intensity. Both superpowers keep pouring money into lunar programs. Public anticipation builds.",delay:"Immediate",severity:"medium",icon:"🚀"},
+      {event:"Soviet landing possible",consequence:"If the N1 rocket is fixed, Soviets might reach the Moon first. The propaganda victory goes to Moscow. Cold War dynamics shift.",delay:"~3 years",severity:"high",icon:"🇷🇺"},
+      {event:"Extended space investment",consequence:"Without 'mission accomplished' in 1969, space budgets stay higher through the 1970s. Mars missions might be seriously attempted earlier.",delay:"~5 years",severity:"medium",icon:"💰"},
+      {event:"Different space culture",consequence:"The specific iconography of Apollo — the flag, the footprint, Earthrise — doesn't define space exploration. Different images, different narrative.",delay:"Cultural",severity:"medium",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Satellite and computing technology still advance, but specific Apollo-derived innovations might come through different paths.",
+      culture:"'If we can put a man on the Moon' as an idiom for ambition doesn't exist. Space exploration's cultural meaning is different.",
+      politics:"The 'we won the Space Race' narrative doesn't anchor American Cold War identity the same way.",
+      daily:"GPS, weather satellites, and telecommunications satellites still exist — those weren't Apollo-dependent. But the cultural relationship with space is different."}},
+
+  {id:"911",name:"September 11 Attacks",born:2001,died:null,cat:"events",cat2:"military",field:"Terrorism",
+    quote:"Today, our nation saw evil, the very worst of human nature.",
+    contributions:["Launched War on Terror","Created Department of Homeland Security","Transformed air travel security","Reshaped US foreign policy for decades"],
+    r:0.25,reasoning:"Al-Qaeda was planning attacks on the US, but the specific form — hijacked planes as missiles targeting the World Trade Center and Pentagon — was genuinely novel and hard to predict. Intelligence agencies had fragments but couldn't assemble the picture. A major attack was likely given al-Qaeda's trajectory, but this specific devastating form was not inevitable.",
+    counterfactual:"Without 9/11 specifically, al-Qaeda still attempts a major attack — the Cole bombing and 1998 embassy attacks showed the trajectory. But a smaller or failed attack changes everything. No invasion of Afghanistan in 2001. Likely no Iraq War. The entire surveillance state develops differently. The TSA doesn't exist. The 21st century's defining conflict might be something other than the War on Terror.",
+    impact:{lives:"2,977 killed directly; hundreds of thousands in subsequent wars",econ:"$3.3 trillion in war costs; billions in security infrastructure",cultural:"Defined a generation's relationship with security, Islam, and American identity",reach:"Global — reshaped geopolitics worldwide",timeline:"Some al-Qaeda attack likely, but this scale was not inevitable"},
+    timeline:[
+      {year:2001,happened:"9/11 attacks kill 2,977; US invades Afghanistan",alternate:"Smaller attack or foiled plot leads to increased vigilance but not war"},
+      {year:2003,happened:"US invades Iraq citing WMDs and terror links",alternate:"Without 9/11's political cover, Iraq invasion far less likely"},
+      {year:2011,happened:"Bin Laden killed; Arab Spring reshapes Middle East",alternate:"Al-Qaeda remains a threat but without defining the era"},
+      {year:2021,happened:"US withdraws from Afghanistan after 20 years",alternate:"No 20-year occupation to withdraw from"}
+    ],
+    cascade:[
+      {event:"No World Trade Center attack",consequence:"The symbolic destruction of America's financial center doesn't happen. The psychological shock that enabled sweeping policy changes is absent.",delay:"Immediate",severity:"high",icon:"🏢"},
+      {event:"No War on Terror framework",consequence:"US foreign policy doesn't reorganize around counterterrorism. Military budget increases are smaller. Surveillance programs don't get the same political support.",delay:"~1 year",severity:"high",icon:"⚔️"},
+      {event:"No Iraq War",consequence:"Without the political environment created by 9/11, the case for invading Iraq doesn't hold. Hundreds of thousands of lives are different.",delay:"~2 years",severity:"high",icon:"🇮🇶"},
+      {event:"Different airport security",consequence:"The TSA doesn't exist. Airport security remains pre-2001 levels. The entire experience of air travel is different.",delay:"~1 year",severity:"medium",icon:"✈️"}
+    ],
+    modernDay:{
+      tech:"Mass surveillance programs like PRISM might not exist at the same scale. Phone and internet monitoring looks very different.",
+      culture:"Islamophobia in the West develops differently. The 'clash of civilizations' narrative doesn't dominate the 2000s.",
+      politics:"The Patriot Act doesn't pass. Executive power doesn't expand the same way. The political landscape of the 2000s-2010s is unrecognizable.",
+      daily:"No removing shoes at airports. No liquid restrictions. No TSA. The daily experience of travel and the background hum of security anxiety are both different."}},
+
+  {id:"printing_press_event",name:"Gutenberg's Press",born:1440,died:null,cat:"events",cat2:"inventions",field:"Information Revolution",
+    quote:"God suffers in the multitude of souls whom His word can not reach.",
+    contributions:["Mass production of books","Enabled Protestant Reformation","Democratized knowledge","Created publishing industry"],
+    r:0.65,reasoning:"Movable type already existed in China and Korea. European experiments with printing were underway in multiple workshops. Gutenberg's specific innovation — the alloy, the press design, the oil-based ink — was clever engineering, but the underlying demand was enormous and someone would have cracked it within decades. The Reformation and Scientific Revolution might have been delayed, but not prevented.",
+    counterfactual:"Without Gutenberg specifically, European printing emerges by 1470-1480 from Dutch or Italian workshops. The 20-30 year delay means Luther's theses spread slower — perhaps slow enough for the Church to contain the damage. The Reformation still happens but possibly as a more gradual reform rather than a rupture. Scientific knowledge still accelerates, just on a slightly later schedule.",
+    impact:{lives:"Billions — literacy and information access transformed civilization",econ:"Created entirely new industries: publishing, journalism, advertising",cultural:"Ended the manuscript era, enabled mass education",reach:"Global eventually, starting in Europe",timeline:"European printing within 20-30 years of Gutenberg regardless"},
+    timeline:[
+      {year:1440,happened:"Gutenberg develops movable type press",alternate:"Dutch and Italian printers continue experimenting, achieve results by 1470s"},
+      {year:1455,happened:"Gutenberg Bible printed — first mass-produced book",alternate:"First European printed books appear 20-30 years later"},
+      {year:1517,happened:"Luther's 95 Theses spread rapidly via print",alternate:"Religious dissent spreads slower, Church has more time to respond"},
+      {year:1600,happened:"200 million volumes printed in Europe",alternate:"Print revolution is 20-30 years behind, but catching up"}
+    ],
+    cascade:[
+      {event:"No Gutenberg press in 1440",consequence:"Books remain hand-copied for another generation. Literacy stays confined to clergy and wealthy elites slightly longer.",delay:"~20 years",severity:"medium",icon:"📖"},
+      {event:"Slower spread of Reformation ideas",consequence:"Luther's theses still get written, but without rapid printing, the Church has time to co-opt or suppress the movement. The Reformation might be a reform, not a schism.",delay:"~80 years",severity:"high",icon:"⛪"},
+      {event:"Delayed scientific communication",consequence:"Scientists still correspond by letter, but can't publish widely. Peer review and replication develop slower.",delay:"~100 years",severity:"medium",icon:"🔬"},
+      {event:"Later rise of literacy",consequence:"Mass literacy arrives a generation later. The Enlightenment's timeline shifts. Democratic movements that depended on pamphlets and newspapers are delayed.",delay:"~200 years",severity:"medium",icon:"📰"}
+    ],
+    modernDay:{
+      tech:"The internet's ancestor — mass information distribution — arrives on roughly the same timeline since the underlying demand was there.",
+      culture:"The specific cultural products of early print (King James Bible, Shakespeare folios) might look different or come from different authors.",
+      politics:"Democratic movements that relied on printed pamphlets might emerge on a slightly different schedule, but the forces driving them were independent of print.",
+      daily:"You'd notice nothing different in 2026. The delay was at most a generation, and the world has long since caught up."}},
+
+  {id:"cuban_missile_crisis",name:"Cuban Missile Crisis",born:1962,died:null,cat:"events",cat2:"military",field:"Nuclear Standoff",
+    quote:"We're eyeball to eyeball, and I think the other fellow just blinked.",
+    contributions:["Closest the world came to nuclear war","Led to Nuclear Test Ban Treaty","Established crisis hotline between superpowers","Shaped nuclear deterrence doctrine"],
+    r:0.20,reasoning:"This was one of history's genuine coin-flips. Multiple moments during the 13 days could have gone differently — Vasili Arkhipov refusing to authorize a nuclear torpedo, Kennedy overruling hawkish generals, back-channel negotiations succeeding. The specific resolution was not inevitable at all. Nuclear war was disturbingly close.",
+    counterfactual:"If the crisis escalated — if Arkhipov had authorized the torpedo, if the U-2 shootdown had triggered retaliation, if Kennedy had listened to Curtis LeMay — nuclear exchange was possible. Even a limited nuclear war in 1962 kills millions immediately and reshapes geopolitics permanently. The world we live in exists partly because a handful of individuals made the right calls under impossible pressure.",
+    impact:{lives:"Potentially hundreds of millions at stake",econ:"Led to arms control frameworks worth trillions in avoided destruction",cultural:"Nuclear anxiety defined Cold War culture",reach:"Global — every nation's future hung in the balance",timeline:"This specific crisis was highly contingent on Soviet missile placement decision"},
+    timeline:[
+      {year:1962,happened:"US discovers Soviet missiles in Cuba; 13-day standoff",alternate:"Missiles discovered later or Soviet decision not made — crisis takes different form"},
+      {year:1963,happened:"Partial Nuclear Test Ban Treaty signed",alternate:"Without the scare, arms control has less urgency"},
+      {year:1963,happened:"Moscow-Washington hotline established",alternate:"No crisis communication infrastructure between superpowers"},
+      {year:1968,happened:"Nuclear Non-Proliferation Treaty signed",alternate:"Slower progress on nuclear arms control without the 1962 wake-up call"}
+    ],
+    cascade:[
+      {event:"Crisis escalates to exchange",consequence:"Even a limited nuclear exchange between US and Soviet forces in the Caribbean kills hundreds of thousands immediately.",delay:"Immediate",severity:"high",icon:"☢️"},
+      {event:"Nuclear winter possibility",consequence:"Full-scale exchange triggers global cooling, crop failures, and famine affecting billions worldwide.",delay:"~1 year",severity:"high",icon:"❄️"},
+      {event:"Global political restructuring",consequence:"Surviving nations reorganize around preventing recurrence. The post-war order is completely rewritten.",delay:"~5 years",severity:"high",icon:"🌍"},
+      {event:"Technology setback",consequence:"Major research centers destroyed. Computing, space, and medical research lose decades of progress.",delay:"~20 years",severity:"high",icon:"💻"}
+    ],
+    modernDay:{
+      tech:"If the crisis had gone badly, entire research ecosystems would have been destroyed. Silicon Valley, for instance, was within range.",
+      culture:"Nuclear anxiety would have been validated rather than gradually fading. The cultural relationship with technology and government would be completely different.",
+      politics:"Arms control frameworks that emerged from the crisis shaped every subsequent negotiation. Without them, nuclear proliferation might be far worse.",
+      daily:"The fact that you're reading this is partly because Vasili Arkhipov said no. That's not hyperbole."}},
+
+  {id:"american_revolution",name:"American Revolution",born:1776,died:null,cat:"events",cat2:"politics",field:"Independence Movement",
+    quote:"We hold these truths to be self-evident, that all men are created equal.",
+    contributions:["First modern democratic republic","Bill of Rights model","Inspired global independence movements","Established separation of powers"],
+    r:0.50,reasoning:"Colonial tensions with Britain were real and growing. Taxation disputes, Enlightenment philosophy, and local self-governance traditions made some kind of break likely within a generation. But the specific form — total independence rather than home rule, a republic rather than constitutional reform, success rather than suppression — was not guaranteed. Many contemporaries expected reconciliation.",
+    counterfactual:"Without the Revolution succeeding in 1776, the colonies likely achieve dominion status like Canada by the early 1800s. The constitutional model that influenced France, Latin America, and beyond doesn't exist in the same form. Slavery might end earlier under British pressure (Britain abolished it in 1833). The specific American experiment in republican government — with its strengths and pathologies — doesn't become the global template.",
+    impact:{lives:"Hundreds of millions shaped by American political model",econ:"Created largest economy in world history",cultural:"American exceptionalism, democratic idealism",reach:"Global — US model copied and adapted worldwide",timeline:"Colonial autonomy or independence within 30-50 years regardless"},
+    timeline:[
+      {year:1776,happened:"Declaration of Independence; Revolutionary War begins",alternate:"Continued negotiations, possible dominion status by 1800s"},
+      {year:1783,happened:"Treaty of Paris — British recognize independence",alternate:"Without military victory, home rule arrangement instead"},
+      {year:1789,happened:"Constitution ratified, Washington becomes president",alternate:"Different governance model — possibly parliamentary"},
+      {year:1791,happened:"Bill of Rights adopted",alternate:"Rights framework develops differently under British constitutional tradition"}
+    ],
+    cascade:[
+      {event:"No American republic in 1776",consequence:"The first large-scale modern democracy doesn't exist as proof of concept. France's revolution lacks the American precedent.",delay:"Immediate",severity:"high",icon:"🗽"},
+      {event:"Slavery under British rule",consequence:"Britain abolishes slavery in 1833. American colonies under British rule likely follow. The Civil War doesn't happen.",delay:"~57 years",severity:"high",icon:"⛓️"},
+      {event:"No constitutional model",consequence:"The specific American model — separation of powers, federalism, bill of rights — doesn't become the template. Other nations build governance differently.",delay:"~50 years",severity:"high",icon:"📜"},
+      {event:"Different Western Hemisphere",consequence:"Latin American independence movements don't have the American model. Monroe Doctrine doesn't exist. European powers retain more influence in the Americas.",delay:"~50 years",severity:"medium",icon:"🌎"}
+    ],
+    modernDay:{
+      tech:"Technology development might not differ much — innovation drivers were largely independent of governance form.",
+      culture:"No American cultural hegemony in the same form. Hollywood, jazz, rock and roll — all products of a specific American experience — might not exist.",
+      politics:"The world's dominant political model would look more parliamentary. The specific American pathologies (two-party system, electoral college) wouldn't be global reference points.",
+      daily:"English still dominates, but American English as the global standard might not. Cultural products you consume daily would come from different sources."}},
+
+  {id:"ww1",name:"World War I",born:1914,died:null,cat:"events",cat2:"military",field:"Global Conflict",
+    quote:"The lamps are going out all over Europe; we shall not see them lit again in our lifetime.",
+    contributions:["Ended four empires","Created modern Middle East","Enabled rise of communism and fascism","Introduced industrial warfare"],
+    r:0.45,reasoning:"European tensions were high but not uniquely so — crises in 1905, 1908, and 1911 all resolved without war. The specific trigger (Archduke's assassination) and the cascade of alliance obligations that followed were contingent. Many historians argue a general European war was likely eventually, but the specific timing, participants, and devastating form were not predetermined.",
+    counterfactual:"Without WWI in 1914, Europe's great powers continue their unstable equilibrium. A war might come in the 1920s over colonial disputes or Balkan tensions, but it might also be smaller or resolved faster. Without the specific devastation of 1914-1918, there's no Russian Revolution in 1917, no Nazi Germany, no Holocaust. The entire 20th century is unrecognizable.",
+    impact:{lives:"20 million dead; 21 million wounded",econ:"Destroyed European economic dominance; $334 billion in costs",cultural:"Lost Generation; modernism in art and literature",reach:"Global — 30+ nations involved",timeline:"European great power war possible within 20 years, but not certain"},
+    timeline:[
+      {year:1914,happened:"Assassination of Archduke Franz Ferdinand triggers alliance cascade",alternate:"Another Balkan crisis resolved diplomatically, as previous ones were"},
+      {year:1917,happened:"Russian Revolution topples Tsar; US enters war",alternate:"No war means no revolution — the Romanovs survive longer"},
+      {year:1918,happened:"Central Powers defeated; four empires collapse",alternate:"Ottoman, Austro-Hungarian, German, Russian empires reform rather than shatter"},
+      {year:1919,happened:"Treaty of Versailles imposes harsh terms on Germany",alternate:"No punitive peace, no conditions for Nazi rise"}
+    ],
+    cascade:[
+      {event:"No assassination cascade in 1914",consequence:"The alliance system remains tense but intact. Diplomatic conferences continue managing crises as they had for decades.",delay:"Immediate",severity:"high",icon:"🔫"},
+      {event:"No Russian Revolution",consequence:"Without the war's devastation and military failures, the Tsar's regime persists. Communism as a state ideology doesn't get its test case.",delay:"~3 years",severity:"high",icon:"🇷🇺"},
+      {event:"No punitive Versailles Treaty",consequence:"Without the humiliation and economic devastation of Versailles, the conditions that produced Hitler don't exist. The Nazi party never gains traction.",delay:"~5 years",severity:"high",icon:"📜"},
+      {event:"No World War II",consequence:"Without WWI's aftermath, WWII in its specific form doesn't happen. The Holocaust doesn't happen. The entire mid-20th century is different.",delay:"~25 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Nuclear weapons might still be developed — the physics was independent — but without WWII's urgency, the Manhattan Project doesn't happen when it did.",
+      culture:"The Lost Generation's art and literature — Hemingway, Remarque, Sassoon — doesn't exist. Modernism might develop differently without the war's trauma.",
+      politics:"The Middle East's borders, drawn by Sykes-Picot, don't exist. Israel might not exist. The entire geopolitics of oil and religion in the region is different.",
+      daily:"The map of Europe looks completely different. Countries like Yugoslavia, Czechoslovakia, and the modern Middle East states were all WWI products."}},
+
+  {id:"chernobyl",name:"Chernobyl Disaster",born:1986,died:null,cat:"events",cat2:"science",field:"Nuclear Disaster",
+    quote:"Every lie we tell incurs a debt to the truth. Sooner or later, that debt is paid.",
+    contributions:["Exposed Soviet system's fatal flaws","Turned global opinion against nuclear power","Accelerated glasnost and Soviet collapse","Created permanent exclusion zone"],
+    r:0.35,reasoning:"The RBMK reactor design had known flaws that Soviet bureaucracy refused to address. Some accident was likely eventually. But the specific Chernobyl disaster — the safety test gone wrong, the operators overriding alarms, the graphite fire — was contingent on a chain of human errors on a specific night. A different accident at a different reactor might have been containable.",
+    counterfactual:"Without Chernobyl specifically, nuclear power's trajectory changes dramatically. The global backlash against nuclear energy doesn't happen at the same scale. Countries like Germany and Italy might never abandon nuclear programs. The Soviet Union still faces systemic problems, but without this specific embarrassment, glasnost proceeds differently. The timeline of Soviet collapse might shift.",
+    impact:{lives:"31 direct deaths; estimated 4,000-93,000 excess cancer deaths",econ:"$235 billion in damages; nuclear industry losses globally",cultural:"Became symbol of Soviet dysfunction and nuclear danger",reach:"Radiation spread across Europe; policy impact global",timeline:"Some Soviet nuclear incident likely, but this scale was contingent"},
+    timeline:[
+      {year:1986,happened:"Reactor 4 explodes during safety test; fire burns for 10 days",alternate:"Safety test succeeds or fails without catastrophic explosion"},
+      {year:1986,happened:"Gorbachev forced into glasnost about disaster",alternate:"Without this specific crisis, transparency reforms are slower"},
+      {year:1987,happened:"Anti-nuclear movements surge globally",alternate:"Nuclear power continues expanding; dozens more reactors built"},
+      {year:2011,happened:"Fukushima — Germany abandons nuclear entirely",alternate:"Without Chernobyl precedent, Fukushima response might be different"}
+    ],
+    cascade:[
+      {event:"No Chernobyl explosion",consequence:"The RBMK design flaw is eventually fixed through internal channels. Soviet nuclear program continues without global embarrassment.",delay:"Immediate",severity:"high",icon:"☢️"},
+      {event:"Nuclear power keeps expanding",consequence:"Without the defining anti-nuclear disaster, dozens more reactors get built in the late 1980s-90s. Nuclear might be 30-40% of global electricity today.",delay:"~5 years",severity:"high",icon:"⚡"},
+      {event:"Slower glasnost",consequence:"Gorbachev's hand isn't forced on transparency. Reforms proceed more cautiously. The Soviet Union might survive a few years longer.",delay:"~3 years",severity:"medium",icon:"🇷🇺"},
+      {event:"Different climate trajectory",consequence:"With more nuclear power and less coal/gas, global carbon emissions might be 10-15% lower. Climate change is still happening but slower.",delay:"~30 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Nuclear reactor technology might be a generation more advanced if investment hadn't collapsed after 1986.",
+      culture:"The word 'Chernobyl' wouldn't be a global shorthand for catastrophic failure. Public attitudes toward nuclear technology would be much more positive.",
+      politics:"Energy policy worldwide would look different. Countries that abandoned nuclear might still be running reactors. The climate debate would have a different shape.",
+      daily:"Your electricity might come from nuclear rather than gas or coal. Energy prices might be lower. The air might be slightly cleaner."}},
+
+  {id:"covid19",name:"COVID-19 Pandemic",born:2020,died:null,cat:"events",cat2:"medicine",field:"Global Pandemic",
+    quote:"We are in this together, and we will get through this together.",
+    contributions:["Accelerated remote work revolution","Drove mRNA vaccine breakthrough","Exposed supply chain fragility","Reshaped public health infrastructure"],
+    r:0.60,reasoning:"Epidemiologists had been warning about a pandemic for decades. SARS, MERS, and H1N1 were rehearsals. A novel respiratory virus jumping from animals to humans was a matter of when, not if. But the specific SARS-CoV-2 virus, its particular transmissibility, and the policy responses were contingent. A different pandemic virus might have been more or less deadly, more or less transmissible.",
+    counterfactual:"Without COVID-19 specifically, some pandemic still hits within a decade — the conditions (wet markets, factory farming, deforestation, global travel) guaranteed it. But a different virus might be less transmissible, or more deadly, or emerge in a different country. Remote work still trends upward but without the overnight forced adoption. mRNA vaccines develop on a slower research timeline. The specific political polarization around COVID doesn't happen.",
+    impact:{lives:"7+ million official deaths; likely 15-25 million excess deaths",econ:"$16+ trillion in global economic losses",cultural:"Transformed work, education, and social interaction",reach:"Every country on Earth",timeline:"Some pandemic within 10-15 years was near-certain"},
+    timeline:[
+      {year:2020,happened:"COVID-19 spreads globally; lockdowns begin",alternate:"Different virus, different timeline, different severity"},
+      {year:2020,happened:"Remote work becomes mainstream overnight",alternate:"Remote work grows gradually over a decade instead"},
+      {year:2021,happened:"mRNA vaccines developed in record time",alternate:"mRNA technology proves itself on a slower research schedule"},
+      {year:2022,happened:"Pandemic disrupts supply chains, triggers inflation",alternate:"Supply chains face different stresses on different timeline"}
+    ],
+    cascade:[
+      {event:"No COVID-19 in 2020",consequence:"The world continues without forced adoption of remote work. Office culture persists as default. Zoom stays a niche product.",delay:"Immediate",severity:"medium",icon:"🏠"},
+      {event:"No emergency mRNA push",consequence:"mRNA vaccine technology still advances but on a 5-10 year research timeline. It's proven for cancer before infectious disease.",delay:"~5 years",severity:"medium",icon:"💉"},
+      {event:"No supply chain crisis",consequence:"Global supply chains remain 'just in time' without stress-testing. The reshoring movement doesn't get political momentum.",delay:"~2 years",severity:"medium",icon:"📦"},
+      {event:"Different political landscape",consequence:"Without pandemic politics, the 2020s partisan landscape is different. Anti-vaccine movements are smaller. Trust in institutions doesn't crater the same way.",delay:"~1 year",severity:"high",icon:"🗳️"}
+    ],
+    modernDay:{
+      tech:"Remote work tools are less advanced. Zoom, Teams, and Slack exist but aren't the infrastructure of daily work. mRNA vaccines are still in clinical trials for infectious disease.",
+      culture:"The shared trauma of lockdowns doesn't exist. No 'unprecedented times' language. Social isolation and mental health crises take different forms.",
+      politics:"Pandemic-era polarization doesn't exist. Trust in public health is higher. The specific political movements fueled by lockdown frustration don't materialize.",
+      daily:"You probably go to an office five days a week. Masks are not a cultural symbol. Your relationship with personal space and crowds is different."}},
+
+  {id:"hiroshima",name:"Atomic Bombings of Japan",born:1945,died:null,cat:"events",cat2:"military",field:"Nuclear Warfare",
+    quote:"Now I am become Death, the destroyer of worlds.",
+    contributions:["Only use of nuclear weapons in war","Ended World War II in the Pacific","Began nuclear arms race","Established nuclear taboo"],
+    r:0.55,reasoning:"The Manhattan Project was converging on a working bomb by mid-1945, and Truman was going to use it — the political and military pressures were overwhelming. But the specific targets, the decision not to demonstrate first, and the two-bomb sequence were debated. A demonstration on an uninhabited island was seriously considered. The Soviet entry into the Pacific war was also about to force Japan's hand.",
+    counterfactual:"Without the bombings, Japan likely surrenders within weeks anyway — the Soviet invasion of Manchuria on August 8 was devastating. But without Hiroshima's specific horror, the nuclear taboo develops differently. The world learns about nuclear weapons through a test or demonstration rather than 200,000 civilian deaths. The visceral fear that prevented nuclear use during the Cold War might be weaker.",
+    impact:{lives:"200,000+ killed; millions affected by radiation; prevented millions of casualties in planned invasion",econ:"Ended WWII, enabling post-war economic boom",cultural:"Created nuclear age; transformed relationship with technology",reach:"Global — reshaped all geopolitics",timeline:"Nuclear weapons used or demonstrated within months regardless"},
+    timeline:[
+      {year:1945,happened:"Hiroshima and Nagasaki bombed; Japan surrenders",alternate:"Demonstration or Soviet invasion forces surrender within weeks"},
+      {year:1949,happened:"Soviet Union tests first atomic bomb",alternate:"Arms race still begins but without the moral weight of civilian use"},
+      {year:1962,happened:"Cuban Missile Crisis — nuclear taboo holds",alternate:"Without Hiroshima's horror, leaders might be more willing to use nuclear weapons"},
+      {year:1968,happened:"Non-Proliferation Treaty signed",alternate:"Nuclear restraint has less emotional foundation without civilian bombing precedent"}
+    ],
+    cascade:[
+      {event:"No civilian nuclear bombing",consequence:"Nuclear weapons exist but haven't been used on people. Their destructive power is known theoretically but not viscerally.",delay:"Immediate",severity:"high",icon:"☢️"},
+      {event:"Weaker nuclear taboo",consequence:"Without 200,000 civilian deaths seared into collective memory, the psychological barrier to using nuclear weapons is lower.",delay:"~10 years",severity:"high",icon:"🕊️"},
+      {event:"Japan surrenders anyway",consequence:"Soviet invasion of Manchuria and continued conventional bombing force surrender. The narrative is about Soviet power, not American technology.",delay:"~2 weeks",severity:"medium",icon:"🇯🇵"},
+      {event:"Different Cold War dynamics",consequence:"Nuclear weapons are seen as very powerful bombs, not civilization-ending weapons. Deterrence doctrine develops differently. Crises might be more dangerous.",delay:"~15 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Nuclear technology still advances on the same physics. Power plants, weapons, medicine — all develop similarly.",
+      culture:"The specific horror of Hiroshima — the shadows burned into walls, the hibakusha survivors — doesn't exist as cultural memory. Anti-nuclear movements have less emotional foundation.",
+      politics:"Nuclear deterrence might be less stable without the taboo. More countries might have used nuclear weapons in regional conflicts.",
+      daily:"The world might actually be more dangerous. The horror of Hiroshima arguably saved millions of lives by making nuclear war unthinkable."}},
+
+  {id:"internet_launch",name:"Birth of the Internet",born:1983,died:null,cat:"events",cat2:"computing",field:"Communications Revolution",
+    quote:"The Internet is the first thing that humanity has built that humanity doesn't understand.",
+    contributions:["Connected billions of people","Created digital economy","Transformed communication","Enabled information age"],
+    r:0.80,reasoning:"Packet-switching networks were being developed independently at multiple institutions. ARPANET was one of several approaches. The underlying demand — fast, decentralized digital communication — was enormous and the technology was converging from multiple directions. The internet as we know it has specific design choices (TCP/IP, open protocols) that weren't inevitable, but some form of global computer network was coming regardless.",
+    counterfactual:"Without ARPANET and the specific 1983 TCP/IP switchover, a global network still emerges by the early 1990s — possibly from European or commercial initiatives. The open, decentralized architecture might not survive; a more centralized, telecom-controlled network was the alternative path. The web might look more like cable TV — channels you subscribe to rather than sites anyone can create.",
+    impact:{lives:"5+ billion users worldwide",econ:"Digital economy worth $15+ trillion",cultural:"Transformed every aspect of human communication and culture",reach:"Global — most transformative technology since printing",timeline:"Global computer network within 10 years regardless of ARPANET"},
+    timeline:[
+      {year:1969,happened:"ARPANET connects first four nodes",alternate:"University and military networks develop independently"},
+      {year:1983,happened:"TCP/IP becomes standard; 'internet' born",alternate:"Competing protocols fragment into incompatible networks"},
+      {year:1991,happened:"World Wide Web launched by Tim Berners-Lee",alternate:"Information services develop but possibly behind paywalls"},
+      {year:1995,happened:"Commercial internet explodes; Netscape IPO",alternate:"Commercial networks emerge but might be more like AOL — walled gardens"}
+    ],
+    cascade:[
+      {event:"No open ARPANET model",consequence:"Computer networks develop through telecom companies instead of universities. The default is centralized, controlled, and metered.",delay:"~10 years",severity:"high",icon:"🌐"},
+      {event:"No open web",consequence:"Without the culture of open protocols, the 'anyone can publish' web might not exist. Information access is more like cable — you pay for channels.",delay:"~20 years",severity:"high",icon:"📱"},
+      {event:"Different innovation model",consequence:"Without open platforms, startups like Google, Facebook, and Amazon can't emerge the same way. Innovation is controlled by telecom incumbents.",delay:"~25 years",severity:"high",icon:"💡"},
+      {event:"Different information landscape",consequence:"Misinformation spreads slower but so does useful information. The democratization of knowledge is more limited.",delay:"~30 years",severity:"medium",icon:"📰"}
+    ],
+    modernDay:{
+      tech:"Some form of global network exists, but it might look more like interactive television than the open web. App stores and walled gardens might be the only option, not just the trend.",
+      culture:"Social media as we know it might not exist. The creator economy, influencer culture, and viral content all depend on open publishing platforms.",
+      politics:"Online political organizing looks different. Authoritarian governments might find it easier to control information on a centralized network.",
+      daily:"You still have a connected device, but it might feel more like choosing cable channels than browsing an open web. The specific freedom of the internet isn't guaranteed."}},
+
+  {id:"fall_berlin_wall",name:"Fall of the Berlin Wall",born:1989,died:null,cat:"events",cat2:"politics",field:"Cold War Turning Point",
+    quote:"Mr. Gorbachev, tear down this wall!",
+    contributions:["Ended the Cold War symbolically","Reunified Germany","Triggered collapse of Eastern Bloc","Reshaped European borders"],
+    r:0.50,reasoning:"The Soviet system was crumbling — economically, politically, and ideologically. Some form of Eastern Bloc liberalization was coming. But the specific night of November 9, 1989 was an accident — a confused press conference by Günter Schabowski led to crowds at the wall before authorities could organize a response. The peaceful nature of the collapse was not guaranteed. China's Tiananmen Square, just months earlier, showed the alternative.",
+    counterfactual:"Without the accidental November 9 opening, the wall still falls within months — the pressures were too great. But a planned, controlled opening looks different. East Germany might negotiate better terms. German reunification might happen more gradually, possibly as a confederation first. The domino effect across Eastern Europe might be slower, giving hardliners more time to organize resistance. Some countries might see Tiananmen-style crackdowns.",
+    impact:{lives:"Hundreds of millions freed from authoritarian rule",econ:"German reunification cost $2+ trillion; opened Eastern European markets",cultural:"Defined 'end of history' optimism of the 1990s",reach:"All of Europe; global geopolitical implications",timeline:"Eastern Bloc liberalization within 1-2 years regardless"},
+    timeline:[
+      {year:1989,happened:"Wall falls November 9 after confused press conference",alternate:"Controlled border opening in early 1990 — less dramatic, more orderly"},
+      {year:1990,happened:"Rapid German reunification",alternate:"Slower confederation process, possibly taking 5-10 years"},
+      {year:1991,happened:"Soviet Union dissolves",alternate:"USSR reforms into looser confederation, dissolution takes longer"},
+      {year:1999,happened:"NATO expands eastward",alternate:"Slower expansion gives Russia more time to adjust — or resist"}
+    ],
+    cascade:[
+      {event:"No spontaneous wall opening",consequence:"The dramatic images that inspired the rest of Eastern Europe don't happen. The domino effect is slower.",delay:"Immediate",severity:"medium",icon:"🧱"},
+      {event:"Slower German reunification",consequence:"A gradual process gives both sides time to negotiate. East Germany retains more identity. The economic shock is spread over a decade.",delay:"~1 year",severity:"medium",icon:"🇩🇪"},
+      {event:"Hardliner resistance possible",consequence:"Without the momentum of the wall's fall, conservative communists in Romania, Czechoslovakia, or East Germany might attempt Tiananmen-style crackdowns.",delay:"~1 year",severity:"high",icon:"✊"},
+      {event:"Different 1990s optimism",consequence:"Without the dramatic, peaceful collapse, the 'end of history' euphoria is more muted. The West is less triumphalist.",delay:"~2 years",severity:"medium",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Minimal direct tech impact — the same innovations emerge regardless.",
+      culture:"The Berlin Wall as symbol of freedom's triumph doesn't have the same dramatic imagery. The 1990s optimism has a different flavor.",
+      politics:"NATO expansion might be slower and less provocative to Russia. Putin's narrative of Western encirclement might have less fuel.",
+      daily:"Berlin looks different — the scars of division might be more visible if reunification was gradual rather than sudden."}},
+
+  {id:"haitian_revolution",name:"Haitian Revolution",born:1791,died:null,cat:"events",cat2:"social",field:"Slave Revolt",
+    quote:"I was born a slave, but nature gave me the soul of a free man.",
+    contributions:["First successful large-scale slave revolt","Created first Black republic","Influenced abolition movements worldwide","Proved enslaved people could defeat European armies"],
+    r:0.30,reasoning:"Slave revolts happened regularly across the Caribbean, but almost all were suppressed. Haiti's success required a unique convergence: the French Revolution creating political chaos, Toussaint Louverture's military genius, yellow fever devastating French reinforcements, and Napoleon's decision to cut losses. Another revolt of this scale and success was far from guaranteed.",
+    counterfactual:"Without the Haitian Revolution's success, Caribbean slavery persists longer and more confidently. The proof that enslaved people could defeat European armies — that abolition could be seized, not just granted — doesn't exist. British abolition in 1833 might be delayed. The Louisiana Purchase might not happen (Napoleon sold Louisiana partly because he lost Haiti). The entire trajectory of Black freedom movements shifts.",
+    impact:{lives:"500,000 enslaved people freed; inspired millions",econ:"Destroyed most profitable colony in the world; triggered Louisiana Purchase",cultural:"Proved Black self-governance possible against every racist assumption",reach:"Caribbean, Americas, Africa — wherever slavery existed",timeline:"No other slave revolt of this scale succeeded for decades"},
+    timeline:[
+      {year:1791,happened:"Massive slave uprising begins in Saint-Domingue",alternate:"Another suppressed revolt; Caribbean plantation system continues"},
+      {year:1801,happened:"Toussaint Louverture controls the island",alternate:"French maintain control; slavery continues"},
+      {year:1803,happened:"Napoleon sells Louisiana to US after Haiti loss",alternate:"France retains Louisiana; US expansion changes"},
+      {year:1804,happened:"Haiti declares independence — first Black republic",alternate:"No proof of concept for Black self-governance for decades"}
+    ],
+    cascade:[
+      {event:"No successful slave revolt",consequence:"Caribbean plantation slavery continues at full strength. The economic argument for abolition weakens — slavery is still profitable.",delay:"Immediate",severity:"high",icon:"⛓️"},
+      {event:"No Louisiana Purchase",consequence:"Napoleon keeps Louisiana as part of a Caribbean empire. The United States doesn't double in size. Western expansion takes a completely different path.",delay:"~2 years",severity:"high",icon:"🗺️"},
+      {event:"Delayed abolition movements",consequence:"Without Haiti proving it possible, abolitionists lose their most powerful argument. British abolition in 1833 might be delayed by a decade or more.",delay:"~30 years",severity:"high",icon:"✊"},
+      {event:"Different racial politics",consequence:"The fear that Haiti instilled in slaveholders shaped American racial politics for generations. Without it, the arguments change — but so does the proof of Black capability.",delay:"~50 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Minimal direct tech impact.",
+      culture:"The concept that enslaved people could win their freedom through revolution — that's Haiti's gift to the world. Without it, the narrative of Black liberation develops very differently.",
+      politics:"The United States might not stretch to the Pacific if the Louisiana Purchase doesn't happen. American geography and politics are unrecognizable.",
+      daily:"If you live in the western United States, your state might not exist — or might be part of a different country entirely."}},
+
+  {id:"arab_spring",name:"Arab Spring",born:2011,died:null,cat:"events",cat2:"social",field:"Mass Protest Movement",
+    quote:"The people want to bring down the regime.",
+    contributions:["Toppled multiple authoritarian governments","Demonstrated power of social media in organizing","Triggered Syrian civil war","Reshaped Middle East politics"],
+    r:0.45,reasoning:"Youth unemployment, corruption, and authoritarianism made unrest likely across the Arab world. But the specific trigger — Mohamed Bouazizi's self-immolation in Tunisia — and the rapid spread via social media were contingent. Previous protests had been contained. The specific cascade from Tunisia to Egypt to Libya to Syria was not predetermined.",
+    counterfactual:"Without Bouazizi's specific act and its viral spread, the underlying pressures still exist but might express themselves differently — isolated protests rather than a regional wave. Mubarak might survive a few more years. The Syrian civil war might not happen. Libya's Gaddafi stays in power longer. The refugee crisis that reshaped European politics might be smaller or take a different form.",
+    impact:{lives:"Millions displaced; hundreds of thousands killed in subsequent conflicts",econ:"Trillions in economic disruption across the region",cultural:"Proved social media could organize revolution",reach:"Entire Middle East and North Africa; refugee impact on Europe",timeline:"Regional unrest likely within 5 years, but cascade form was contingent"},
+    timeline:[
+      {year:2011,happened:"Bouazizi self-immolation triggers Tunisian revolution",alternate:"Another isolated protest is contained by security forces"},
+      {year:2011,happened:"Mubarak falls in Egypt after 18 days of protest",alternate:"Egyptian regime adapts with minor reforms"},
+      {year:2011,happened:"Syrian uprising begins, eventually becomes civil war",alternate:"Assad faces protests but contains them without full civil war"},
+      {year:2015,happened:"European refugee crisis peaks",alternate:"Migration pressures exist but without Syrian war's scale"}
+    ],
+    cascade:[
+      {event:"No viral cascade from Tunisia",consequence:"Individual country protests happen but don't feed off each other. Each regime handles dissent separately, usually through repression.",delay:"Immediate",severity:"high",icon:"📱"},
+      {event:"No Syrian civil war",consequence:"Without the regional momentum, Assad's security forces contain protests. Hundreds of thousands of lives are different. ISIS doesn't get its territory.",delay:"~6 months",severity:"high",icon:"🇸🇾"},
+      {event:"Smaller refugee crisis",consequence:"Without Syria's collapse, the 2015 European refugee crisis is far smaller. Right-wing populism in Europe has less fuel.",delay:"~4 years",severity:"high",icon:"🚢"},
+      {event:"Different European politics",consequence:"Brexit, the rise of far-right parties across Europe — much of this was fueled by the refugee crisis. Without it, the 2010s political landscape is calmer.",delay:"~5 years",severity:"high",icon:"🇪🇺"}
+    ],
+    modernDay:{
+      tech:"Social media's role in political organizing is still recognized, but without the Arab Spring as proof of concept, the conversation about tech and democracy is different.",
+      culture:"The optimism about social media as a democratizing force — and the subsequent disillusionment — takes a different arc.",
+      politics:"European populism still exists but without the refugee crisis as accelerant. Brexit might not happen. EU politics are more stable.",
+      daily:"If you live in Europe, immigration politics are less intense. If you live in Syria, your country isn't destroyed."}},
+
+  {id:"industrial_revolution",name:"Industrial Revolution",born:1760,died:null,cat:"events",cat2:"inventions",field:"Economic Transformation",
+    quote:"The wealth of nations depends upon the division of labor.",
+    contributions:["Mechanized production","Urbanization of society","Created working class","Began fossil fuel dependence"],
+    r:0.75,reasoning:"The conditions for industrialization — coal deposits, capital accumulation, scientific knowledge, labor availability, patent systems — were converging across Northwestern Europe. If not Britain in the 1760s, then the Low Countries or France within a generation. The specific British form (textiles first, then iron, then railways) was contingent, but the broader transformation was coming.",
+    counterfactual:"Without the British Industrial Revolution starting in the 1760s, industrialization begins in the 1790s-1800s, possibly in Belgium or France. The 30-year delay changes which nations lead the industrial world. Britain might not become the global hegemon. The specific horrors of early industrialization (child labor in British mills, urban squalor) take different forms. But by 1850, the world is industrializing regardless.",
+    impact:{lives:"Every human alive today — transformed how all 8 billion live",econ:"Increased global GDP per capita by 10x+ over 200 years",cultural:"Created modern concepts of work, class, and progress",reach:"Global — eventually reached every society",timeline:"Industrialization within 30 years regardless of Britain's timing"},
+    timeline:[
+      {year:1760,happened:"Textile mills mechanize in Northern England",alternate:"Mechanization begins in Low Countries or France by 1790s"},
+      {year:1830,happened:"Railways transform transportation",alternate:"Rail development delayed by 10-20 years"},
+      {year:1850,happened:"Britain is 'workshop of the world'",alternate:"Different nation leads — possibly Belgium or a unified Germany"},
+      {year:1900,happened:"Industrialization has spread globally",alternate:"Same endpoint reached, ~20-30 years later"}
+    ],
+    cascade:[
+      {event:"No British lead in 1760s",consequence:"The specific British model — private enterprise, minimal regulation, rapid urbanization — isn't the template. Alternative paths might be more state-directed.",delay:"~30 years",severity:"medium",icon:"🏭"},
+      {event:"Different colonial dynamics",consequence:"Without industrial military advantage, British colonial expansion is slower. India's colonization might take a different form.",delay:"~50 years",severity:"high",icon:"🌍"},
+      {event:"Different labor movements",consequence:"The specific British working class experience — Luddites, Chartists, trade unions — doesn't set the pattern. Marx might write about Belgian or French conditions instead.",delay:"~80 years",severity:"medium",icon:"✊"},
+      {event:"Delayed but inevitable transformation",consequence:"By 1900, the world is still industrialized. The endpoint is similar but the path — which nations lead, which suffer — is different.",delay:"~100 years",severity:"low",icon:"⚙️"}
+    ],
+    modernDay:{
+      tech:"Same technologies exist — the physics and engineering don't change. But the specific companies and nations that led development might be different.",
+      culture:"The British cultural fingerprint on industrialization (English as business language, common law in commerce) might be replaced by French or Dutch influence.",
+      politics:"Different colonial histories mean different post-colonial politics. India under French rather than British rule has a completely different modern trajectory.",
+      daily:"Your daily life is essentially the same — industrialization was coming regardless. But the brands, languages, and cultural references might be different."}},
+
+  {id:"assassination_jfk",name:"JFK Assassination",born:1963,died:null,cat:"events",cat2:"politics",field:"Political Assassination",
+    quote:"A man may die, nations may rise and fall, but an idea lives on.",
+    contributions:["Transformed American political culture","Fueled conspiracy culture","Elevated Kennedy to mythic status","Shaped 1960s trajectory"],
+    r:0.15,reasoning:"This was a genuinely contingent event. Oswald's specific grievances, his position at the Book Depository, the motorcade route through Dealey Plaza — none of this was structurally determined. Kennedy surviving changes the 1960s dramatically. Vietnam escalation might look different. The Great Society programs might not happen as they did. The cultural trauma that shaped a generation doesn't occur.",
+    counterfactual:"If Kennedy lives, Vietnam policy is the big question — he was skeptical of escalation but also couldn't appear weak. The most likely scenario: a more limited engagement than Johnson pursued. The Great Society programs happen on a different scale. Bobby Kennedy doesn't run in 1968 on a grief-fueled platform. The 1960s counterculture still emerges but the specific American trauma is different. Conspiracy culture as we know it develops differently.",
+    impact:{lives:"Kennedy's death shaped American policy affecting millions",econ:"Policy continuity under LBJ vs potential Kennedy second term",cultural:"Created modern conspiracy culture; Kennedy mythologized",reach:"Global — US policy affects everyone",timeline:"Highly contingent — this specific event was not structurally determined"},
+    timeline:[
+      {year:1963,happened:"Kennedy assassinated in Dallas",alternate:"Kennedy completes first term, runs for re-election in 1964"},
+      {year:1964,happened:"LBJ wins landslide, launches Great Society",alternate:"Kennedy wins re-election more narrowly, pursues own agenda"},
+      {year:1965,happened:"LBJ escalates Vietnam with 184,000 troops",alternate:"Kennedy likely pursues more limited Vietnam engagement"},
+      {year:1968,happened:"RFK assassinated during presidential campaign",alternate:"RFK doesn't run on same platform; 1968 election is different"}
+    ],
+    cascade:[
+      {event:"Kennedy survives Dallas",consequence:"No national trauma. No martyrdom. Kennedy is judged on his actual record rather than mythologized. His approval ratings were middling.",delay:"Immediate",severity:"high",icon:"🇺🇸"},
+      {event:"Different Vietnam trajectory",consequence:"Kennedy was more skeptical of military escalation than Johnson. A more limited engagement means fewer of the 58,000 American deaths in Vietnam.",delay:"~2 years",severity:"high",icon:"🪖"},
+      {event:"No conspiracy culture explosion",consequence:"The Warren Commission, the grassy knoll, the magic bullet — none of this enters American consciousness. Institutional trust doesn't erode the same way.",delay:"~5 years",severity:"medium",icon:"🔍"},
+      {event:"Different 1968",consequence:"Without JFK's assassination, RFK's 1968 campaign doesn't have the same emotional charge. The entire 1968 election — and possibly Nixon's rise — is different.",delay:"~5 years",severity:"high",icon:"🗳️"}
+    ],
+    modernDay:{
+      tech:"Minimal direct tech impact — space program continues regardless.",
+      culture:"American conspiracy culture might be far less prominent. The JFK assassination was the original conspiracy theory that taught Americans to distrust official narratives.",
+      politics:"Without the Vietnam escalation and its aftermath, the specific form of American political polarization might look different. Nixon might never become president.",
+      daily:"The vague distrust of institutions that pervades American life — the sense that the official story is never the real story — has roots in Dallas, 1963."}},
+
+  {id:"magna_carta",name:"Signing of the Magna Carta",born:1215,died:null,cat:"events",cat2:"politics",field:"Constitutional Law",
+    quote:"No free man shall be seized, imprisoned, or stripped of his rights except by the lawful judgment of his peers.",
+    contributions:["Established principle that rulers are subject to law","Foundation for habeas corpus","Influenced every subsequent bill of rights","Created concept of due process"],
+    r:0.55,reasoning:"English barons had grievances that would have produced some form of concession from the crown — the political dynamics demanded it. But the specific document, its specific clauses, and its survival as a symbol were contingent. Most of Magna Carta's clauses addressed immediate feudal disputes, not grand principles. Its later transformation into a symbol of universal rights was a creative reinterpretation by later generations.",
+    counterfactual:"Without Magna Carta specifically, English barons still extract concessions from King John — the political pressure was real. But without this specific document becoming the mythic foundation of English liberty, the common law tradition develops around different precedents. The American founders cited Magna Carta constantly; without it, they'd build their arguments on different foundations. The same principles emerge but through different texts and traditions.",
+    impact:{lives:"Billions influenced by legal systems derived from its principles",econ:"Rule of law and property rights essential for economic development",cultural:"Foundation myth of English-speaking world's legal tradition",reach:"Global — through British Empire and American influence",timeline:"Some charter of baronial rights within 10 years regardless"},
+    timeline:[
+      {year:1215,happened:"Barons force King John to sign Magna Carta at Runnymede",alternate:"Different charter with different specific provisions"},
+      {year:1297,happened:"Edward I confirms Magna Carta as statute law",alternate:"Baronial rights established through different legal precedents"},
+      {year:1628,happened:"Petition of Right cites Magna Carta against Charles I",alternate:"Parliamentary arguments built on different constitutional foundation"},
+      {year:1791,happened:"US Bill of Rights draws on Magna Carta tradition",alternate:"American rights framework built on different philosophical base"}
+    ],
+    cascade:[
+      {event:"No Magna Carta document",consequence:"English baronial rights are established through oral tradition and custom rather than a single iconic text. Less portable as a symbol.",delay:"~10 years",severity:"medium",icon:"📜"},
+      {event:"Different common law foundation",consequence:"Without Magna Carta as touchstone, English common law develops around different precedents. Same principles, different mythology.",delay:"~200 years",severity:"medium",icon:"⚖️"},
+      {event:"Different American founding rhetoric",consequence:"Jefferson, Madison, and Adams built arguments on Magna Carta. Without it, they cite Locke, Montesquieu, and classical sources more heavily.",delay:"~550 years",severity:"medium",icon:"🗽"},
+      {event:"Same destination, different path",consequence:"Rule of law, due process, and limits on executive power still develop. The specific document matters less than the underlying political forces.",delay:"~800 years",severity:"low",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"No direct tech impact.",
+      culture:"The specific phrase 'Magna Carta' as shorthand for fundamental rights doesn't exist. Legal education uses different foundational texts.",
+      politics:"Constitutional democracies still exist — the political forces driving them were independent of one document. But the specific rhetoric and symbolism are different.",
+      daily:"Your legal rights are essentially the same. The principles Magna Carta symbolizes would have found expression through other documents."}},
 ];
 
 
@@ -8905,7 +9375,7 @@ const COMPOUND_SCENARIOS = [
 ];
 
 const ALL_SUBJECTS = (() => {
-  const combined = [...FIGURES, ...INSTITUTIONS, ...INVENTIONS];
+  const combined = [...FIGURES, ...INSTITUTIONS, ...INVENTIONS, ...EVENTS];
   const seen = new Set();
   const deduped = combined.filter(s => {
     if (seen.has(s.id)) return false;
@@ -8927,12 +9397,12 @@ const COLLECTIONS = [
   {
     id: "cold_war",
     title: "The Cold War",
-    subtitle: "Whose moves shaped the standoff?",
+    subtitle: "What shaped the standoff — people, weapons, or moments?",
     emoji: "🧊",
     color: "#1e40af",
     bg: "#eff6ff",
     border: "#bfdbfe",
-    figures: ["jfk", "reagan", "gorbachev", "nato", "nuclearpower", "gagarin", "armstrong", "zhukov"],
+    figures: ["jfk", "reagan", "gorbachev", "nato", "nuclearpower", "gagarin", "armstrong", "zhukov", "cuban_missile_crisis", "fall_berlin_wall"],
   },
   {
     id: "renaissance",
@@ -8997,7 +9467,7 @@ const COLLECTIONS = [
   {
     id: "medicine",
     title: "Medicine's Turning Points",
-    subtitle: "Would we have found the cure without them?",
+    subtitle: "Would the breakthroughs have come without these specific people and discoveries?",
     emoji: "💊",
     color: "#059669",
     bg: "#ecfdf5",
@@ -9024,30 +9494,40 @@ const COLLECTIONS = [
     border: "#fecdd3",
     figures: ["beethoven", "mozart", "bach", "coltrane", "marley", "hendrix", "bowie", "fela"],
   },
+  {
+    id: "turning_points",
+    title: "Turning Points",
+    subtitle: "Were these moments inevitable — or could history have gone another way?",
+    emoji: "⚡",
+    color: "#7c3aed",
+    bg: "#faf5ff",
+    border: "#e9d5ff",
+    figures: ["french_revolution", "black_death", "ww1", "911", "cuban_missile_crisis", "hiroshima", "fall_berlin_wall", "haitian_revolution"],
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ACHIEVEMENTS
 // ─────────────────────────────────────────────────────────────────────────────
 const ACHIEVEMENTS = [
-  { id: "first_play", icon: "🌱", title: "First Steps", desc: "Play your first figure", check: (h, p) => p.length >= 1 },
-  { id: "ten_played", icon: "📖", title: "History Student", desc: "Play 10 figures", check: (h, p) => p.length >= 10 },
-  { id: "fifty_played", icon: "📚", title: "Well Read", desc: "Play 50 figures", check: (h, p) => p.length >= 50 },
-  { id: "century", icon: "💯", title: "Century Club", desc: "Play 100 figures", check: (h, p) => p.length >= 100 },
-  { id: "completionist", icon: "🏆", title: "Completionist", desc: "Play all built-in figures", check: (h, p) => {
+  { id: "first_play", icon: "🌱", title: "First Steps", desc: "Play your first round", check: (h, p) => p.length >= 1 },
+  { id: "ten_played", icon: "📖", title: "History Student", desc: "Play 10 rounds", check: (h, p) => p.length >= 10 },
+  { id: "fifty_played", icon: "📚", title: "Well Read", desc: "Play 50 rounds", check: (h, p) => p.length >= 50 },
+  { id: "century", icon: "💯", title: "Century Club", desc: "Play 100 rounds", check: (h, p) => p.length >= 100 },
+  { id: "completionist", icon: "🏆", title: "Completionist", desc: "Play every built-in entry", check: (h, p) => {
     const builtIn = new Set(ALL_SUBJECTS.map(s => s.id));
     return p.filter(id => builtIn.has(id)).length >= ALL_SUBJECTS.length;
   }},
   { id: "bullseye", icon: "🎯", title: "Bullseye", desc: "Guess within 3% of actual", check: (h) => h.some(g => g.diff <= 3) },
   { id: "sharpshooter", icon: "🔫", title: "Sharpshooter", desc: "5 games within 5% accuracy", check: (h) => h.filter(g => g.diff <= 5).length >= 5 },
   { id: "sniper", icon: "🎖️", title: "Sniper", desc: "10 games within 3% accuracy", check: (h) => h.filter(g => g.diff <= 3).length >= 10 },
-  { id: "perfect", icon: "💎", title: "Perfection", desc: "Score 100 points on a figure", check: (h) => h.some(g => g.pts === 100) },
+  { id: "perfect", icon: "💎", title: "Perfection", desc: "Score a perfect 100", check: (h) => h.some(g => g.pts === 100) },
   { id: "high_roller", icon: "🔥", title: "High Roller", desc: "Score 80+ five times", check: (h) => h.filter(g => g.pts >= 80).length >= 5 },
-  { id: "all_cats", icon: "🌍", title: "Renaissance Mind", desc: "Play a figure in every category", check: (h, p) => {
+  { id: "all_cats", icon: "🌍", title: "Renaissance Mind", desc: "Play one from every category", check: (h, p) => {
     const catSet = new Set(ALL_SUBJECTS.filter(s => p.includes(s.id)).map(s => s.cat));
     return catSet.size >= Object.keys(CATS).length;
   }},
-  { id: "hard_nail", icon: "🧊", title: "Hard Mode Hero", desc: "Score 70+ on a Hard figure", check: (h) => {
+  { id: "hard_nail", icon: "🧊", title: "Hard Mode Hero", desc: "Score 70+ on a Hard entry", check: (h) => {
     return h.some(g => {
       const fig = ALL_SUBJECTS.find(s => s.id === g.id);
       return fig && getDifficulty(fig.r) >= 0.25 && g.pts >= 70;
@@ -9077,6 +9557,18 @@ const ACHIEVEMENTS = [
     return done.length >= 3;
   }},
   { id: "daily_7", icon: "📅", title: "Weekly Warrior", desc: "7-day daily challenge streak", check: (h, p, ds) => (ds?.dailyStreak || 0) >= 7 },
+  { id: "shield_save", icon: "🛡️", title: "Close Call", desc: "Have a Streak Shield save your streak", check: (h, p, ds, sr) => sr && sr.includes("streak_shield") },
+  { id: "streak_15", icon: "👑", title: "Historian's Run", desc: "Reach a 15-round accuracy streak", check: (h) => {
+    let run = 0, max = 0;
+    h.forEach(g => { run = g.diff <= 15 ? run + 1 : 0; max = Math.max(max, run); });
+    return max >= 15;
+  }},
+  { id: "hard_5", icon: "💀", title: "Trial by Fire", desc: "Score 60+ on 5 Hard entries", check: (h) => {
+    return h.filter(g => {
+      const fig = ALL_SUBJECTS.find(s => s.id === g.id);
+      return fig && getDifficulty(fig.r) >= 0.25 && g.pts >= 60;
+    }).length >= 5;
+  }},
 ];
 
 const ERAS = [
@@ -9090,25 +9582,62 @@ const ERAS = [
   { id: "postwar", label: "Postwar & Digital", range: "1950 – Present", min: 1950, max: Infinity, color: "#4f46e5", bg: "#eef2ff", icon: "💻" },
 ];
 
-// Streak milestones — bonus points awarded when crossing each threshold
+// Streak milestones — bonus points + unlockable rewards
 const STREAK_MILESTONES = [
-  { at: 3, bonus: 10, emoji: "⚡", label: "Getting warm" },
-  { at: 5, bonus: 25, emoji: "🔥", label: "On fire" },
-  { at: 7, bonus: 40, emoji: "💥", label: "Unstoppable" },
-  { at: 10, bonus: 60, emoji: "⭐", label: "Legendary run" },
-  { at: 15, bonus: 80, emoji: "👑", label: "Historian" },
-  { at: 20, bonus: 100, emoji: "🏛️", label: "Oracle streak" },
+  { at: 3, bonus: 10, emoji: "⚡", label: "Getting warm", reward: "streak_shield", rewardLabel: "Streak Shield unlocked — saves your streak once" },
+  { at: 5, bonus: 25, emoji: "🔥", label: "On fire", reward: "golden_share", rewardLabel: "Golden share card style unlocked" },
+  { at: 7, bonus: 40, emoji: "💥", label: "Unstoppable", reward: "difficulty_peek", rewardLabel: "Difficulty Peek unlocked — see difficulty before playing" },
+  { at: 10, bonus: 60, emoji: "⭐", label: "Legendary run", reward: "streak_shield_2", rewardLabel: "Second Streak Shield earned" },
+  { at: 15, bonus: 80, emoji: "👑", label: "Historian", reward: "point_boost", rewardLabel: "Point Boost unlocked — +10% points for 5 rounds" },
+  { at: 20, bonus: 100, emoji: "🏛️", label: "Oracle streak", reward: "oracle_badge", rewardLabel: "Oracle Badge — permanent profile flair" },
+];
+
+// Difficulty point multipliers — harder figures are worth more
+const DIFFICULTY_MULTIPLIER = (r) => {
+  const d = getDifficulty(r);
+  if (d >= 0.30) return { mult: 1.5, label: "1.5×", tier: "hard" };
+  if (d >= 0.15) return { mult: 1.25, label: "1.25×", tier: "medium" };
+  return { mult: 1.0, label: "1×", tier: "easy" };
+};
+
+// Warm-up coaching tips for new players
+const WARMUP_TIPS = [
+  "Start with your gut — how much did this specific entry change history compared to the forces around it?",
+  "Think about it this way: if this never existed or never happened, would the same outcome have arrived anyway?",
+  "Low scores mean 'easily replaced' — the outcome was in the air. High scores mean 'truly irreplaceable' — history hinged on this specific moment.",
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // UTILITY FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
-const getScoreLabel = (score) => {
+const getScoreLabel = (score, subject) => {
   // score here is a weight value (0-1), where 1 = history-defining
-  if (score >= 0.80) return { label: "History-Defining", color: "#b91c1c", desc: "Without them, the world looks fundamentally different — no clear substitute existed" };
-  if (score >= 0.50) return { label: "High Weight", color: "#c2410c", desc: "Shaped history in ways that would have been hard for others to replicate" };
-  if (score >= 0.20) return { label: "Moderate Weight", color: "#a16207", desc: "Others were converging on similar ideas — the timeline shifts, but the outcome arrives" };
-  return { label: "Low Weight", color: "#15803d", desc: "Multiple paths were converging — this was happening regardless of any one person" };
+  const cat = subject?.cat || "";
+  const isEvent = cat === "events";
+  const isInvention = cat === "inventions";
+  const isInstitution = cat === "institutions";
+  const isPerson = !isEvent && !isInvention && !isInstitution;
+
+  if (score >= 0.80) return { label: "History-Defining", color: "#b91c1c", desc:
+    isEvent ? "This didn't have to happen — and without it, the world becomes unrecognizable"
+    : isInvention ? "This specific invention reshaped everything — nothing else was converging on the same solution"
+    : isInstitution ? "Without this institution, the systems it built have no clear replacement"
+    : "Without them, the world looks fundamentally different — no one else was close" };
+  if (score >= 0.50) return { label: "High Weight", color: "#c2410c", desc:
+    isEvent ? "The specific way this unfolded mattered — a different version of events changes the outcome"
+    : isInvention ? "The specific form of this invention mattered — a different version changes what followed"
+    : isInstitution ? "This institution shaped its domain in ways that weren't guaranteed by the underlying need"
+    : "Shaped history in ways that would have been hard for anyone else to replicate" };
+  if (score >= 0.20) return { label: "Moderate Weight", color: "#a16207", desc:
+    isEvent ? "The underlying forces were real, but the timing and shape weren't guaranteed"
+    : isInvention ? "The need was real, but the specific timing and form weren't guaranteed"
+    : isInstitution ? "Something like this was needed, but the specific institution shaped the outcome"
+    : "Others were working toward similar ends — the timeline shifts, but the outcome likely arrives" };
+  return { label: "Low Weight", color: "#15803d", desc:
+    isEvent ? "History was converging here from multiple directions — this was coming regardless"
+    : isInvention ? "Multiple inventors were closing in — this was arriving within a generation"
+    : isInstitution ? "The function this served was being filled from multiple directions"
+    : "Multiple paths were converging — someone else gets here within a generation" };
 };
 
 const getDifficulty = (r) => Math.abs(r - 0.5);
@@ -9120,8 +9649,18 @@ const calculatePoints = (diff) => {
   return Math.round(100 * Math.pow(1 - diff * 2, 2));
 };
 
+// Conviction multiplier — penalizes hedging near 50%, rewards bold predictions
+// prediction at 50% → 0.75x, at 35%/65% → ~0.98x, at 15%/85% → 1.15x, at 0%/100% → 1.25x
+const CONVICTION_MULT = (prediction) => {
+  const conviction = Math.pow(Math.abs(prediction - 0.5) / 0.5, 0.65);
+  const mult = 0.75 + 0.5 * conviction;
+  if (mult >= 1.05) return { mult, label: `${Math.round((mult - 1) * 100)}% conviction`, tier: "bonus" };
+  if (mult <= 0.90) return { mult, label: `${Math.round((1 - mult) * 100)}% hedge penalty`, tier: "penalty" };
+  return { mult, label: null, tier: "neutral" };
+};
+
 const getAccuracyFeedback = (diff, pts, subject, prediction) => {
-  const name = subject ? subject.name : "this figure";
+  const name = subject ? subject.name : "this entry";
   const w = subject ? toWeight(subject.r ?? subject._r ?? 0.5) : 0.5;
   const over = prediction > w; // player said MORE impactful than analysis
   if (diff < 0.03) return { emoji: "🎯", msg: `Near-perfect read on ${name}. You saw right through this one.`, tier: "perfect" };
@@ -9133,10 +9672,10 @@ const getAccuracyFeedback = (diff, pts, subject, prediction) => {
     ? `You thought ${name} was more impactful than the analysis shows.`
     : `${name} shaped history more than you'd expect.`, tier: "okay" };
   if (diff < 0.40) return { emoji: "📚", msg: over
-    ? `${name}'s contribution was easier to replicate than you assumed.`
+    ? `${name}'s impact was less singular than you assumed.`
     : `${name} left a deeper mark on history than most people realize.`, tier: "miss" };
   return { emoji: "😮", msg: over
-    ? `Way off — ${name}'s impact was far less unique than you guessed.`
+    ? `Way off — ${name} was far more replaceable than you guessed.`
     : `Way off — ${name} was far more impactful than you thought.`, tier: "far" };
 };
 
@@ -9148,14 +9687,36 @@ const getDifficultyLabel = (r) => {
 };
 
 // RANK SYSTEM — based on avg points per round + minimum games
+const RANK_LADDER = [
+  { title: "Oracle", icon: "🏛️", color: "#7c2d12", avgReq: 84, gamesReq: 50, pctPlayers: "~2%", topPct: 2, desc: "Top tier — you see what others miss" },
+  { title: "Master", icon: "👑", color: "#6d28d9", avgReq: 76, gamesReq: 40, pctPlayers: "~5%", topPct: 7, desc: "Rare air — consistent and deep" },
+  { title: "Fellow", icon: "🎓", color: "#1d4ed8", avgReq: 68, gamesReq: 30, pctPlayers: "~12%", topPct: 19, desc: "Strong instincts across the board" },
+  { title: "Scholar", icon: "📜", color: "#0d9488", avgReq: 58, gamesReq: 20, pctPlayers: "~22%", topPct: 41, desc: "You know your history" },
+  { title: "Analyst", icon: "🔍", color: "#ca8a04", avgReq: 45, gamesReq: 10, pctPlayers: "~28%", topPct: 69, desc: "Getting sharper every round" },
+  { title: "Novice", icon: "📖", color: "#64748b", avgReq: 0, gamesReq: 5, pctPlayers: "~24%", topPct: 93, desc: "Finding your footing" },
+  { title: "Newcomer", icon: "🌱", color: "#94a3b8", avgReq: 0, gamesReq: 0, pctPlayers: "~7%", topPct: 100, desc: "Just getting started" },
+];
+
 const getRank = (avgPts, gamesPlayed) => {
-  if (gamesPlayed < 5) return { title: "Newcomer", icon: "🌱", color: "#94a3b8", next: "Play 5 rounds to earn a rank" };
-  if (avgPts >= 82 && gamesPlayed >= 40) return { title: "Oracle of Clio", icon: "🏛️", color: "#7c2d12", next: null };
-  if (avgPts >= 72 && gamesPlayed >= 30) return { title: "Senior Fellow", icon: "🎓", color: "#6d28d9", next: `${82 - avgPts > 0 ? `+${82 - avgPts} avg pts` : ""}${gamesPlayed < 40 ? ` · ${40 - gamesPlayed} more rounds` : ""} → Oracle of Clio` };
-  if (avgPts >= 60 && gamesPlayed >= 20) return { title: "Counterfactual Scholar", icon: "📜", color: "#0d9488", next: `${72 - avgPts > 0 ? `+${72 - avgPts} avg pts` : ""}${gamesPlayed < 30 ? ` · ${30 - gamesPlayed} more rounds` : ""} → Senior Fellow` };
-  if (avgPts >= 45 && gamesPlayed >= 10) return { title: "Historical Analyst", icon: "🔍", color: "#ca8a04", next: `${60 - avgPts > 0 ? `+${60 - avgPts} avg pts` : ""}${gamesPlayed < 20 ? ` · ${20 - gamesPlayed} more rounds` : ""} → Scholar` };
-  if (gamesPlayed >= 5) return { title: "History Student", icon: "📖", color: "#64748b", next: `${45 - avgPts > 0 ? `+${45 - avgPts} avg pts` : ""}${gamesPlayed < 10 ? ` · ${10 - gamesPlayed} more rounds` : ""} → Analyst` };
-  return { title: "Newcomer", icon: "🌱", color: "#94a3b8", next: "Play 5 rounds to earn a rank" };
+  for (const r of RANK_LADDER) {
+    if (r.title === "Newcomer") continue;
+    if (avgPts >= r.avgReq && gamesPlayed >= r.gamesReq) {
+      // Find next rank up
+      const idx = RANK_LADDER.indexOf(r);
+      const nextUp = idx > 0 ? RANK_LADDER[idx - 1] : null;
+      let nextHint = null;
+      if (nextUp) {
+        const parts = [];
+        if (avgPts < nextUp.avgReq) parts.push(`+${nextUp.avgReq - avgPts} avg pts`);
+        if (gamesPlayed < nextUp.gamesReq) parts.push(`${nextUp.gamesReq - gamesPlayed} more rounds`);
+        nextHint = parts.length > 0 ? `${parts.join(" · ")} → ${nextUp.title}` : null;
+      }
+      return { ...r, next: nextHint };
+    }
+  }
+  // Default: Newcomer
+  const newcomer = RANK_LADDER[RANK_LADDER.length - 1];
+  return { ...newcomer, next: `Play ${5 - gamesPlayed} more rounds → Novice` };
 };
 
 // CONTEXTUAL INTERLUDE — reveals actual analysis sentence by sentence
@@ -9201,6 +9762,8 @@ const getInterludePhases = (subject, prediction) => {
       finance: "Would the same market forces have produced the same outcome?",
       exploration: "Separating the explorer from the conditions that made exploration possible...",
       social: "Was this change driven by one person, or by forces larger than any individual?",
+      sports: `Would the sport have evolved the same way without ${name}?`,
+      events: `Was this moment inevitable, or could it have gone completely differently?`,
       institutions: "Would other organizations have converged on the same model?",
       inventions: "Was the underlying science ready for anyone to find this?",
     };
@@ -9213,30 +9776,43 @@ const getInterludePhases = (subject, prediction) => {
   return phases;
 };
 
-// DIRECTIONAL INSIGHT — explains why the player was off
+// DIRECTIONAL INSIGHT — explains why the player was off, using actual subject context
 const getDirectionInsight = (prediction, rValue, subject) => {
   const actual = toWeight(rValue); // convert to weight
   const diff = prediction - actual; // positive = player said MORE impactful than reality
   const absDiff = Math.abs(diff);
   if (absDiff < 0.10) return null; // close enough, no need
+
+  const name = subject.name || "this entry";
+  const field = subject.field || "";
+  const reasoning = subject.reasoning || "";
+
+  // Extract a concrete detail from reasoning to ground the feedback
+  const sentences = reasoning.match(/[^.!?]+[.!?]+/g) || [];
+  const detailSentence = sentences.find(s =>
+    s.length > 30 && s.length < 150 &&
+    !s.includes("score") && !s.includes("weight")
+  );
+  const detail = detailSentence ? detailSentence.trim() : "";
+
   if (diff > 0) {
-    // Player overestimated impact (thought they were more important)
-    return `You rated this as more impactful than the analysis suggests. ${
-      actual < 0.30
-        ? "Multiple independent paths were converging — the timing was ripe regardless of who got there first."
-        : actual < 0.50
-        ? "There were more contemporaries working on similar problems than most people realize."
-        : "The individual contribution was real, but the underlying conditions were pushing toward this outcome anyway."
-    }`;
+    // Player overestimated impact (thought more important than analysis says)
+    if (actual < 0.30) {
+      return `${name} mattered less than intuition suggests. ${detail || `The conditions in ${field.toLowerCase()} were converging — the same outcome was arriving from multiple directions.`}`;
+    } else if (actual < 0.50) {
+      return `${name}'s impact was real but not as singular as it seems. ${detail || `Similar forces in ${field.toLowerCase()} were pushing toward the same outcome.`}`;
+    } else {
+      return `${name} was important, but the underlying conditions were doing more of the work than it appears. ${detail}`.trim();
+    }
   } else {
-    // Player underestimated impact (thought they were more replaceable)
-    return `You underestimated this one's historical weight. ${
-      actual > 0.70
-        ? `Figures this impactful are rare — ${subject.name}'s specific contribution had no close parallel.`
-        : actual > 0.50
-        ? "While the field was active, this particular contribution was harder to replicate than it looks."
-        : "Even with contemporaries working nearby, the specific form of this contribution mattered more than you'd expect."
-    }`;
+    // Player underestimated impact (thought more replaceable than analysis says)
+    if (actual > 0.70) {
+      return `${name} was harder to replace than you thought. ${detail || `Nothing else in ${field.toLowerCase()} was converging on this specific outcome.`}`;
+    } else if (actual > 0.50) {
+      return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened — how it happened shaped what came after.`}`;
+    } else {
+      return `Even with similar forces at work, ${name}'s particular version of events carried more weight than expected. ${detail}`.trim();
+    }
   }
 };
 
@@ -9359,6 +9935,242 @@ const getConnectionLabel = (current, other) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SMART RECOMMENDATIONS — personalized suggestions from play history
 // ─────────────────────────────────────────────────────────────────────────────
+// ─── PATTERN INSIGHTS — teaches transferable counterfactual reasoning ───
+// Triggers at 5/10/20 games per category. Detects directional bias and
+// matches it to domain-specific heuristics about *why* players misjudge.
+const CATEGORY_HEURISTICS = {
+  science: {
+    over: [
+      { at: 4, title: "The Convergence Trap", text: (n, total) => `You've overestimated ${n} of ${total} science entries. When multiple labs race toward the same breakthrough, the specific discoverer matters less than intuition suggests. Ask: was anyone else close?` },
+      { at: 10, title: "Simultaneous Discovery", text: (n, total) => `Still overestimating science (${n}/${total}). Calculus, evolution, oxygen, the telephone — history is full of near-simultaneous discovery. In competitive fields, "who" matters less than "when."` },
+    ],
+    under: [
+      { at: 4, title: "Vision vs. Discovery", text: (n, total) => `You've underestimated ${n} of ${total} science entries. Some breakthroughs aren't just about getting there first — they require conceptual leaps that reshape how entire fields think. The framework can matter more than the finding.` },
+    ],
+  },
+  arts: {
+    over: [
+      { at: 4, title: "Art Isn't Convergent", text: (n, total) => `You've overestimated ${n} of ${total} arts entries. Unlike science, a different artist wouldn't produce the same work. No one else writes Hamlet. Art is personal in a way that makes the creator harder to replace.` },
+    ],
+    under: [
+      { at: 4, title: "Movements vs. Artists", text: (n, total) => `You've underestimated ${n} of ${total} arts entries. Artistic movements often have structural causes — cultural conditions that produce Impressionism or hip-hop regardless of any single artist. The movement was coming; the specific masterpieces weren't.` },
+    ],
+  },
+  politics: {
+    over: [
+      { at: 4, title: "Structural Forces Matter", text: (n, total) => `You've overestimated ${n} of ${total} political entries. Political outcomes often reflect deep structural forces — economics, demographics, geography — that constrain what any leader can do. The office shapes the person as much as the reverse.` },
+      { at: 10, title: "The Substitute Leader", text: (n, total) => `Still overestimating politics (${n}/${total}). When a political need is urgent enough, someone fills the role. Revolutions find their leaders; crises produce their commanders. The question is whether *this specific person's* decisions diverged from what a typical leader would have chosen.` },
+    ],
+    under: [
+      { at: 4, title: "Decisions at the Pivot", text: (n, total) => `You've underestimated ${n} of ${total} political entries. Leaders at critical junctures make choices that foreclose other paths. A different person in the same office, facing the same pressures, might have chosen differently — and history would have forked.` },
+    ],
+  },
+  military: {
+    over: [
+      { at: 4, title: "Wars Have Many Generals", text: (n, total) => `You've overestimated ${n} of ${total} military entries. Most armies have deep benches of competent officers. Wars are won by logistics, resources, and institutional strength as much as individual brilliance. Ask: would a merely competent replacement have lost?` },
+    ],
+    under: [
+      { at: 4, title: "Tactical Genius Is Real", text: (n, total) => `You've underestimated ${n} of ${total} military entries. Some commanders made decisions so unconventional that no replacement would have attempted them. When victory hinged on a specific bold move, the individual mattered enormously.` },
+    ],
+  },
+  social: {
+    over: [
+      { at: 4, title: "Movements Have Roots", text: (n, total) => `You've overestimated ${n} of ${total} social movement entries. Social movements grow from structural conditions — inequality, oppression, demographic change. The pressure existed before the leader. Someone would have channeled it.` },
+    ],
+    under: [
+      { at: 4, title: "The Shape of the Movement", text: (n, total) => `You've underestimated ${n} of ${total} social entries. Movements feel inevitable in retrospect, but specific leaders shaped their character, timing, and strategy in ways that produced very different outcomes. Nonviolence wasn't inevitable. Neither was that specific vision of justice.` },
+    ],
+  },
+  inventions: {
+    over: [
+      { at: 4, title: "Multiple Inventors", text: (n, total) => `You've overestimated ${n} of ${total} invention entries. Most inventions had near-simultaneous inventors. The telephone, lightbulb, radio, calculus — when the prerequisite technologies exist, the next step becomes almost inevitable. Focus on timing, not credit.` },
+      { at: 15, title: "Implementation Matters", text: (n, total) => `You keep overestimating inventions (${n}/${total}). Here's the nuance: even when the invention was coming, the *specific implementation* often shaped everything after. VHS vs Betamax. QWERTY keyboards. The form factor gets locked in.` },
+    ],
+    under: [
+      { at: 4, title: "Convergent Technology", text: (n, total) => `You've underestimated ${n} of ${total} invention entries. Technology is highly convergent — when the components exist, someone assembles them. The question isn't "would it have been invented?" but "how much later, and in what form?"` },
+    ],
+  },
+  events: {
+    over: [
+      { at: 4, title: "Contingent Triggers", text: (n, total) => `You've overestimated ${n} of ${total} event entries. The underlying pressures were real, but the specific trigger was often contingent. An assassination, a storm, a chance meeting — remove the trigger and the explosion might not happen, or happen very differently.` },
+    ],
+    under: [
+      { at: 4, title: "Pressure Finds Release", text: (n, total) => `You've underestimated ${n} of ${total} event entries. When structural pressures build — economic crisis, political repression, technological change — *something* happens. The specific event might differ, but the category of outcome was likely.` },
+    ],
+  },
+  institutions: {
+    over: [
+      { at: 4, title: "Needs Find Expression", text: (n, total) => `You've overestimated ${n} of ${total} institution entries. When a genuine need exists — for governance, coordination, knowledge — some institution forms to fill it. The specific institution might look different, but the function would be served.` },
+      { at: 15, title: "Institutional Inertia", text: (n, total) => `Still overestimating institutions (${n}/${total}). Once formed, institutions develop internal logic, culture, and constituencies. The specific founder's choices get locked in for decades. The need was generic; the institution that resulted was not.` },
+    ],
+    under: [
+      { at: 4, title: "The Founder's Imprint", text: (n, total) => `You've underestimated ${n} of ${total} institution entries. Founders imprint their vision on organizations in ways that persist long after they leave. A different founder facing the same need would have built something meaningfully different.` },
+    ],
+  },
+  computing: {
+    over: [
+      { at: 4, title: "Computing Is Convergent", text: (n, total) => `You've overestimated ${n} of ${total} computing entries. Computing advances are among the most convergent in history. Multiple teams build similar hardware, write similar software, have similar ideas. Moore's Law doesn't care who's in the chair.` },
+    ],
+    under: [
+      { at: 4, title: "Architecture Gets Locked In", text: (n, total) => `You've underestimated ${n} of ${total} computing entries. The specific architecture — x86, Unix, TCP/IP — shapes decades of development once adopted. Someone else builds *a* computer, but the one we got sent ripples through every system built on top of it.` },
+    ],
+  },
+  medicine: {
+    over: [
+      { at: 4, title: "Medical Convergence", text: (n, total) => `You've overestimated ${n} of ${total} medicine entries. Medical breakthroughs often have multiple near-discoverers working with the same tools and knowledge. The cure was coming — usually within a decade. The question is how many lives that decade costs.` },
+    ],
+    under: [
+      { at: 4, title: "Unique Clinical Insight", text: (n, total) => `You've underestimated ${n} of ${total} medicine entries. Some medical advances required a specific person's unusual perspective — a surgeon willing to try what others wouldn't, a researcher connecting fields no one else bridged.` },
+    ],
+  },
+  philosophy: {
+    over: [
+      { at: 4, title: "Ideas Have Preconditions", text: (n, total) => `You've overestimated ${n} of ${total} philosophy entries. Philosophical ideas emerge from cultural and intellectual conditions. The questions were being asked; someone would have answered them. But the *articulation* — how the idea was expressed — shaped how it was received.` },
+    ],
+    under: [
+      { at: 4, title: "Articulation Is Everything", text: (n, total) => `You've underestimated ${n} of ${total} philosophy entries. In philosophy, how an idea is expressed can matter as much as the idea itself. A different thinker might reach similar conclusions but frame them in ways that fail to catch fire.` },
+    ],
+  },
+  finance: {
+    over: [
+      { at: 4, title: "Financial Innovation Clusters", text: (n, total) => `You've overestimated ${n} of ${total} finance entries. Financial innovations tend to emerge when market conditions demand them. Multiple people were developing similar instruments. The specific form mattered, but the capability was arriving.` },
+    ],
+    under: [
+      { at: 4, title: "Path Dependence in Markets", text: (n, total) => `You've underestimated ${n} of ${total} finance entries. Financial systems are deeply path-dependent. The specific design choices — of a currency, a market, an institution — get locked in and shape behavior for generations.` },
+    ],
+  },
+  exploration: {
+    over: [
+      { at: 4, title: "Someone Was Coming", text: (n, total) => `You've overestimated ${n} of ${total} exploration entries. Once the technology and motivation exist, "discovery" is mostly a matter of timing. Others were literally sailing the same oceans. But the *timing* of contact shaped centuries of what followed.` },
+    ],
+    under: [
+      { at: 4, title: "First Contact Shapes Everything", text: (n, total) => `You've underestimated ${n} of ${total} exploration entries. Who arrives first — and what they do on arrival — shapes the trajectory of entire civilizations. A different explorer with different priorities could have meant radically different colonial outcomes.` },
+    ],
+  },
+};
+
+// Cross-category pattern detectors
+const CROSS_PATTERNS = [
+  {
+    id: "great_person_bias",
+    icon: "👤",
+    title: "Great Person Bias",
+    check: (catData) => {
+      const cats = Object.values(catData);
+      if (cats.reduce((a, c) => a + c.games.length, 0) < 12) return null;
+      const overCats = cats.filter(c => c.games.length >= 3 && c.overPct > 0.55);
+      if (overCats.length >= 3) return "You consistently overrate individual impact across multiple categories. This is the 'Great Person' bias — history tends to be more driven by structural forces, competing actors, and convergent pressures than our narratives suggest.";
+      return null;
+    },
+  },
+  {
+    id: "structural_determinism",
+    icon: "⚙️",
+    title: "Structural Determinism",
+    check: (catData) => {
+      const cats = Object.values(catData);
+      if (cats.reduce((a, c) => a + c.games.length, 0) < 12) return null;
+      const underCats = cats.filter(c => c.games.length >= 3 && c.underPct > 0.55);
+      if (underCats.length >= 3) return "You consistently underrate individual impact across categories. Structural forces are powerful, but history repeatedly shows that specific people and decisions at critical junctures produce outcomes no \"underlying force\" would have generated on its own.";
+      return null;
+    },
+  },
+  {
+    id: "convergent_vs_divergent",
+    icon: "🔀",
+    title: "Convergence Blindspot",
+    check: (catData) => {
+      const convergent = ["science", "inventions", "computing", "medicine"].filter(c => catData[c] && catData[c].games.length >= 3);
+      const divergent = ["arts", "politics", "military", "social"].filter(c => catData[c] && catData[c].games.length >= 3);
+      if (convergent.length < 1 || divergent.length < 1) return null;
+      const convOver = convergent.filter(c => catData[c].overPct > 0.55).length;
+      const divUnder = divergent.filter(c => catData[c].underPct > 0.55).length;
+      if (convOver >= 1 && divUnder >= 1) return "You overrate individuals in convergent fields (science, tech) while underrating them in divergent ones (arts, politics). That's backwards — science has substitute discoverers; art and political leadership don't. Try flipping your instincts.";
+      const convUnder = convergent.filter(c => catData[c].underPct > 0.55).length;
+      const divOver = divergent.filter(c => catData[c].overPct > 0.55).length;
+      if (convUnder >= 1 && divOver >= 1) return "You've got good instincts about convergent fields — you correctly sense that science and tech breakthroughs have substitute discoverers. But you're also calibrated well on the personal nature of art and leadership. That's the right mental model.";
+      return null;
+    },
+  },
+];
+
+const getPatternInsights = (history) => {
+  if (history.length < 8) return [];
+
+  // Build per-category data
+  const catData = {};
+  history.forEach(g => {
+    if (!catData[g.cat]) catData[g.cat] = { games: [], overCount: 0, underCount: 0, totalBias: 0 };
+    const cd = catData[g.cat];
+    cd.games.push(g);
+    const bias = g.pred - g.r;
+    cd.totalBias += bias;
+    if (bias > 5) cd.overCount++;
+    if (bias < -5) cd.underCount++;
+  });
+
+  // Compute percentages
+  Object.values(catData).forEach(cd => {
+    cd.overPct = cd.games.length > 0 ? cd.overCount / cd.games.length : 0;
+    cd.underPct = cd.games.length > 0 ? cd.underCount / cd.games.length : 0;
+    cd.avgBias = cd.games.length > 0 ? cd.totalBias / cd.games.length : 0;
+  });
+
+  const insights = [];
+
+  // Category-specific insights — threshold: 4+ games, >55% directional bias
+  Object.entries(catData).forEach(([cat, data]) => {
+    const h = CATEGORY_HEURISTICS[cat];
+    if (!h) return;
+    const n = data.games.length;
+    if (n < 4) return;
+
+    if (data.overPct > 0.55 && h.over) {
+      const tier = [...h.over].reverse().find(t => n >= t.at);
+      if (tier) insights.push({ icon: "🎓", title: tier.title, text: tier.text(data.overCount, n), cat });
+    } else if (data.underPct > 0.55 && h.under) {
+      const tier = [...h.under].reverse().find(t => n >= t.at);
+      if (tier) insights.push({ icon: "🎓", title: tier.title, text: tier.text(data.underCount, n), cat });
+    }
+  });
+
+  // Cross-category patterns
+  CROSS_PATTERNS.forEach(p => {
+    const result = p.check(catData);
+    if (result) insights.push({ icon: p.icon, title: p.title, text: result, cross: true });
+  });
+
+  // Fallback: if no category insights fired but we have enough data,
+  // surface the player's sharpest contrast between categories
+  if (insights.length === 0 && history.length >= 12) {
+    const ranked = Object.entries(catData)
+      .filter(([, d]) => d.games.length >= 3)
+      .map(([cat, d]) => ({
+        cat,
+        avgErr: d.games.reduce((a, g) => a + g.diff, 0) / d.games.length,
+        avgBias: d.avgBias,
+        n: d.games.length,
+      }))
+      .sort((a, b) => a.avgErr - b.avgErr);
+
+    if (ranked.length >= 2) {
+      const best = ranked[0];
+      const worst = ranked[ranked.length - 1];
+      const bestLabel = CATS[best.cat]?.label || best.cat;
+      const worstLabel = CATS[worst.cat]?.label || worst.cat;
+      if (worst.avgErr - best.avgErr > 5) {
+        insights.push({
+          icon: "🔍", title: "Category Gap",
+          text: `Your ${bestLabel} predictions average ${Math.round(best.avgErr)} points off — strong intuition. But ${worstLabel} averages ${Math.round(worst.avgErr)} points off. What's different about how replaceability works in ${worstLabel.toLowerCase()}?`,
+          cross: true,
+        });
+      }
+    }
+  }
+
+  return insights;
+};
+
 const getRecommendations = (playedIds, history, allSubjects) => {
   if (!history || history.length < 3) return [];
   const recs = [];
@@ -9836,6 +10648,10 @@ export default function App() {
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [streakMilestone, setStreakMilestone] = useState(null);
+  const [streakShields, setStreakShields] = useState(0);
+  const [streakRewards, setStreakRewards] = useState([]); // earned reward IDs
+  const [pointBoostRounds, setPointBoostRounds] = useState(0); // rounds of +10% remaining
+  const [challengeMode, setChallengeMode] = useState(false); // hard figures only, 2× points
   const [sfxEnabled, setSfxEnabled] = useState(SFX.isEnabled());
   const [newAchievement, setNewAchievement] = useState(null);
   const prevEarnedRef = useRef(new Set());
@@ -9873,6 +10689,9 @@ export default function App() {
       setStreak(saved.streak || 0);
       setBestStreak(saved.bestStreak || 0);
       setHasSeenIntro(saved.hasSeenIntro || false);
+      setStreakShields(saved.streakShields || 0);
+      setStreakRewards(saved.streakRewards || []);
+      setPointBoostRounds(saved.pointBoostRounds || 0);
     }
     // Load and clean custom cache — purge stale entries from when API was broken
     const cached = loadCustomCache();
@@ -9991,8 +10810,8 @@ export default function App() {
 
   // Save progress
   useEffect(() => {
-    if (played.length > 0) saveProgress({ score, played, streak, bestStreak, hasSeenIntro });
-  }, [score, played, streak, bestStreak, hasSeenIntro]);
+    if (played.length > 0) saveProgress({ score, played, streak, bestStreak, hasSeenIntro, streakShields, streakRewards, pointBoostRounds });
+  }, [score, played, streak, bestStreak, hasSeenIntro, streakShields, streakRewards, pointBoostRounds]);
 
   // Trigger result animation
   useEffect(() => {
@@ -10015,12 +10834,44 @@ export default function App() {
       return;
     }
     setNavHistory(prev => [...prev, screen]);
+
+    // Challenge mode: only hard figures
+    if (challengeMode) {
+      const hardOnly = unplayed.filter(s => getDifficulty(s.r) >= 0.25);
+      if (hardOnly.length === 0) {
+        showToast("No hard entries left! Turning off Challenge Mode.");
+        setChallengeMode(false);
+      } else {
+        const pick = hardOnly[Math.floor(Math.random() * hardOnly.length)];
+        setSubject(pick);
+        setPrediction(0.5);
+        setRevealed(false);
+        setStreakMilestone(null);
+        setScreen("predict");
+        scrollTop();
+        return;
+      }
+    }
+
     // Difficulty progression: weights shift as player gains experience
     const n = played.length;
     const hard = unplayed.filter(s => getDifficulty(s.r) >= 0.30);
     const medium = unplayed.filter(s => { const d = getDifficulty(s.r); return d >= 0.15 && d < 0.30; });
     const easy = unplayed.filter(s => getDifficulty(s.r) < 0.15);
-    // Early games lean easy; experienced players see harder figures
+
+    // Warm-up: first 3 games always easy
+    if (n < 3 && easy.length > 0) {
+      const pick = easy[Math.floor(Math.random() * easy.length)];
+      setSubject(pick);
+      setPrediction(0.5);
+      setRevealed(false);
+      setStreakMilestone(null);
+      setScreen("predict");
+      scrollTop();
+      return;
+    }
+
+    // Standard progression
     let wHard, wMed;
     if (n < 5) { wHard = 0.10; wMed = 0.30; }       // 60% easy
     else if (n < 15) { wHard = 0.25; wMed = 0.40; }  // 35% easy
@@ -10075,14 +10926,32 @@ export default function App() {
     const r = subject.r ?? subject._r;
     const w = toWeight(r);
     const diff = Math.abs(prediction - w);
-    const pts = calculatePoints(diff);
+    let basePts = calculatePoints(diff);
     const isReplay = played.includes(subject.id);
 
     // Only award points and track on first play
     if (!isReplay) {
+      // --- Conviction multiplier (penalizes 50% hedge, rewards bold calls) ---
+      const convMult = CONVICTION_MULT(prediction);
+      let finalPts = Math.round(basePts * convMult.mult);
+
+      // --- Difficulty multiplier ---
+      const diffMult = DIFFICULTY_MULTIPLIER(r);
+      finalPts = Math.round(finalPts * diffMult.mult);
+
+      // Challenge mode: 2× all points
+      if (challengeMode) finalPts = Math.round(finalPts * 2);
+
+      // Point boost (earned at streak 15): +10% for limited rounds
+      if (pointBoostRounds > 0) {
+        finalPts = Math.round(finalPts * 1.10);
+        setPointBoostRounds(prev => prev - 1);
+      }
+
       let bonusPts = 0;
-      setScore(prev => prev + pts);
+      setScore(prev => prev + finalPts);
       setPlayed(prev => [...prev, subject.id]);
+
       // Streak: within 15% counts as "good"
       if (diff < 0.15) {
         setStreak(prev => {
@@ -10095,15 +10964,37 @@ export default function App() {
             bonusPts = milestone.bonus;
             setScore(s => s + bonusPts);
             setTimeout(() => SFX.milestone(), 300);
+            // Grant streak reward
+            if (milestone.reward && !streakRewards.includes(milestone.reward)) {
+              setStreakRewards(prev => [...prev, milestone.reward]);
+              // Special reward effects
+              if (milestone.reward === "streak_shield" || milestone.reward === "streak_shield_2") {
+                setStreakShields(prev => prev + 1);
+              }
+              if (milestone.reward === "point_boost") {
+                setPointBoostRounds(5);
+              }
+            }
           } else {
             setStreakMilestone(null);
           }
           return next;
         });
       } else {
-        setStreak(0);
-        setStreakMilestone(null);
+        // Streak broken — but check for streak shield
+        if (streakShields > 0 && streak >= 3) {
+          // Shield consumed — streak preserved!
+          setStreakShields(prev => prev - 1);
+          setStreakMilestone({ at: streak, bonus: 0, emoji: "🛡️", label: "Streak Shield activated!", reward: "shield_used", rewardLabel: `Shield saved your ${streak}-round streak` });
+          setTimeout(() => SFX.milestone(), 200);
+        } else {
+          setStreak(0);
+          setStreakMilestone(null);
+        }
       }
+
+      // Store the final computed points for display (replacing raw basePts)
+      basePts = finalPts;
     }
 
     // Save daily challenge result
@@ -10116,7 +11007,7 @@ export default function App() {
         completed: true,
         prediction,
         figureId: subject.id,
-        points: pts,
+        points: basePts,
         dailyStreak: newDailyStreak,
         lastCompletedDate: today,
       };
@@ -10129,7 +11020,7 @@ export default function App() {
       setH2hMode(prev => ({
         ...prev,
         myPredictions: [...prev.myPredictions, Math.round(prediction * 100)],
-        myPoints: [...prev.myPoints, pts],
+        myPoints: [...prev.myPoints, basePts],
       }));
     }
 
@@ -10141,7 +11032,7 @@ export default function App() {
         cat: subject.cat,
         r: Math.round(w * 100),
         pred: Math.round(prediction * 100),
-        pts,
+        pts: basePts,
         diff: Math.round(diff * 100),
         ts: Date.now(),
       };
@@ -10152,7 +11043,7 @@ export default function App() {
       });
     }
 
-    setLastPts(isReplay ? 0 : pts);
+    setLastPts(isReplay ? 0 : basePts);
     setInterludeStep(0);
     setScreen("interlude");
     scrollTop();
@@ -10162,7 +11053,7 @@ export default function App() {
   useEffect(() => {
     if (played.length === 0) return;
     const currentEarned = new Set(
-      ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).map(a => a.id)
+      ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)).map(a => a.id)
     );
     const prev = prevEarnedRef.current;
     // Find achievements that are new since last check
@@ -10181,7 +11072,7 @@ export default function App() {
   // Initialize prevEarnedRef on mount
   useEffect(() => {
     prevEarnedRef.current = new Set(
-      ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).map(a => a.id)
+      ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)).map(a => a.id)
     );
   }, []);
 
@@ -10255,28 +11146,29 @@ export default function App() {
       max_tokens: 3000,
       messages: [{
         role: "user",
-        content: `Analyze the historical inevitability of "${customName}". The question: if this person/thing never existed, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
+        content: `Analyze the historical inevitability of "${customName}". The question: if this never existed or never happened, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
 {
   "name": "Full proper name",
   "born": year as number (negative for BCE, null if unknown),
   "died": year as number or null if alive/unknown,
   "field": "Primary field, 2-4 words",
-  "cat": "one of: science, politics, military, arts, philosophy, medicine, computing, finance, exploration, social, institutions, inventions",
+  "cat": "one of: science, politics, military, arts, philosophy, medicine, computing, finance, exploration, social, sports, events, institutions, inventions",
+  "cat2": "optional secondary category from the same list above, or null if it fits cleanly in one category",
   "quote": "A famous quote by or about them",
   "contributions": ["contribution 1", "contribution 2", "contribution 3", "contribution 4"],
-  "r": inevitability score 0.0 to 1.0 (0=singular, no one else could have done it; 1=highly inevitable, multiple paths converging — consider contemporaries, timing, convergent discovery). We display this as "historical weight" (inverted: weight = 1 - r),
+  "r": inevitability score 0.0 to 1.0 (0=singular, nothing else could have produced this outcome; 1=highly inevitable, multiple paths converging — consider contemporaries, timing, convergent forces). We display this as "historical weight" (inverted: weight = 1 - r),
   "reasoning": "2-3 sentences explaining the score. Name specific contemporaries or alternatives.",
-  "counterfactual": "3-4 sentences: what does the world look like without them? Be concrete and specific.",
+  "counterfactual": "3-4 sentences: what does the world look like without this? Be concrete and specific.",
 
   "impact": {
     "lives": "How many lives affected and how",
     "econ": "Economic impact with dollar figure if applicable",
     "cultural": "Cultural or intellectual legacy",
     "reach": "Geographic or demographic reach",
-    "timeline": "How long until someone else does it"
+    "timeline": "How long until the same outcome arrives another way"
   },
   "timeline": [
-    {"year": number, "happened": "What actually happened", "alternate": "What would have happened without them"},
+    {"year": number, "happened": "What actually happened", "alternate": "What would have happened without this"},
     {"year": number, "happened": "...", "alternate": "..."},
     {"year": number, "happened": "...", "alternate": "..."},
     {"year": number, "happened": "...", "alternate": "..."}
@@ -10288,7 +11180,7 @@ export default function App() {
     {"event": "Fourth domino", "consequence": "...", "delay": "...", "severity": "...", "icon": "emoji"}
   ],
   "modernDay": {
-    "tech": "How technology in 2026 differs without them (1-2 sentences)",
+    "tech": "How technology in 2026 differs without this (1-2 sentences)",
     "culture": "How culture in 2026 differs (1-2 sentences)",
     "politics": "How politics in 2026 differs (1-2 sentences)",
     "daily": "What you'd notice differently in daily life (1-2 sentences)"
@@ -10568,7 +11460,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       ctx.beginPath();
       ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
       ctx.fill();
-      centerText(`🗓️  Daily #${dayNum}`, 140, "bold 20px 'Helvetica Neue', sans-serif", "#fff");
+      centerText(`🗓️  Daily Challenge`, 140, "bold 20px 'Helvetica Neue', sans-serif", "#fff");
     }
 
     const nameY = isDaily ? 230 : 190;
@@ -10659,7 +11551,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const { achievement, isRankUp, isProfile } = opts;
     const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
     const rank = getRank(avgPts, played.length);
-    const earnedCount = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).length;
+    const earnedCount = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)).length;
 
     const W = 1080, H = 1080;
     const canvas = document.createElement("canvas");
@@ -10756,7 +11648,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       });
 
       // Achievement showcase — top 3 earned
-      const topEarned = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).slice(-3);
+      const topEarned = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)).slice(-3);
       if (topEarned.length > 0) {
         const achY = 730;
         cText("Recent Achievements", achY - 20, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.35)");
@@ -10782,15 +11674,15 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const { achievement, isRankUp } = opts;
     const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
     const rank = getRank(avgPts, played.length);
-    const earnedCount = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState)).length;
+    const earnedCount = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)).length;
 
     let text;
     if (achievement) {
-      text = `Achievement Unlocked: ${achievement.title} — ${achievement.desc}. ${rank.title} with ${played.length} figures played.`;
+      text = `Achievement Unlocked: ${achievement.title} — ${achievement.desc}. ${rank.title} with ${played.length} entries played.`;
     } else if (isRankUp) {
-      text = `Ranked up to ${rank.title}! ${played.length} figures played, ${avgPts} avg pts, ${earnedCount} badges.`;
+      text = `Ranked up to ${rank.title}! ${played.length} entries played, ${avgPts} avg pts, ${earnedCount} badges.`;
     } else {
-      text = `${rank.title} on Counterfactual — ${played.length} figures, ${avgPts} avg pts, best streak: ${bestStreak}.`;
+      text = `${rank.title} on Counterfactual — ${played.length} entries, ${avgPts} avg pts, best streak: ${bestStreak}.`;
     }
 
     let imageBlob = null;
@@ -10837,7 +11729,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
   const createChallenge = () => {
     if (subject._isCustom) {
-      showToast("Challenge mode is only for built-in figures");
+      showToast("Challenge mode is only for built-in entries");
       return;
     }
     const data = btoa(JSON.stringify({ id: subject.id, score: Math.round(prediction * 100) }));
@@ -11200,7 +12092,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 <span style={{ fontStyle: "italic" }}>Counterfactual</span>
               </h1>
               <p style={{ fontSize: 17, color: "#5a5750", lineHeight: 1.65, maxWidth: 400, margin: "0 auto 36px" }}>
-                History's biggest question, turned into a game: how much did this person actually shape the world — or would someone else have done what they did?
+                History's biggest question, turned into a game: was this outcome inevitable — or did it hinge on a specific person, moment, or invention?
               </p>
 
               <div style={{
@@ -11209,11 +12101,11 @@ Be historically precise. The cascade should show a chain reaction where each dom
               }}>
                 <div style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7 }}>
                   <p style={{ margin: "0 0 12px" }}>
-                    You'll see a historical figure and learn what they did. Then you predict: on a scale of 0–100%, how much <strong>historical weight</strong> did they carry?
+                    You'll see a historical figure, event, or invention and learn its story. Then you predict: on a scale of 0–100%, how much <strong>historical weight</strong> did it carry?
                   </p>
                   <p style={{ margin: 0 }}>
                     <strong>0%</strong> = it was happening no matter what.
-                    <strong> 100%</strong> = only they could've done it.
+                    <strong> 100%</strong> = nothing else could have produced this outcome.
                   </p>
                 </div>
               </div>
@@ -11279,7 +12171,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 background: "#f0fdfa", border: "1px solid #ccfbf1",
               }}>
                 <p style={{ margin: 0, fontSize: 14, color: "#115e59", lineHeight: 1.6 }}>
-                  📖 Now ask yourself: if Galileo had never been born, how different would the world be? Would someone else have made these discoveries around the same time, or did history need exactly him?
+                  📖 Now ask yourself: if Galileo had never existed, how different would the world be? Would someone else have made these discoveries around the same time, or did history need exactly him?
                 </p>
               </div>
 
@@ -11310,14 +12202,14 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   {tutorialFig.name}
                 </h3>
                 <p style={{ fontSize: 13, color: "#9a9890", textAlign: "center", marginBottom: 28 }}>
-                  How much historical weight did he carry?
+                  How much historical weight did they carry?
                 </p>
 
                 {/* Scale labels */}
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, padding: "0 4px" }}>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#15803d" }}>0%</div>
-                    <div style={{ fontSize: 10, color: "#9a9890" }}>Someone else would've</div>
+                    <div style={{ fontSize: 10, color: "#9a9890" }}>Bound to happen</div>
                   </div>
                   <div style={{ textAlign: "center" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#a16207" }}>50%</div>
@@ -11352,8 +12244,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   {onboardPred < 20 ? "Low weight — history finds another way without him"
                     : onboardPred < 40 ? "Modest weight — others were close"
                     : onboardPred < 60 ? "Mixed — some parts needed him, some didn't"
-                    : onboardPred < 80 ? "High weight — hard to see who else does this"
-                    : "History-defining — only Galileo makes this happen"}
+                    : onboardPred < 80 ? "High weight — hard to replicate this"
+                    : "History-defining — irreplaceable"}
                 </div>
               </div>
 
@@ -11471,8 +12363,12 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     You were off by <strong>{Math.round(tutDiff * 100)}%</strong> from the analysis.
                     Points = (100 − distance)². So being off by 10% scores 81 points, but off by 30% scores just 49.
                   </p>
+                  <p style={{ margin: "0 0 6px" }}>
+                    <strong>Conviction bonus:</strong> Predictions near 50% get a penalty — that's hedging, not predicting.
+                    Move away from the middle to earn up to a 25% bonus. Bold and right beats safe and lucky.
+                  </p>
                   <p style={{ margin: 0 }}>
-                    Land within 15% to build streaks. Climb from History Student all the way to Oracle of Clio.
+                    Land within 15% to build streaks. Climb from Novice all the way to Oracle.
                   </p>
                 </div>
               </div>
@@ -11511,7 +12407,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
         <ToastOverlay />
         <div style={S.inner}>
           {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: 28, paddingTop: 16, position: "relative" }}>
+          <div style={{ textAlign: "center", marginBottom: 24, paddingTop: 16, position: "relative" }}>
             {/* Sound toggle */}
             <button
               onClick={() => { const next = SFX.toggle(); setSfxEnabled(next); if (next) SFX.click(); }}
@@ -11525,75 +12421,27 @@ Be historically precise. The cascade should show a chain reaction where each dom
             >
               {sfxEnabled ? "🔊" : "🔇"}
             </button>
-            <h1 style={{ ...S.h1, fontSize: 48, marginBottom: 8 }}>
+            <h1 style={{ ...S.h1, fontSize: 44, marginBottom: 4 }}>
               <span style={{ fontStyle: "italic" }}>Counterfactual</span>
             </h1>
-            <p style={{ ...S.muted, fontSize: 16, maxWidth: 460, margin: "0 auto", lineHeight: 1.55 }}>
-              Could someone else have done what they did?<br/>
-              Or did history need exactly them?
+            <p style={{ ...S.muted, fontSize: 14, margin: "0 auto" }}>
+              Could history have gone another way?
             </p>
           </div>
 
-          {/* Daily Challenge — Compact */}
-          {dailyState && (() => {
-            const dailyFig = getDailyFigure();
-            const dayNum = getDayNumber();
-            const completed = dailyState.completed;
-            const dailyStrk = dailyState.dailyStreak || 0;
-
-            return completed ? (
-              <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: "12px 18px", marginBottom: 24, borderRadius: 12,
-                background: "#fefce8", border: "1px solid #fde68a",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontSize: 16 }}>🗓️</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>
-                    Daily #{dayNum} ✓
-                  </span>
-                  <span style={{ fontSize: 13, color: "#a16207" }}>+{dailyState.points} pts</span>
-                  {dailyStrk >= 2 && <span style={{ fontSize: 12, color: "#b45309" }}>🔥 {dailyStrk}</span>}
-                </div>
-                <span style={{ fontSize: 12, color: "#a16207" }}>
-                  Next: {dailyCountdown || getTimeUntilNext()}
-                </span>
-              </div>
-            ) : (
-              <div
-                onClick={startDaily}
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "14px 18px", marginBottom: 24, borderRadius: 12,
-                  background: "linear-gradient(135deg, #fffbeb, #fef3c7)",
-                  border: "2px solid #f59e0b", cursor: "pointer",
-                  transition: "all 0.15s ease",
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(245,158,11,0.15)"; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontSize: 18 }}>🗓️</span>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "#92400e" }}>Daily #{dayNum}</div>
-                    <div style={{ fontSize: 13, color: "#a16207" }}>{dailyFig.name} · {dailyFig.field}</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  {dailyStrk >= 2 && <span style={{ fontSize: 12, color: "#b45309" }}>🔥 {dailyStrk}</span>}
-                  <span style={{ fontSize: 14, fontWeight: 700, color: "#d97706" }}>Play →</span>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Rank + Stats merged */}
+          {/* Rank card — clickable → stats */}
           {played.length > 0 && (
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "12px 18px", marginBottom: 24, borderRadius: 12,
-              background: `${rank.color}06`, border: `1px solid ${rank.color}18`,
-            }}>
+            <div
+              onClick={() => { SFX.click(); setNavHistory(prev => [...prev, "home"]); setScreen("stats"); scrollTop(); }}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "12px 18px", marginBottom: 16, borderRadius: 12,
+                background: `${rank.color}06`, border: `1px solid ${rank.color}18`,
+                cursor: "pointer", transition: "all 0.15s ease",
+              }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = `${rank.color}40`; e.currentTarget.style.background = `${rank.color}10`; }}
+              onMouseOut={e => { e.currentTarget.style.borderColor = `${rank.color}18`; e.currentTarget.style.background = `${rank.color}06`; }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <span style={{ fontSize: 26 }}>{rank.icon}</span>
                 <div>
@@ -11613,28 +12461,132 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     <div style={{ fontSize: 9, color: "#9a9890", fontWeight: 500, letterSpacing: "0.03em" }}>{s.label}</div>
                   </div>
                 ))}
+                <span style={{ fontSize: 16, color: "#ccc8c0", marginLeft: 4 }}>›</span>
               </div>
             </div>
           )}
 
-          {/* Action buttons */}
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 24, flexWrap: "wrap" }}>
-            <button onClick={startRandom} style={{ ...S.btn, ...S.btnPrimary, padding: "14px 26px", fontSize: 16 }}>
-              🎲 Play Random
-            </button>
+          {/* Play tabs — Daily + Random side by side */}
+          {(() => {
+            const dailyFig = dailyState ? getDailyFigure() : null;
+            const dayNum = dailyState ? getDayNumber() : 0;
+            const dailyDone = dailyState?.completed;
+            const dailyStrk = dailyState?.dailyStreak || 0;
+
+            return (
+              <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                {/* Daily Challenge tab */}
+                {dailyState && (
+                  <button
+                    onClick={dailyDone ? undefined : startDaily}
+                    style={{
+                      flex: 1, padding: "18px 14px", borderRadius: 14,
+                      background: dailyDone
+                        ? "#fefce8"
+                        : "linear-gradient(135deg, #fffbeb, #fef3c7)",
+                      border: dailyDone ? "1px solid #fde68a" : "2px solid #f59e0b",
+                      cursor: dailyDone ? "default" : "pointer",
+                      textAlign: "left", transition: "all 0.15s ease",
+                      opacity: dailyDone ? 0.85 : 1,
+                    }}
+                    onMouseEnter={e => { if (!dailyDone) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(245,158,11,0.12)"; }}}
+                    onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                      <span style={{ fontSize: 18 }}>🗓️</span>
+                      <span style={{ fontSize: 15, fontWeight: 800, color: "#92400e" }}>
+                        Daily Challenge
+                      </span>
+                      {dailyStrk >= 2 && <span style={{ fontSize: 12, color: "#b45309" }}>🔥 {dailyStrk}</span>}
+                    </div>
+                    {dailyDone ? (
+                      <div style={{ fontSize: 12, color: "#a16207" }}>
+                        ✓ +{dailyState.points} pts · Next: {dailyCountdown || getTimeUntilNext()}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: 12, color: "#a16207" }}>
+                        {dailyFig.name} · {dailyFig.field}
+                      </div>
+                    )}
+                  </button>
+                )}
+
+                {/* Play Random tab */}
+                <button
+                  onClick={startRandom}
+                  style={{
+                    flex: 1, padding: "18px 14px", borderRadius: 14,
+                    background: challengeMode
+                      ? "linear-gradient(135deg, #7c2d12, #991b1b)"
+                      : "linear-gradient(135deg, #1a1a1a, #292524)",
+                    border: "2px solid transparent",
+                    cursor: "pointer", textAlign: "left", transition: "all 0.15s ease",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.12)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <span style={{ fontSize: 18 }}>{challengeMode ? "⚔️" : "🎲"}</span>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>
+                      {challengeMode ? "Challenge" : "Play Random"}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
+                    {challengeMode ? "Hard entries · 2× points" : `${ALL_SUBJECTS.length - played.length} entries remaining`}
+                  </div>
+                </button>
+              </div>
+            );
+          })()}
+
+          {/* Secondary modes — compact pill row */}
+          <div style={{
+            display: "flex", gap: 8, justifyContent: "center", alignItems: "center",
+            marginBottom: 24, flexWrap: "wrap",
+          }}>
             <button onClick={startH2H} style={{
-              ...S.btn, padding: "14px 26px", fontSize: 16, fontWeight: 700,
-              background: "linear-gradient(135deg, #dc2626, #ea580c)",
-              color: "#fff", border: "none",
+              ...S.btn, padding: "8px 16px", fontSize: 12, fontWeight: 700, borderRadius: 20,
+              background: "#faf9f6", color: "#dc2626",
+              border: "1px solid #fecaca",
             }}>
               ⚔️ Head-to-Head
             </button>
-            {played.length >= 3 && (
-              <button onClick={() => { setNavHistory(prev => [...prev, "home"]); setScreen("stats"); scrollTop(); }} style={{
-                ...S.btn, ...S.btnSecondary, padding: "14px 20px", fontSize: 14,
-              }}>
-                📊 Stats
+            {played.length >= 10 && (
+              <button
+                onClick={() => { setChallengeMode(prev => !prev); SFX.click(); }}
+                style={{
+                  ...S.btn, padding: "8px 16px", fontSize: 12, fontWeight: 700, borderRadius: 20,
+                  background: challengeMode ? "#7c2d12" : "#faf9f6",
+                  color: challengeMode ? "#fff" : "#7c2d12",
+                  border: `1px solid ${challengeMode ? "#7c2d12" : "#ddd9d0"}`,
+                }}
+              >
+                {challengeMode ? "🔥 Challenge: ON" : "⚔️ Challenge Mode"}
               </button>
+            )}
+            {streakShields > 0 && (
+              <span style={{
+                padding: "5px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700,
+                background: "#f0fdfa", border: "1px solid #99f6e4", color: "#0d9488",
+              }}>
+                🛡️ {streakShields}
+              </span>
+            )}
+            {pointBoostRounds > 0 && (
+              <span style={{
+                padding: "5px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700,
+                background: "#fffbeb", border: "1px solid #fde68a", color: "#d97706",
+              }}>
+                ✨ +10% · {pointBoostRounds} left
+              </span>
+            )}
+            {streak >= 3 && (
+              <span style={{
+                padding: "5px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700,
+                background: "#faf5ff", border: "1px solid #e9d5ff", color: "#7c3aed",
+              }}>
+                🔥 {streak}
+              </span>
             )}
           </div>
 
@@ -11649,7 +12601,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   ✨ Recommended for You
                 </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {recs.map((rec, i) => {
+                  {recs.slice(0, 3).map((rec, i) => {
                     const fig = rec.figure;
                     const cat = CATS[fig.cat];
                     return (
@@ -11667,6 +12619,19 @@ Be historically precise. The cascade should show a chain reaction where each dom
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{fig.name}</span>
                           <span style={{ fontSize: 12, color: "#9a9890", marginLeft: 8 }}>{rec.label}</span>
+                          {streakRewards.includes("difficulty_peek") && (() => {
+                            const dl = getDifficultyLabel(fig.r);
+                            const dm = DIFFICULTY_MULTIPLIER(fig.r);
+                            return (
+                              <span style={{
+                                fontSize: 10, fontWeight: 700, marginLeft: 6, padding: "1px 6px", borderRadius: 4,
+                                background: dm.tier === "hard" ? "rgba(220,38,38,0.08)" : dm.tier === "medium" ? "rgba(217,119,6,0.08)" : "rgba(22,163,74,0.08)",
+                                color: dm.tier === "hard" ? "#dc2626" : dm.tier === "medium" ? "#d97706" : "#16a34a",
+                              }}>
+                                {dl.label} {dm.mult > 1 ? dm.label : ""}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <span style={{ fontSize: 14, color: "#ccc8c0", flexShrink: 0 }}>›</span>
                       </button>
@@ -11684,7 +12649,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </h3>
             <ScrollRow>
               {Object.entries(CATS).map(([key, cat]) => {
-                const catFigures = ALL_SUBJECTS.filter(s => s.cat === key);
+                const catFigures = ALL_SUBJECTS.filter(s => figInCat(s, key));
                 const catPlayed = catFigures.filter(f => played.includes(f.id)).length;
                 const total = catFigures.length;
                 const pct = total > 0 ? Math.round((catPlayed / total) * 100) : 0;
@@ -11840,7 +12805,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                       {sc.title}
                     </div>
                     <div style={{ fontSize: 12, color: unlocked ? `${sc.color}bb` : "#9a9890", marginBottom: 10, lineHeight: 1.4 }}>
-                      {unlocked ? sc.subtitle : `Play all ${total} figures to unlock`}
+                      {unlocked ? sc.subtitle : `Play all ${total} entries to unlock`}
                     </div>
                     {/* Figure chips with played state */}
                     <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: unlocked ? 0 : 8 }}>
@@ -12113,8 +13078,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const recentAvg = recent20.length > 0 ? Math.round(recent20.reduce((a, g) => a + g.pts, 0) / recent20.length) : 0;
 
     // Achievements
-    const earned = ACHIEVEMENTS.filter(a => a.check(history, played, dailyState));
-    const locked = ACHIEVEMENTS.filter(a => !a.check(history, played, dailyState));
+    const earned = ACHIEVEMENTS.filter(a => a.check(history, played, dailyState, streakRewards));
+    const locked = ACHIEVEMENTS.filter(a => !a.check(history, played, dailyState, streakRewards));
 
     // Collections progress
     const colProgress = COLLECTIONS.map(col => {
@@ -12134,37 +13099,97 @@ Be historically precise. The cascade should show a chain reaction where each dom
         <div style={S.inner}>
           <BackButton />
 
-          {/* Profile card */}
+          {/* Profile card — rank hero + stats banner + horizontal ladder */}
           <div style={{
             ...S.card, textAlign: "center", marginBottom: 24,
             background: "linear-gradient(180deg, #fafaf9, #f5f4f0)",
             animation: "fadeUp 0.35s ease both",
           }}>
-            <div style={{ fontSize: 48, marginBottom: 8 }}>{rank.icon}</div>
-            <h2 style={{ ...S.h2, fontSize: 26, color: rank.color, marginBottom: 4 }}>{rank.title}</h2>
-            <p style={{ ...S.muted, fontSize: 14, marginBottom: 20 }}>
-              {played.length} figures · {score} total points · {avgPts} avg
+            {/* Rank hero */}
+            <div style={{ fontSize: 48, marginBottom: 6 }}>{rank.icon}</div>
+            <h2 style={{ ...S.h2, fontSize: 28, color: rank.color, marginBottom: 4 }}>
+              {rank.title}
+              {streakRewards.includes("oracle_badge") && (
+                <span style={{ fontSize: 14, marginLeft: 8, padding: "2px 8px", borderRadius: 10, background: "#fce7f3", color: "#be185d", fontWeight: 600, verticalAlign: "middle" }}>
+                  🏛️ Oracle
+                </span>
+              )}
+            </h2>
+            <p style={{ fontSize: 14, color: "#9a9890", fontWeight: 600, marginBottom: 2 }}>
+              Top {rank.topPct}% of players
             </p>
+            {rank.next && (
+              <p style={{ fontSize: 12, color: rank.color, fontWeight: 600, marginBottom: 0, opacity: 0.8 }}>
+                {rank.next}
+              </p>
+            )}
 
-            {/* Key stats grid */}
+            {/* Stats banner */}
             <div style={{
-              display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1,
+              display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 1,
               background: "#e5e2db", borderRadius: 12, overflow: "hidden",
+              marginTop: 20,
             }}>
               {[
+                { label: "Played", value: played.length, icon: "📚" },
+                { label: "Total Pts", value: score, icon: "⭐" },
+                { label: "Avg Pts", value: avgPts, icon: "🎯" },
+                { label: "Accuracy", value: totalGames > 0 ? `${Math.round(history.reduce((a, g) => a + (100 - g.diff), 0) / totalGames)}%` : "—", icon: "🎪" },
                 { label: "Best Streak", value: bestStreak, icon: "🔥" },
-                { label: "Accuracy", value: totalGames > 0 ? `${Math.round(history.reduce((a, g) => a + (100 - g.diff), 0) / totalGames)}%` : "—", icon: "🎯" },
-                { label: "Recent Avg", value: recentAvg || "—", icon: "📈" },
               ].map((stat, i) => (
                 <div key={i} style={{
-                  background: "#fff", padding: "16px 8px",
+                  background: "#fff", padding: "14px 4px",
                   textAlign: "center",
                 }}>
-                  <div style={{ fontSize: 20, marginBottom: 4 }}>{stat.icon}</div>
-                  <div style={{ fontSize: 22, fontWeight: 800, color: "#1a1a1a" }}>{stat.value}</div>
-                  <div style={{ fontSize: 11, color: "#9a9890", fontWeight: 600 }}>{stat.label}</div>
+                  <div style={{ fontSize: 16, marginBottom: 3 }}>{stat.icon}</div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: "#1a1a1a" }}>{stat.value}</div>
+                  <div style={{ fontSize: 9, color: "#9a9890", fontWeight: 600 }}>{stat.label}</div>
                 </div>
               ))}
+            </div>
+
+            {/* Horizontal rank ladder */}
+            <div style={{ marginTop: 20, padding: "0 4px" }}>
+              {/* Track */}
+              <div style={{
+                display: "flex", alignItems: "stretch",
+                borderRadius: 10, overflow: "hidden", border: "1px solid #e5e2db",
+                background: "#f5f4f0",
+              }}>
+                {[...RANK_LADDER].reverse().map((r, i) => {
+                  const isCurrent = r.title === rank.title;
+                  const isBelow = RANK_LADDER.indexOf(r) > RANK_LADDER.findIndex(x => x.title === rank.title);
+                  const isLast = i === RANK_LADDER.length - 1;
+                  return (
+                    <div key={r.title} style={{
+                      flex: 1, padding: "10px 2px 8px", textAlign: "center",
+                      background: isCurrent
+                        ? `${r.color}15`
+                        : isBelow ? "#f5f4f0" : `${r.color}08`,
+                      borderRight: isLast ? "none" : "1px solid #e5e2db",
+                      position: "relative",
+                    }}>
+                      {isCurrent && (
+                        <div style={{
+                          position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                          background: r.color, borderRadius: "0 0 2px 2px",
+                        }} />
+                      )}
+                      <div style={{
+                        fontSize: isCurrent ? 18 : 14,
+                        marginBottom: 2,
+                        opacity: isBelow ? 0.35 : isCurrent ? 1 : 0.6,
+                      }}>{r.icon}</div>
+                      <div style={{
+                        fontSize: isCurrent ? 11 : 9,
+                        fontWeight: isCurrent ? 800 : 600,
+                        color: isCurrent ? r.color : isBelow ? "#ccc8c0" : "#9a9890",
+                        lineHeight: 1.2,
+                      }}>{r.title}</div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Share Profile */}
@@ -12204,9 +13229,9 @@ Be historically precise. The cascade should show a chain reaction where each dom
             // Build insight sentences
             const insights = [];
             if (biasDir === "over") {
-              insights.push({ icon: "📐", text: `You tend to overestimate historical weight by about ${biasAbs} points. Many figures are more replaceable than your gut says.` });
+              insights.push({ icon: "📐", text: `You tend to overestimate historical weight by about ${biasAbs} points. Many entries are more replaceable than your gut says.` });
             } else if (biasDir === "under") {
-              insights.push({ icon: "📐", text: `You tend to underestimate historical weight by about ${biasAbs} points. You're not giving enough credit to individual contributions.` });
+              insights.push({ icon: "📐", text: `You tend to underestimate historical weight by about ${biasAbs} points. The specific form matters more than you think.` });
             } else {
               insights.push({ icon: "📐", text: "Your predictions are well-calibrated — no consistent lean toward overrating or underrating impact." });
             }
@@ -12216,13 +13241,13 @@ Be historically precise. The cascade should show a chain reaction where each dom
             if (improving > 5) {
               insights.push({ icon: "📈", text: `You're improving — your recent games average ${secondAvg} pts, up from ${firstAvg} in your first ${half} games.` });
             } else if (improving < -5) {
-              insights.push({ icon: "📉", text: `Your early games averaged ${firstAvg} pts, but recent ones dropped to ${secondAvg}. Harder figures, or getting overconfident?` });
+              insights.push({ icon: "📉", text: `Your early games averaged ${firstAvg} pts, but recent ones dropped to ${secondAvg}. Harder entries, or getting overconfident?` });
             } else {
               insights.push({ icon: "📊", text: `Consistent performer — averaging ${firstAvg} pts early and ${secondAvg} pts recently.` });
             }
 
             return (
-              <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.05s both" }}>
+              <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.1s both" }}>
                 <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 16 }}>
                   🧠 Your Tendencies
                 </h3>
@@ -12242,8 +13267,62 @@ Be historically precise. The cascade should show a chain reaction where each dom
             );
           })()}
 
+          {/* Pattern Insights — teaches transferable counterfactual thinking */}
+          {(() => {
+            const patterns = getPatternInsights(history);
+            if (patterns.length === 0) return null;
+            return (
+              <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.12s both" }}>
+                <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 6 }}>
+                  🎓 Pattern Insights
+                </h3>
+                <p style={{ ...S.muted, fontSize: 13, marginBottom: 16 }}>
+                  Thinking patterns from your play history
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  {patterns.map((p, i) => {
+                    const catInfo = p.cat ? CATS[p.cat] : null;
+                    return (
+                      <div key={i} style={{
+                        padding: "16px 18px", borderRadius: 12,
+                        background: p.cross ? "linear-gradient(135deg, #faf5ff, #f0f9ff)" : "#fafaf9",
+                        border: p.cross ? "1px solid #e9d5ff" : "1px solid #f0efeb",
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                          <span style={{ fontSize: 16 }}>{p.icon}</span>
+                          <span style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a" }}>{p.title}</span>
+                          {catInfo && (
+                            <span style={{
+                              fontSize: 10, fontWeight: 700, color: catInfo.color,
+                              padding: "2px 8px", borderRadius: 4, background: catInfo.bg,
+                              marginLeft: "auto",
+                            }}>
+                              {catInfo.label}
+                            </span>
+                          )}
+                          {p.cross && (
+                            <span style={{
+                              fontSize: 10, fontWeight: 700, color: "#7c3aed",
+                              padding: "2px 8px", borderRadius: 4, background: "rgba(124,58,237,0.06)",
+                              marginLeft: "auto",
+                            }}>
+                              Cross-category
+                            </span>
+                          )}
+                        </div>
+                        <p style={{ fontSize: 13, color: "#4a4840", lineHeight: 1.65, margin: 0 }}>
+                          {p.text}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Achievements */}
-          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.1s both" }}>
+          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.15s both" }}>
             <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 4 }}>
               🏅 Achievements
             </h3>
@@ -12301,42 +13380,109 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </div>
           </div>
 
-          {/* Score Distribution */}
-          {totalGames > 0 && (
-            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.2s both" }}>
-              <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 16 }}>
-                📊 Score Distribution
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {distLabels.map((label, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: "#7a7770", width: 72, textAlign: "right", flexShrink: 0 }}>
-                      {label}
-                    </span>
-                    <div style={{ flex: 1, height: 20, background: "#f5f4f0", borderRadius: 4, overflow: "hidden" }}>
-                      <div style={{
-                        width: `${(distBuckets[i] / distMax) * 100}%`,
-                        height: "100%", borderRadius: 4,
-                        background: distColors[i],
-                        transition: "width 0.5s ease",
-                        minWidth: distBuckets[i] > 0 ? 2 : 0,
-                      }} />
+          {/* Streak Rewards */}
+          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.2s both" }}>
+            <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 4 }}>
+              ⚡ Streak Rewards
+            </h3>
+            <p style={{ ...S.muted, fontSize: 13, marginBottom: 16 }}>
+              Earn rewards by building accuracy streaks · Best: {bestStreak}
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {STREAK_MILESTONES.map(m => {
+                const unlocked = streakRewards.includes(m.reward);
+                const isNext = !unlocked && STREAK_MILESTONES.filter(sm => sm.at < m.at).every(sm => streakRewards.includes(sm.reward) || bestStreak >= sm.at);
+                return (
+                  <div key={m.at} style={{
+                    display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
+                    borderRadius: 10,
+                    background: unlocked ? "linear-gradient(135deg, #fefce8, #fffbeb)" : isNext ? "#faf9f6" : "#fafaf9",
+                    border: `1px solid ${unlocked ? "#fde68a" : isNext ? "#e8e6e1" : "#f0efeb"}`,
+                    opacity: unlocked || isNext ? 1 : 0.55,
+                  }}>
+                    <div style={{ fontSize: 24, flexShrink: 0 }}>{unlocked ? m.emoji : "🔒"}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: unlocked ? "#92400e" : "#6a6860" }}>
+                        {m.at}-Round Streak — {m.label}
+                      </div>
+                      <div style={{ fontSize: 12, color: unlocked ? "#b45309" : "#9a9890", marginTop: 2 }}>
+                        {unlocked ? `✓ ${m.rewardLabel}` : m.rewardLabel}
+                      </div>
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#1a1a1a", width: 28, textAlign: "right" }}>
-                      {distBuckets[i]}
-                    </span>
+                    <div style={{
+                      fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
+                      color: unlocked ? "#16a34a" : "#b0ada6",
+                    }}>
+                      {unlocked ? "Earned" : `+${m.bonus} pts`}
+                    </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          )}
+
+            {/* Active perks summary */}
+            {(streakShields > 0 || pointBoostRounds > 0 || streakRewards.includes("oracle_badge") || streakRewards.includes("golden_share") || streakRewards.includes("difficulty_peek")) && (
+              <div style={{
+                marginTop: 14, padding: "12px 14px", borderRadius: 10,
+                background: "#f0fdf4", border: "1px solid #bbf7d0",
+              }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#166534", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                  Active Perks
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {streakShields > 0 && (
+                    <span style={{ padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600, background: "#ccfbf1", color: "#0d9488" }}>
+                      🛡️ {streakShields} Streak Shield{streakShields > 1 ? "s" : ""}
+                    </span>
+                  )}
+                  {pointBoostRounds > 0 && (
+                    <span style={{ padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600, background: "#fef3c7", color: "#d97706" }}>
+                      ✨ +10% Boost ({pointBoostRounds} rounds)
+                    </span>
+                  )}
+                  {streakRewards.includes("difficulty_peek") && (
+                    <span style={{ padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600, background: "#faf5ff", color: "#7c3aed" }}>
+                      👁️ Difficulty Peek
+                    </span>
+                  )}
+                  {streakRewards.includes("golden_share") && (
+                    <span style={{ padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600, background: "#fef3c7", color: "#b45309" }}>
+                      ✨ Golden Share Card
+                    </span>
+                  )}
+                  {streakRewards.includes("oracle_badge") && (
+                    <span style={{ padding: "4px 10px", borderRadius: 12, fontSize: 12, fontWeight: 600, background: "#fce7f3", color: "#be185d" }}>
+                      🏛️ Oracle Badge
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Category Breakdown */}
           {totalGames > 0 && (
-            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.3s both" }}>
-              <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 16 }}>
+            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.25s both" }}>
+              <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 6 }}>
                 🗂️ Category Breakdown
               </h3>
+              {/* Score distribution summary — compact inline */}
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
+                {[
+                  { label: "90+", count: distBuckets[0], color: "#16a34a" },
+                  { label: "64-89", count: distBuckets[1], color: "#65a30d" },
+                  { label: "36-63", count: distBuckets[2], color: "#ca8a04" },
+                  { label: "<36", count: distBuckets[3] + distBuckets[4], color: "#dc2626" },
+                ].filter(b => b.count > 0).map((b, i) => (
+                  <span key={i} style={{
+                    fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 6,
+                    background: `${b.color}10`, color: b.color,
+                  }}>
+                    {b.label}: {b.count}
+                  </span>
+                ))}
+              </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {Object.entries(catStats)
                   .filter(([, s]) => s.played > 0)
@@ -12345,7 +13491,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     const cat = CATS[key];
                     if (!cat) return null;
                     const avg = Math.round(stats.totalPts / stats.played);
-                    const total = ALL_SUBJECTS.filter(s => s.cat === key).length;
+                    const total = ALL_SUBJECTS.filter(s => figInCat(s, key)).length;
                     return (
                       <div key={key} style={{
                         display: "flex", alignItems: "center", gap: 10,
@@ -12381,7 +13527,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
           {/* Best Calls */}
           {bestGames.length > 0 && (
-            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.4s both" }}>
+            <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.3s both" }}>
               <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 14 }}>
                 🏆 Best Calls
               </h3>
@@ -12416,7 +13562,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           )}
 
           {/* Collections Progress */}
-          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.5s both" }}>
+          <div style={{ ...S.card, marginBottom: 24, animation: "fadeUp 0.35s ease 0.35s both" }}>
             <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 14 }}>
               📚 Collections Progress
             </h3>
@@ -12448,45 +13594,6 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </div>
           </div>
 
-          {/* Rank progression */}
-          <div style={{ ...S.card, animation: "fadeUp 0.35s ease 0.6s both" }}>
-            <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 14 }}>
-              🎖️ Rank Ladder
-            </h3>
-            {[
-              { title: "Oracle of Clio", icon: "🏛️", req: "82+ avg, 40+ games", color: "#7c2d12" },
-              { title: "Senior Fellow", icon: "🎓", req: "72+ avg, 30+ games", color: "#6d28d9" },
-              { title: "Counterfactual Scholar", icon: "📜", req: "60+ avg, 20+ games", color: "#0d9488" },
-              { title: "Historical Analyst", icon: "🔍", req: "45+ avg, 10+ games", color: "#ca8a04" },
-              { title: "History Student", icon: "📖", req: "5+ games", color: "#64748b" },
-              { title: "Newcomer", icon: "🌱", req: "Start playing", color: "#94a3b8" },
-            ].map((r, i) => {
-              const isCurrent = r.title === rank.title;
-              return (
-                <div key={i} style={{
-                  display: "flex", alignItems: "center", gap: 12,
-                  padding: "10px 14px", borderRadius: 10, marginBottom: 4,
-                  background: isCurrent ? `${r.color}08` : "transparent",
-                  border: isCurrent ? `2px solid ${r.color}30` : "2px solid transparent",
-                }}>
-                  <span style={{ fontSize: 24, opacity: isCurrent ? 1 : 0.4 }}>{r.icon}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      fontSize: 14, fontWeight: isCurrent ? 800 : 600,
-                      color: isCurrent ? r.color : "#9a9890",
-                    }}>{r.title}</div>
-                    <div style={{ fontSize: 11, color: "#b0ada5" }}>{r.req}</div>
-                  </div>
-                  {isCurrent && (
-                    <span style={{
-                      fontSize: 10, fontWeight: 800, color: r.color,
-                      background: `${r.color}12`, padding: "3px 8px", borderRadius: 6,
-                    }}>YOU</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
     );
@@ -12498,7 +13605,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
   if (screen === "category" && activeCategory) {
     const catKey = activeCategory;
     const cat = CATS[catKey] || { label: catKey, color: "#64748b", bg: "#f5f4f0" };
-    const catFigures = ALL_SUBJECTS.filter(s => s.cat === catKey);
+    const catFigures = ALL_SUBJECTS.filter(s => figInCat(s, catKey));
     const playedCount = catFigures.filter(f => played.includes(f.id)).length;
     const total = catFigures.length;
     const allDone = playedCount === total;
@@ -12596,7 +13703,10 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     <span style={{
                       fontSize: 10, fontWeight: 700, color: diff.color,
                       background: `${diff.color}12`, padding: "2px 7px", borderRadius: 6,
-                    }}>{diff.label}</span>
+                    }}>{diff.label}{streakRewards.includes("difficulty_peek") && (() => {
+                      const dm = DIFFICULTY_MULTIPLIER(s.r);
+                      return dm.mult > 1 ? ` · ${dm.label}` : "";
+                    })()}</span>
                     {wasPlayed && histEntry && (
                       <span style={{
                         fontSize: 12, fontWeight: 800,
@@ -13151,7 +14261,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "predict" && subject) {
     const cat = CATS[subject.cat] || { label: subject.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
-    const predLabel = getScoreLabel(prediction);
+    const predLabel = getScoreLabel(prediction, subject);
 
     return (
       <div style={S.page}>
@@ -13167,7 +14277,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 background: "linear-gradient(135deg, #f0f9ff, #eff6ff)",
                 border: "1px solid #bfdbfe", fontSize: 13, lineHeight: 1.6, color: "#1e40af",
               }}>
-                <strong>How to play:</strong> Predict this entry's historical weight — how much did they personally shape history (high weight), or would things have turned out roughly the same without them (low weight)?
+                <strong>How to play:</strong> Predict this entry's historical weight — was this a turning point that reshaped everything (high weight), or was the same outcome arriving regardless (low weight)?
               </div>
             )}
             {isDaily && (
@@ -13177,7 +14287,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 background: "#fef3c7", border: "1px solid #fde68a",
                 fontSize: 12, fontWeight: 700, color: "#d97706",
               }}>
-                🗓️ Daily #{getDayNumber()}
+                🗓️ Daily Challenge
               </div>
             )}
             {h2hMode && (
@@ -13190,8 +14300,53 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 ⚔️ Round {h2hMode.currentIndex + 1} of {h2hMode.figures.length}
               </div>
             )}
-            <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
-            <h2 style={{ ...S.h2, fontSize: 32, marginTop: 14, marginBottom: 6 }}>{subject.name}</h2>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 4 }}>
+              <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+              {/* Difficulty badge — always visible, helps players learn the system */}
+              {(() => {
+                const r = subject.r ?? subject._r ?? 0.5;
+                const diff = getDifficultyLabel(r);
+                const mult = DIFFICULTY_MULTIPLIER(r);
+                return (
+                  <span style={{
+                    ...S.tag(
+                      mult.tier === "hard" ? "#dc2626" : mult.tier === "medium" ? "#d97706" : "#16a34a",
+                      mult.tier === "hard" ? "rgba(220,38,38,0.08)" : mult.tier === "medium" ? "rgba(217,119,6,0.08)" : "rgba(22,163,74,0.08)"
+                    ),
+                  }}>
+                    {diff.label} {mult.mult > 1 ? `· ${mult.label} pts` : ""}
+                  </span>
+                );
+              })()}
+              {challengeMode && (
+                <span style={{ ...S.tag("#7c2d12", "rgba(124,45,18,0.08)"), fontWeight: 800 }}>
+                  ⚔️ Challenge
+                </span>
+              )}
+            </div>
+            {/* Active streak + shield indicator */}
+            {(streak >= 2 || streakShields > 0 || pointBoostRounds > 0) && (
+              <div style={{
+                display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 8, marginTop: 4,
+              }}>
+                {streak >= 2 && (
+                  <span style={{ fontSize: 12, color: "#7c3aed", fontWeight: 600 }}>
+                    🔥 {streak}-round streak
+                  </span>
+                )}
+                {streakShields > 0 && (
+                  <span style={{ fontSize: 12, color: "#0d9488", fontWeight: 600 }}>
+                    🛡️ {streakShields} shield{streakShields > 1 ? "s" : ""}
+                  </span>
+                )}
+                {pointBoostRounds > 0 && (
+                  <span style={{ fontSize: 12, color: "#d97706", fontWeight: 600 }}>
+                    ✨ +10% boost ({pointBoostRounds} left)
+                  </span>
+                )}
+              </div>
+            )}
+            <h2 style={{ ...S.h2, fontSize: 32, marginTop: 8, marginBottom: 6 }}>{subject.name}</h2>
             <p style={{ ...S.muted, marginBottom: 22 }}>
               {subject.field} · {formatLifespan(subject.born, subject.died)}
             </p>
@@ -13213,6 +14368,49 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </h4>
               <ContributionTags items={subject.contributions} />
             </div>
+
+            {/* Key Moments — chronological context so players can reason, not guess */}
+            {subject.timeline && subject.timeline.length > 0 && (
+              <div style={{ marginBottom: 24 }}>
+                <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  Key Moments
+                </h4>
+                <div style={{ position: "relative", paddingLeft: 20 }}>
+                  {/* Vertical thread */}
+                  <div style={{
+                    position: "absolute", left: 5, top: 6, bottom: 6, width: 1,
+                    background: "linear-gradient(180deg, #d4d0c8, #e8e6e1)",
+                  }} />
+                  {subject.timeline.map((event, i) => (
+                    <div key={i} style={{
+                      position: "relative", marginBottom: i === subject.timeline.length - 1 ? 0 : 14,
+                      display: "flex", gap: 12, alignItems: "baseline",
+                    }}>
+                      {/* Dot */}
+                      <div style={{
+                        position: "absolute", left: -18, top: 6,
+                        width: 7, height: 7, borderRadius: "50%",
+                        background: i === 0 || i === subject.timeline.length - 1 ? "#78716c" : "#b0ada6",
+                        border: "1.5px solid #fff",
+                        boxShadow: "0 0 0 1px #d4d0c8",
+                        flexShrink: 0,
+                      }} />
+                      <span style={{
+                        fontSize: 12, fontWeight: 700, color: "#78716c",
+                        whiteSpace: "nowrap", fontFamily: fontStack, flexShrink: 0,
+                      }}>
+                        {formatYear(event.year)}
+                      </span>
+                      <span style={{
+                        fontSize: 13, color: "#4a4840", lineHeight: 1.5,
+                      }}>
+                        {event.happened}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Tension hook — frames why this figure is debatable */}
             {(() => {
@@ -13241,6 +14439,17 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
             <hr style={S.divider} />
 
+            {/* Warm-up coaching tip for first 3 games */}
+            {played.length < 3 && (
+              <div style={{
+                padding: "12px 16px", borderRadius: 10, marginBottom: 16,
+                background: "linear-gradient(135deg, #f0fdf4, #ecfdf5)",
+                border: "1px solid #bbf7d0", fontSize: 13, lineHeight: 1.6, color: "#166534",
+              }}>
+                💡 <strong>Tip:</strong> {WARMUP_TIPS[played.length] || WARMUP_TIPS[0]}
+              </div>
+            )}
+
             {/* Slider */}
             <div style={{ marginBottom: 28 }}>
               <h4 style={{ fontSize: 15, color: "#1a1a1a", marginBottom: 18, fontWeight: 600 }}>
@@ -13248,7 +14457,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </h4>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, paddingTop: 28 }}>
                 <span style={{ fontSize: 12, color: "#15803d", fontWeight: 600 }}>Low Weight — Bound to Happen</span>
-                <span style={{ fontSize: 12, color: "#b91c1c", fontWeight: 600 }}>History-Defining — Only Them</span>
+                <span style={{ fontSize: 12, color: "#b91c1c", fontWeight: 600 }}>History-Defining — Irreplaceable</span>
               </div>
               <div style={{ position: "relative", marginBottom: 4 }}>
                 {/* Floating label above thumb */}
@@ -13297,6 +14506,27 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 <div style={{ ...S.muted, marginTop: 6, fontSize: 13 }}>
                   {predLabel.desc}
                 </div>
+                {/* Conviction indicator */}
+                {(() => {
+                  const cm = CONVICTION_MULT(prediction);
+                  if (cm.tier === "penalty") return (
+                    <div style={{
+                      marginTop: 10, fontSize: 11, fontWeight: 700,
+                      color: "#dc2626", letterSpacing: "0.02em",
+                    }}>
+                      ⚠️ {cm.label} — move away from 50%
+                    </div>
+                  );
+                  if (cm.tier === "bonus") return (
+                    <div style={{
+                      marginTop: 10, fontSize: 11, fontWeight: 700,
+                      color: "#059669", letterSpacing: "0.02em",
+                    }}>
+                      ✦ +{cm.label}
+                    </div>
+                  );
+                  return null;
+                })()}
               </div>
             </div>
 
@@ -13338,7 +14568,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 background: "#fef3c7", border: "1px solid #fde68a",
                 fontSize: 12, fontWeight: 700, color: "#d97706",
               }}>
-                🗓️ Daily #{getDayNumber()}
+                🗓️ Daily Challenge
               </div>
             )}
             <h2 style={{ ...S.h2, fontSize: 28, marginBottom: 4 }}>{subject.name}</h2>
@@ -13412,7 +14642,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const diff = Math.abs(prediction - w);
     const pts = lastPts;
     const correct = diff < 0.15;
-    const actualLabel = getScoreLabel(w);
+    const actualLabel = getScoreLabel(w, subject);
     const feedback = getAccuracyFeedback(diff, pts, subject, prediction);
     const difficulty = getDifficultyLabel(r);
     const isReplay = pts === 0 && diff >= 0.03;
@@ -13477,7 +14707,37 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 <div style={{ fontSize: 34, fontWeight: 400, color: pts > 0 ? "#6d28d9" : "#b0ada6", fontFamily: fontStack }}>
                   {pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}
                 </div>
-                {streakMilestone && !isReplay && (
+                {/* Difficulty multiplier badge */}
+                {pts > 0 && !isReplay && (() => {
+                  const mult = DIFFICULTY_MULTIPLIER(r);
+                  if (mult.mult > 1) return (
+                    <div style={{ fontSize: 11, color: mult.tier === "hard" ? "#dc2626" : "#d97706", fontWeight: 700, marginTop: 2 }}>
+                      {mult.label} {mult.tier} bonus
+                    </div>
+                  );
+                  return null;
+                })()}
+                {/* Conviction multiplier badge */}
+                {!isReplay && (() => {
+                  const cm = CONVICTION_MULT(prediction);
+                  if (cm.tier === "bonus") return (
+                    <div style={{ fontSize: 11, color: "#059669", fontWeight: 700, marginTop: 2 }}>
+                      +{cm.label}
+                    </div>
+                  );
+                  if (cm.tier === "penalty") return (
+                    <div style={{ fontSize: 11, color: "#dc2626", fontWeight: 700, marginTop: 2 }}>
+                      −{cm.label}
+                    </div>
+                  );
+                  return null;
+                })()}
+                {challengeMode && pts > 0 && !isReplay && (
+                  <div style={{ fontSize: 11, color: "#7c2d12", fontWeight: 700, marginTop: 2 }}>
+                    2× challenge mode
+                  </div>
+                )}
+                {streakMilestone && !isReplay && streakMilestone.bonus > 0 && (
                   <div style={{ fontSize: 12, color: "#92400e", fontWeight: 700, marginTop: 2 }}>
                     +{streakMilestone.bonus} streak
                   </div>
@@ -13486,30 +14746,148 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </div>
             </div>
 
+            {/* Visual gap bar — makes distance between prediction and actual visceral */}
+            <div style={{
+              marginBottom: diff > 0.24 ? 8 : 20, padding: "0 4px",
+              ...rp(1),
+            }}>
+              <div style={{
+                position: "relative", height: 12, borderRadius: 6,
+                background: "linear-gradient(90deg, #15803d, #a16207 40%, #c2410c 65%, #b91c1c)",
+                overflow: "visible",
+              }}>
+                {/* Gap highlight zone */}
+                {diff > 0.08 && (() => {
+                  const lo = Math.min(prediction, w);
+                  const hi = Math.max(prediction, w);
+                  return (
+                    <div style={{
+                      position: "absolute", top: -2, bottom: -2,
+                      left: `${lo * 100}%`, width: `${(hi - lo) * 100}%`,
+                      background: "rgba(255,255,255,0.35)",
+                      borderRadius: 4,
+                      border: "1px solid rgba(255,255,255,0.5)",
+                    }} />
+                  );
+                })()}
+                {/* Prediction marker */}
+                <div style={{
+                  position: "absolute", top: "50%", transform: "translate(-50%, -50%)",
+                  left: `${Math.round(prediction * 100)}%`,
+                  width: 16, height: 16, borderRadius: "50%",
+                  background: "#fff", border: "3px solid #1a1a1a",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+                  zIndex: 2,
+                }} />
+                {/* Actual marker */}
+                <div style={{
+                  position: "absolute", top: "50%", transform: "translate(-50%, -50%)",
+                  left: `${Math.round(w * 100)}%`,
+                  width: 16, height: 16, borderRadius: "50%",
+                  background: actualLabel.color, border: "3px solid #fff",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.25)",
+                  zIndex: 3,
+                }} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                <span style={{ fontSize: 10, color: "#9a9890" }}>0%</span>
+                <div style={{ display: "flex", gap: 12 }}>
+                  <span style={{ fontSize: 10, color: "#9a9890", display: "flex", alignItems: "center", gap: 4 }}>
+                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#fff", border: "2px solid #1a1a1a" }} /> You
+                  </span>
+                  <span style={{ fontSize: 10, color: "#9a9890", display: "flex", alignItems: "center", gap: 4 }}>
+                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: actualLabel.color, border: "2px solid #fff" }} /> Actual
+                  </span>
+                </div>
+                <span style={{ fontSize: 10, color: "#9a9890" }}>100%</span>
+              </div>
+            </div>
+
+            {/* Big miss commentary — vivid one-liner when gap is 25%+ */}
+            {diff > 0.24 && (
+              <div style={{
+                textAlign: "center", padding: "12px 20px", marginBottom: 20,
+                borderRadius: 10, fontSize: 14, lineHeight: 1.55,
+                color: prediction > w ? "#991b1b" : "#166534",
+                background: prediction > w ? "#fef2f2" : "#f0fdf4",
+                border: prediction > w ? "1px solid #fecaca" : "1px solid #bbf7d0",
+                fontStyle: "italic",
+                ...rp(1),
+              }}>
+                {(() => {
+                  const gap = Math.round(diff * 100);
+                  const overMisses = [
+                    `Off by ${gap} points. History had a backup plan you didn't see.`,
+                    `${gap} points high. The forces behind this were bigger than any one name.`,
+                    `Overshot by ${gap}. Others were closer to the same outcome than you thought.`,
+                    `${gap}-point miss. The conditions were ripe — someone else would have gotten there.`,
+                    `Off by ${gap}. Easy to overrate what feels singular in hindsight.`,
+                  ];
+                  const underMisses = [
+                    `Off by ${gap} points. This mattered more than it looks from here.`,
+                    `${gap} points low. Remove this, and the ripple effects go deeper than expected.`,
+                    `Undershot by ${gap}. The specific form shaped everything that followed.`,
+                    `${gap}-point miss. Inevitability is an illusion — this was more contingent than it seems.`,
+                    `Off by ${gap}. What feels like it was "bound to happen" really wasn't.`,
+                  ];
+                  const pool = prediction > w ? overMisses : underMisses;
+                  const idx = Math.abs(hashString(subject.name + "miss")) % pool.length;
+                  return pool[idx];
+                })()}
+              </div>
+            )}
+
             {/* Streak indicator + milestone celebration */}
-            {streak >= 2 && !isReplay && (
+            {((streak >= 2 && !isReplay) || (streakMilestone && streakMilestone.reward === "shield_used")) && (
               <div style={{
                 textAlign: "center", marginBottom: 20, padding: streakMilestone ? "16px 20px" : "10px 16px",
                 background: streakMilestone
-                  ? "linear-gradient(135deg, #fffbeb, #fef3c7)"
+                  ? streakMilestone.reward === "shield_used"
+                    ? "linear-gradient(135deg, #f0fdfa, #ccfbf1)"
+                    : "linear-gradient(135deg, #fffbeb, #fef3c7)"
                   : "linear-gradient(135deg, #faf5ff, #f3e8ff)",
                 borderRadius: 10,
-                border: streakMilestone ? "1px solid #fde68a" : "1px solid #e9d5ff",
+                border: streakMilestone
+                  ? streakMilestone.reward === "shield_used"
+                    ? "1px solid #99f6e4"
+                    : "1px solid #fde68a"
+                  : "1px solid #e9d5ff",
                 ...rp(1),
               }}>
                 {streakMilestone ? (
                   <>
                     <div style={{ fontSize: 28, marginBottom: 6 }}>{streakMilestone.emoji}</div>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: "#92400e", marginBottom: 4 }}>
-                      {streak}-Round Streak — {streakMilestone.label}!
+                    <div style={{ fontSize: 16, fontWeight: 700, color: streakMilestone.reward === "shield_used" ? "#0d9488" : "#92400e", marginBottom: 4 }}>
+                      {streakMilestone.reward === "shield_used"
+                        ? `Streak Shield Activated!`
+                        : `${streak}-Round Streak — ${streakMilestone.label}!`}
                     </div>
-                    <div style={{
-                      display: "inline-block", padding: "6px 16px", borderRadius: 8,
-                      background: "#92400e", color: "#fff", fontSize: 14, fontWeight: 700,
-                      marginTop: 4,
-                    }}>
-                      +{streakMilestone.bonus} bonus points
-                    </div>
+                    {streakMilestone.bonus > 0 && (
+                      <div style={{
+                        display: "inline-block", padding: "6px 16px", borderRadius: 8,
+                        background: "#92400e", color: "#fff", fontSize: 14, fontWeight: 700,
+                        marginTop: 4,
+                      }}>
+                        +{streakMilestone.bonus} bonus points
+                      </div>
+                    )}
+                    {/* Reward unlock notification */}
+                    {streakMilestone.rewardLabel && streakMilestone.reward !== "shield_used" && (
+                      <div style={{
+                        marginTop: 10, padding: "8px 14px", borderRadius: 8,
+                        background: "rgba(109,40,217,0.08)", border: "1px solid rgba(109,40,217,0.15)",
+                        fontSize: 13, color: "#6d28d9", fontWeight: 600,
+                      }}>
+                        🎁 {streakMilestone.rewardLabel}
+                      </div>
+                    )}
+                    {streakMilestone.reward === "shield_used" && (
+                      <div style={{
+                        marginTop: 8, fontSize: 13, color: "#0d9488",
+                      }}>
+                        {streakMilestone.rewardLabel}
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
@@ -13545,7 +14923,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                     <h3 style={{ ...S.sectionHeader, color: "#d97706", margin: 0 }}>
-                      <span>🗓️</span> Daily #{dayNum}
+                      <span>🗓️</span> Daily Challenge
                     </h3>
                     <span style={{ fontSize: 12, color: "#92400e", fontWeight: 600 }}>
                       {community.totalPlayers.toLocaleString()} players today
@@ -13643,7 +15021,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
               );
             })()}
 
-            {/* ═══ THE ANALYSIS — merged verdict + counterfactual ═══ */}
+            {/* ═══ THE ANALYSIS — verdict + reasoning ═══ */}
             <div style={{
               background: `${actualLabel.color}06`, borderRadius: 14, padding: "20px 22px",
               marginBottom: 22, borderLeft: `4px solid ${actualLabel.color}`,
@@ -13654,15 +15032,6 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </h3>
               <p style={{ color: actualLabel.color, fontSize: 12, margin: "0 0 12px", opacity: 0.8, fontWeight: 500 }}>{actualLabel.desc}</p>
               <p style={{ color: "#4a4840", lineHeight: 1.7, fontSize: 14, margin: 0 }}>{subject.reasoning}</p>
-              {subject.counterfactual && (
-                <p style={{
-                  color: "#4a4840", lineHeight: 1.7, fontSize: 14,
-                  marginTop: 12, marginBottom: 0,
-                  paddingTop: 12, borderTop: `1px solid ${actualLabel.color}15`,
-                }}>
-                  {subject.counterfactual}
-                </p>
-              )}
               {(() => {
                 const insight = getDirectionInsight(prediction, r, subject);
                 return insight ? (
@@ -13672,12 +15041,31 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     padding: "10px 14px", borderRadius: 8,
                     background: prediction > w ? "#fef2f2" : "#f0fdf4",
                   }}>
-                    <span style={{ fontWeight: 700 }}>{prediction > w ? "↑ You overestimated" : "↓ You underestimated"} their weight.</span>{" "}
+                    <span style={{ fontWeight: 700 }}>{prediction > w ? "↑ You overestimated" : "↓ You underestimated"} the weight.</span>{" "}
                     {insight}
                   </div>
                 ) : null;
               })()}
             </div>
+
+            {/* ═══ THE COUNTERFACTUAL — the vivid "what if" moment ═══ */}
+            {subject.counterfactual && (
+              <div style={{
+                marginBottom: 22, borderRadius: 14, padding: "20px 22px",
+                background: "#fffbeb", border: "1px solid #fde68a",
+                ...rp(2),
+              }}>
+                <h3 style={{ ...S.sectionHeader, color: "#92400e", marginBottom: 12 }}>
+                  <span>🔮</span> The Counterfactual
+                </h3>
+                <p style={{
+                  color: "#78350f", lineHeight: 1.75, fontSize: 14.5, margin: 0,
+                  fontFamily: fontStack, fontStyle: "italic",
+                }}>
+                  {subject.counterfactual}
+                </p>
+              </div>
+            )}
 
             {/* ═══ BUTTERFLY EFFECT CASCADE — promoted, always visible ═══ */}
             {subject.cascade && subject.cascade.length > 0 && (
@@ -13830,32 +15218,6 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </div>
             )}
 
-            {/* ═══ WHAT THE WORLD WOULD LOSE — compact stat grid ═══ */}
-            {subject.impact && (
-              <div style={{
-                marginBottom: 22, borderRadius: 14, padding: "20px 22px",
-                background: "#faf5ff", border: "1px solid #e9d5ff",
-                ...rp(3),
-              }}>
-                <h3 style={{ ...S.sectionHeader, color: "#6d28d9", marginBottom: 14 }}>
-                  <span>📊</span> What the World Would Lose
-                </h3>
-                <div style={{ display: "grid", gap: 10 }}>
-                  {[
-                    ["Lives", subject.impact.lives],
-                    ["Economy", subject.impact.econ],
-                    ["Culture", subject.impact.cultural],
-                    ["Reach", subject.impact.reach],
-                  ].filter(([, val]) => val).map(([label, val]) => (
-                    <div key={label} style={{ display: "flex", gap: 12, fontSize: 14 }}>
-                      <span style={{ color: "#8b5cf6", fontWeight: 700, minWidth: 72, fontSize: 13 }}>{label}</span>
-                      <span style={{ color: "#4a4840" }}>{val}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* ═══ ALTERNATE TIMELINE — collapsible ═══ */}
             {subject.timeline && subject.timeline.length > 0 && (
               <details style={{ marginBottom: 22, ...rp(4) }}>
@@ -13891,35 +15253,6 @@ Be historically precise. The cascade should show a chain reaction where each dom
                         </div>
                       </div>
                     ))}
-                  </div>
-                </div>
-              </details>
-            )}
-
-            {/* Fallback timeline */}
-            {(!subject.timeline || subject.timeline.length === 0) && subject.impact?.timeline && (
-              <details style={{ marginBottom: 22, ...rp(4) }}>
-                <summary style={S.collapsibleSummary}>
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span>🔀</span> What Happened vs. Alternate Timeline
-                  </span>
-                  <Chevron />
-                </summary>
-                <div style={S.collapsibleBody}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                    <div style={{ padding: 16, background: "#dcfce7", borderRadius: 10, border: "1px solid #bbf7d0" }}>
-                      <div style={{ fontSize: 10, fontWeight: 800, color: "#166534", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>✓ What happened</div>
-                      <div style={{ fontSize: 14, color: "#166534", lineHeight: 1.6 }}>
-                        {subject.contributions[0]}
-                        {subject.contributions[1] && <><br /><br />{subject.contributions[1]}</>}
-                      </div>
-                    </div>
-                    <div style={{ padding: 16, background: "#fef3c7", borderRadius: 10, border: "1px solid #fde68a" }}>
-                      <div style={{ fontSize: 10, fontWeight: 800, color: "#92400e", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>⚡ Alternate timeline</div>
-                      <div style={{ fontSize: 14, color: "#92400e", lineHeight: 1.6 }}>
-                        {subject.impact.timeline}
-                      </div>
-                    </div>
                   </div>
                 </div>
               </details>
