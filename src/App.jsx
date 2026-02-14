@@ -13710,8 +13710,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
           </>)}
         </div>
-      </div>
       <TabBar />
+      </div>
     );
   }
 
@@ -13860,8 +13860,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </div>
           </div>
         </div>
-      </div>
       <TabBar />
+      </div>
     );
   }
 
@@ -14422,8 +14422,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
           </div>
 
         </div>
-      </div>
       <TabBar />
+      </div>
     );
   }
 
@@ -14557,8 +14557,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </div>
           )}
         </div>
-      </div>
       <TabBar />
+      </div>
     );
   }
 
@@ -14679,8 +14679,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
             })}
           </div>
         </div>
-      </div>
       <TabBar />
+      </div>
     );
   }
 
@@ -14791,8 +14791,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
             })}
           </div>
         </div>
-      </div>
       <TabBar />
+      </div>
     );
   }
 
