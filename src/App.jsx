@@ -239,7 +239,7 @@ const FIGURES = [
   {id:"curie",name:"Marie Curie",born:1867,died:1934,cat:"science",field:"Physics & Chemistry",
     quote:"Nothing in life is to be feared, it is only to be understood.",
     contributions:["Discovered polonium and radium","Pioneered radioactivity research","First woman to win Nobel Prize","Mobile X-ray units in WWI"],
-    r:0.55,reasoning:"Becquerel discovered radioactivity in 1896. Multiple labs were investigating. The Curies' systematic isolation of radium was exceptional work, but the elements were there to be found. Her greater irreplaceable impact was social — proving women could lead frontier science.",
+    r:0.55,reasoning:"Becquerel discovered radioactivity in 1896. Multiple labs were investigating. The Curies' systematic isolation of radium was exceptional work, but the elements were there to be found. Her greater lasting impact was social — proving women could lead frontier science.",
     counterfactual:"Without Marie Curie, radioactivity would have been discovered by others like Becquerel and Rutherford, but likely 5-10 years later and with less systematic rigor. The medical applications of radium would have emerged more slowly, and women's entry into scientific leadership would have been significantly delayed, potentially by decades.",
     ripples:[
       {category:"Scientific Discovery",detail:"Radium and polonium discovered by German or British researchers around 1905-1910, with less precise isolation techniques and slower understanding of radioactive properties."},
@@ -258,7 +258,7 @@ const FIGURES = [
     quote:"The present is theirs; the future, for which I really worked, is mine.",
     contributions:["AC power system and induction motor","Rotating magnetic field","Radio technology foundations","Wireless power concepts"],
     r:0.60,reasoning:"Westinghouse and others were developing AC systems. Ferraris independently invented the induction motor. The AC vs DC battle would have been won by AC regardless — the physics favored it. Tesla accelerated adoption by 5-10 years.",
-    counterfactual:"Without Tesla, AC power would still have won the 'War of Currents' — the physics of long-distance transmission made it inevitable. Ferraris had independently invented the induction motor in Italy. Westinghouse's engineers were capable. Tesla accelerated AC adoption and added elegance to the systems, but the electrical age was coming regardless. His biggest irreplaceable impact might be cultural — the 'mad genius inventor' archetype he embodied.",
+    counterfactual:"Without Tesla, AC power would still have won the 'War of Currents' — the physics of long-distance transmission made it inevitable. Ferraris had independently invented the induction motor in Italy. Westinghouse's engineers were capable. Tesla accelerated AC adoption and added elegance to the systems, but the electrical age was coming regardless. His biggest unique impact might be cultural — the 'mad genius inventor' archetype he embodied.",
     ripples:[
       {category:"AC Power Systems",detail:"Ferraris's induction motor designs adopted instead; Westinghouse engineers develop polyphase systems by 1895. AC wins the current war, just 5-10 years later."},
       {category:"Radio Technology",detail:"Marconi's radio work proceeds without Tesla's contributions. The patent disputes never happen; Marconi is unambiguously credited with radio invention."},
@@ -294,7 +294,7 @@ const FIGURES = [
     quote:"Nothing is too wonderful to be true if it be consistent with the laws of nature.",
     contributions:["Electromagnetic induction","Electric motor principles","Faraday cage","Electrochemistry foundations"],
     r:0.45,reasoning:"Henry discovered induction independently in America. Ørsted had shown electricity and magnetism were related. But Faraday's intuitive genius — thinking in fields rather than forces — was unique. His concepts shaped Maxwell's mathematics.",
-    counterfactual:"Without Faraday, Joseph Henry in America discovers electromagnetic induction independently (as he actually did, just slightly later). But Faraday's conceptual innovation — thinking in terms of 'lines of force' and fields rather than action at a distance — was harder to replace. Maxwell might have struggled without Faraday's physical intuitions to mathematize. The field concept in physics could have developed decades later.",
+    counterfactual:"Without Faraday, Joseph Henry in America discovers electromagnetic induction independently (as he actually did, just slightly later). But Faraday's conceptual innovation — thinking in terms of 'lines of force' and fields rather than action at a distance — carried far more weight. Maxwell might have struggled without Faraday's physical intuitions to mathematize. The field concept in physics could have developed decades later.",
     ripples:[
       {category:"Electromagnetic Induction",detail:"Henry gets priority for induction discovery. American physics gets an earlier boost. Practical generators and motors still emerge by 1840s."},
       {category:"Field Theory",detail:"Without Faraday's 'lines of force,' Maxwell has less to mathematize. Field theory emerges later, possibly through different physical intuitions. Relativity is affected."},
@@ -365,7 +365,7 @@ const FIGURES = [
   {id:"bohr",name:"Niels Bohr",born:1885,died:1962,cat:"science",field:"Quantum Physics",
     quote:"Prediction is very difficult, especially about the future.",
     contributions:["Bohr model of the atom","Copenhagen interpretation","Nuclear fission understanding","Complementarity principle"],
-    r:0.50,reasoning:"Rutherford's atomic model needed fixing. Bohr's specific solution was one approach. Eventually wave mechanics superseded it. Bohr's institutional role leading Copenhagen discussions may have been more irreplaceable than his physics.",
+    r:0.50,reasoning:"Rutherford's atomic model needed fixing. Bohr's specific solution was one approach. Eventually wave mechanics superseded it. Bohr's institutional role leading Copenhagen discussions may have carried more weight than his physics.",
     counterfactual:"Without Bohr, atomic physics still needs to explain atomic spectra. Sommerfeld or others extend Rutherford's model differently. Wave mechanics (Schrödinger) and matrix mechanics (Heisenberg) still emerge in the 1920s, but without the Copenhagen interpretation dominating. Quantum mechanics might develop with different philosophical foundations — perhaps more realist, less 'shut up and calculate.'",
     ripples:[
       {category:"Atomic Model",detail:"Sommerfeld or others patch Rutherford's model. The specific quantization rules differ. Hydrogen spectrum still explained, but history credits someone else."},
@@ -710,7 +710,7 @@ const FIGURES = [
     quote:"What you do makes a difference, and you have to decide what kind of difference you want to make.",
     contributions:["Chimpanzee behavior studies","Tool use discovery in chimps","Conservation advocacy","Roots & Shoots program"],
     r:0.35,reasoning:"Her discovery that chimps use tools was paradigm-shifting. Her 60+ years with Gombe chimps is unreplicable data. Her long-term, intimate approach was pioneering.",
-    counterfactual:"Without Goodall, Leakey still sends someone to study chimpanzees — perhaps Birutė Galdikas (who studied orangutans) or Dian Fossey (gorillas) might have taken that role. But Goodall's specific approach — living among the chimps, naming them, observing tool use — was deeply personal. Her 60+ years of continuous data is irreplaceable. Someone else might have studied chimps scientifically, but the specific relationship with the Gombe community, and the bridge she built between scientific observation and public emotion, might never have formed.",
+    counterfactual:"Without Goodall, Leakey still sends someone to study chimpanzees — perhaps Birutė Galdikas (who studied orangutans) or Dian Fossey (gorillas) might have taken that role. But Goodall's specific approach — living among the chimps, naming them, observing tool use — was deeply personal. Her 60+ years of continuous data is unmatched. Someone else might have studied chimps scientifically, but the specific relationship with the Gombe community, and the bridge she built between scientific observation and public emotion, might never have formed.",
     ripples:[
       {category:"Tool Use Discovery",detail:"Chimp tool use discovered later, perhaps by Toshisada Nishida in Japan or another researcher. The 'Man the Toolmaker' definition of humanity challenged differently."},
       {category:"Long-term Data",detail:"No 60-year continuous study of a chimp community. The specific behavioral and social data from Gombe doesn't exist."},
@@ -1036,7 +1036,7 @@ const FIGURES = [
     quote:"The only thing we have to fear is fear itself.",
     contributions:["New Deal programs","Led US through WWII","United Nations vision","Four-term presidency"],
     r:0.40,reasoning:"Another Democrat would have tried stimulus programs, but FDR's specific personality — fireside chats, coalition-building — shaped the New Deal's form. His wartime leadership was less unique; the US would have fought.",
-    counterfactual:"Without FDR, the Depression still prompts government response — Hoover was already intervening, just inadequately. A different Democrat (Al Smith? Newton Baker?) tries different programs. The specific New Deal coalition — labor, farmers, African Americans, urban machines — might not form. Social Security might look different or not exist. Wartime leadership is easier to replace; the US fights WWII regardless. The UN still emerges, perhaps with different structure.",
+    counterfactual:"Without FDR, the Depression still prompts government response — Hoover was already intervening, just inadequately. A different Democrat (Al Smith? Newton Baker?) tries different programs. The specific New Deal coalition — labor, farmers, African Americans, urban machines — might not form. Social Security might look different or not exist. Wartime leadership carries less weight; the US fights WWII regardless. The UN still emerges, perhaps with different structure.",
     ripples:[
       {category:"New Deal Programs",detail:"Different programs address the Depression. Social Security might have different structure or not exist. Labor relations develop differently."},
       {category:"Democratic Coalition",detail:"The New Deal coalition that dominates American politics for 40 years might not form in the same way."},
@@ -1617,7 +1617,7 @@ const FIGURES = [
   {id:"montgomery",name:"Bernard Montgomery",born:1887,died:1976,cat:"military",field:"WWII Command",
     quote:"Rule 1: On pages 14 and 15, delete the words 'no' and 'not'.",
     contributions:["El Alamein victory","D-Day ground forces commander","Operation Market Garden (failure)","British military leadership"],
-    r:0.55,reasoning:"Britain had other capable generals. El Alamein was partly won by superior resources. Market Garden was his failure. His personality clashes with Americans complicated alliance. Competent but not irreplaceable.",
+    r:0.55,reasoning:"Britain had other capable generals. El Alamein was partly won by superior resources. Market Garden was his failure. His personality clashes with Americans complicated alliance. Competent but not singular.",
     counterfactual:"Without Montgomery, Britain finds another general for the Eighth Army. El Alamein is won anyway — by November 1942, Rommel was desperately short of fuel and supplies while Montgomery had massive superiority. The British needed a victory and a hero after years of defeats, and they would have found one. Market Garden doesn't happen in its disastrous form. The alliance might actually run smoother without Monty's ego.",
     ripples:[
       {category:"El Alamein",detail:"British win anyway with material superiority. Different general becomes the hero Britain needed."},
@@ -2017,7 +2017,7 @@ const FIGURES = [
   {id:"vangogh",name:"Vincent van Gogh",born:1853,died:1890,cat:"arts",field:"Visual Art",
     quote:"I dream my painting and I paint my dream.",
     contributions:["Post-Impressionist style","Starry Night, Sunflowers","2,100+ artworks","Influenced Expressionism"],
-    r:0.20,reasoning:"Van Gogh's style was unique — no one else painted with that emotional intensity and brushwork. He sold one painting in his lifetime but became the most influential post-Impressionist. His specific vision was irreplaceable.",
+    r:0.20,reasoning:"Van Gogh's style was unique — no one else painted with that emotional intensity and brushwork. He sold one painting in his lifetime but became the most influential post-Impressionist. His specific vision carried enormous weight.",
     counterfactual:"Without Van Gogh, Post-Impressionism still exists — Cézanne, Gauguin, Seurat were all working. But Van Gogh's specific contribution — the emotional intensity, the visible brushwork that captured inner states, the color as feeling — was uniquely his. Starry Night, Sunflowers, the Bedroom at Arles don't exist. Expressionism loses a crucial precursor. The 'tortured artist' narrative loses its central example.",
     ripples:[
       {category:"Expressionism",detail:"Without Van Gogh's example, Expressionism develops differently. Munch becomes more central perhaps."},
@@ -2180,7 +2180,7 @@ const FIGURES = [
     quote:"I dream for a living.",
     contributions:["Jaws, ET, Schindler's List","Modern blockbuster inventor","Most commercially successful director","Academy Awards"],
     r:0.40,reasoning:"Spielberg invented the modern blockbuster with Jaws. His influence on Hollywood is enormous. But Lucas was doing similar things; Coppola and Scorsese pushed film art. His specific commercial-artistic balance was influential but not unique.",
-    counterfactual:"Without Spielberg, blockbuster cinema still emerges — Lucas was doing similar things, and the economic incentives were clear. But Spielberg's specific range is harder to replace: Jaws and ET for spectacle, Schindler's List and Saving Private Ryan for prestige. The idea that you could be both the most commercial and most respected director — that balance was his achievement. Hollywood's grammar for action, wonder, and sentiment would be different.",
+    counterfactual:"Without Spielberg, blockbuster cinema still emerges — Lucas was doing similar things, and the economic incentives were clear. But Spielberg's specific range is what carried the most weight: Jaws and ET for spectacle, Schindler's List and Saving Private Ryan for prestige. The idea that you could be both the most commercial and most respected director — that balance was his achievement. Hollywood's grammar for action, wonder, and sentiment would be different.",
     ripples:[
       {category:"Blockbuster Cinema",detail:"Jaws invented summer blockbusters. Without Spielberg, the phenomenon emerges differently — maybe Lucas leads it entirely."},
       {category:"Holocaust Memory",detail:"Schindler's List shaped how a generation understood the Holocaust. Different films, different public memory."},
@@ -2433,7 +2433,7 @@ const FIGURES = [
   {id:"wittgenstein",name:"Ludwig Wittgenstein",born:1889,died:1951,cat:"philosophy",field:"Philosophy",
     quote:"The limits of my language mean the limits of my world.",
     contributions:["Tractatus Logico-Philosophicus","Philosophical Investigations","Language games","Two philosophical careers"],
-    r:0.20,reasoning:"Wittgenstein uniquely had two revolutionary phases. Both transformed their fields. His specific personality and insights were irreplaceable.",
+    r:0.20,reasoning:"Wittgenstein uniquely had two revolutionary phases. Both transformed their fields. His specific personality and insights were singular — no one else was thinking this way.",
     counterfactual:"Without Wittgenstein, analytic philosophy still exists — Russell, Frege, the Vienna Circle were working. But Wittgenstein uniquely had two revolutionary phases: the Tractatus seemed to solve philosophy's problems through logic, then the Investigations undermined his own earlier work and introduced 'language games.' No one else would have made both moves. Philosophy develops along one path rather than both.",
     ripples:[
       {category:"Early Analytic Philosophy",detail:"The Tractatus shaped logical positivism. Without it, the Vienna Circle develops from different foundations."},
@@ -2933,7 +2933,7 @@ const FIGURES = [
       {category:"Statistics",detail:"The normal distribution might bear another name. Statistical methods develop slightly differently."},
       {category:"Number Theory",detail:"The Disquisitiones Arithmeticae doesn't exist. Number theory develops without this organizing work."},
       {category:"Astronomy",detail:"Gauss's method for calculating orbits doesn't exist. Asteroid tracking develops differently."},
-      {category:"Many Fields",detail:"Contributions to magnetism, optics, differential geometry all delayed. Breadth impossible to replace."}
+      {category:"Many Fields",detail:"Contributions to magnetism, optics, differential geometry all delayed. That breadth of impact is unmatched."}
     ],
     timeline:[
       {year:1801,happened:"Disquisitiones Arithmeticae published",alternate:"Number theory develops without this synthesis"},
@@ -2946,7 +2946,7 @@ const FIGURES = [
     quote:"Logic is the foundation of the certainty of all the knowledge we acquire.",
     contributions:["Most prolific mathematician ever","Graph theory founder","Euler's identity","Modern mathematical notation"],
     r:0.25,reasoning:"Euler wrote more mathematics than anyone. He invented much modern notation. No single mathematician could have replaced his staggering output and range.",
-    counterfactual:"Without Euler, mathematics develops more slowly — his output was simply too large to be replaced. He invented modern mathematical notation (f(x), e, i, Σ). He founded graph theory with the Königsberg bridges. Euler's identity (e^(iπ) + 1 = 0) doesn't exist. The entire mathematical vocabulary and notation we use would be different. Mathematics would be decades behind.",
+    counterfactual:"Without Euler, mathematics develops more slowly — his output was simply too vast for any single successor to match. He invented modern mathematical notation (f(x), e, i, Σ). He founded graph theory with the Königsberg bridges. Euler's identity (e^(iπ) + 1 = 0) doesn't exist. The entire mathematical vocabulary and notation we use would be different. Mathematics would be decades behind.",
     ripples:[
       {category:"Notation",detail:"Modern mathematical notation (f(x), e, i, Σ) doesn't exist. Different symbols, different conventions."},
       {category:"Graph Theory",detail:"The field doesn't start with Königsberg bridges. Develops later from different origins."},
@@ -3018,7 +3018,7 @@ const FIGURES = [
     quote:"It's easier to ask forgiveness than it is to get permission.",
     contributions:["First compiler (A-0)","COBOL development","'Debugging' term popularization","Programming advocacy"],
     r:0.50,reasoning:"Compilers were an emerging idea. Hopper's specific contributions were important but part of a movement. Her advocacy for accessible programming made her uniquely influential culturally.",
-    counterfactual:"Without Hopper, compilers still develop — the idea was emerging. But Hopper's specific contributions and advocacy were influential. COBOL might look different or not exist. The idea that programming should be accessible to non-mathematicians might develop more slowly. Her cultural role as 'Amazing Grace' — making computing seem approachable — is harder to replace.",
+    counterfactual:"Without Hopper, compilers still develop — the idea was emerging. But Hopper's specific contributions and advocacy were influential. COBOL might look different or not exist. The idea that programming should be accessible to non-mathematicians might develop more slowly. Her cultural role as 'Amazing Grace' — making computing seem approachable — carried its own weight.",
     ripples:[
       {category:"Compilers",detail:"Compilers develop anyway, but Hopper's early work accelerated the field."},
       {category:"COBOL",detail:"Business computing might use different languages. Different syntax, different approach."},
@@ -3495,7 +3495,7 @@ const FIGURES = [
   {id:"shackleton",name:"Ernest Shackleton",born:1874,died:1922,cat:"exploration",field:"Polar Exploration",
     quote:"Difficulties are just things to overcome, after all.",
     contributions:["Endurance expedition survival","Antarctic exploration","Leadership under pressure","All men saved"],
-    r:0.30,reasoning:"Shackleton's achievement was leadership, not exploration. When Endurance was crushed, his decisions saved all 27 men over 22 months. Another leader might have lost them. His specific character was irreplaceable in that situation.",
+    r:0.30,reasoning:"Shackleton's achievement was leadership, not exploration. When Endurance was crushed, his decisions saved all 27 men over 22 months. Another leader might have lost them. His specific character was the decisive factor in that situation.",
     counterfactual:"Without Shackleton, the Endurance expedition probably ends in disaster. When the ship was crushed by ice, survival required 22 months of perfect leadership decisions: maintaining morale on the ice, the 800-mile open boat journey to South Georgia, crossing unmapped mountains. These decisions were Shackleton's character made manifest. A different leader — more rigid, less attuned to men's morale, less willing to take calculated risks — likely loses some or all of the 27 men. Shackleton's failure as explorer became the greatest leadership story ever told.",
     ripples:[
       {category:"Crew Survival",detail:"Without Shackleton's specific decisions, some or all of the 27 men die. The expedition becomes tragedy, not triumph."},
@@ -3843,7 +3843,19 @@ const INSTITUTIONS = [
       {year:1960,happened:"UN membership expands with decolonization",alternate:"Decolonization handled by former colonial powers; different outcomes"},
       {year:2015,happened:"Sustainable Development Goals adopted",alternate:"No global development framework; bilateral aid dominates"}
     ],
-    impact:{lives:"Peacekeeping: millions protected",econ:"International development: $50B+ annually",cultural:"Global cooperation model",reach:"193 member states",timeline:"Alternative international body emerges"}},
+    impact:{lives:"Peacekeeping: millions protected",econ:"International development: $50B+ annually",cultural:"Global cooperation model",reach:"193 member states",timeline:"Alternative international body emerges"},
+
+    cascade:[
+      {event:"No unified post-war forum",consequence:"The Big Four coordinate bilaterally. Disputes between US and USSR lack a neutral stage. Proxy conflicts escalate faster without Security Council debate.",delay:"Immediate",severity:"high",icon:"🏛️"},
+      {event:"No Universal Declaration of Human Rights",consequence:"International human rights law develops country by country. No global standard. Authoritarian governments face less rhetorical pressure.",delay:"~3 years",severity:"high",icon:"📜"},
+      {event:"Decolonization lacks global stage",consequence:"New nations have no General Assembly to join, no international recognition pathway. Former colonial powers negotiate bilaterally with more leverage.",delay:"~15 years",severity:"medium",icon:"🌍"},
+      {event:"Peacekeeping never institutionalizes",consequence:"Regional powers handle conflicts alone. More proxy wars, messier endings. The Korean War plays out without UN mandate.",delay:"~5 years",severity:"high",icon:"⚔️"}
+    ],
+    modernDay:{
+      tech:"UN specialized agencies set global standards — internet domain names (ITU), aviation codes (ICAO), weather data (WMO). Without them, competing national standards create friction.",
+      culture:"The very concept of 'the international community' as a collective actor doesn't exist in the same way. Global responses to crises are more openly transactional.",
+      politics:"Without the Security Council veto system, great-power competition has no institutional pressure valve. The Cold War might have turned hot at several flashpoints where UN mediation helped."
+    }},
   {id:"redcross",name:"Red Cross / Red Crescent",born:1863,died:null,cat:"institutions",field:"Humanitarian Aid",
     quote:"Inter arma caritas — In war, charity.",
     contributions:["Geneva Conventions foundation","Disaster relief globally","Blood bank system","War prisoner protection"],
@@ -3861,7 +3873,19 @@ const INSTITUTIONS = [
       {year:1914,happened:"Red Cross crucial in WWI",alternate:"WWI even more brutal without humanitarian coordination"},
       {year:2020,happened:"Red Cross responds to COVID, disasters globally",alternate:"Humanitarian response more fragmented, less effective"}
     ],
-    impact:{lives:"Billions aided since 1863",econ:"$3B+ annual operations",cultural:"Neutral humanitarian symbol",reach:"192 national societies",timeline:"Humanitarian law develops much slower"}},
+    impact:{lives:"Billions aided since 1863",econ:"$3B+ annual operations",cultural:"Neutral humanitarian symbol",reach:"192 national societies",timeline:"Humanitarian law develops much slower"},
+
+    cascade:[
+      {event:"No Geneva Conventions",consequence:"Wars continue without codified protections for wounded, prisoners, or civilians. Treatment of POWs varies by captor's whim.",delay:"~1 year",severity:"high",icon:"⚖️"},
+      {event:"World War I without humanitarian law",consequence:"Gas attacks, trench warfare proceed without even symbolic limits. Prisoner exchanges are ad hoc. Wounded are left to die more often.",delay:"~51 years",severity:"high",icon:"💀"},
+      {event:"No neutral humanitarian space",consequence:"All wartime aid is aligned with one side. Relief workers are legitimate military targets. Hospitals in war zones get no protection.",delay:"~50 years",severity:"high",icon:"🏥"},
+      {event:"Blood banking develops differently",consequence:"The Red Cross built modern blood donation infrastructure. Without it, blood supply systems are fragmented. Surgery during WWII has worse outcomes.",delay:"~80 years",severity:"medium",icon:"🩸"}
+    ],
+    modernDay:{
+      tech:"The Red Cross symbol on your first aid kit, the blood donation system at your local hospital — these are Red Cross inheritances. Emergency response coordination protocols trace back to their model.",
+      culture:"The idea that neutrality in war is even possible — that you can help both sides' wounded — was a radical concept. Without it, humanitarianism is always political.",
+      politics:"The Geneva Conventions that govern every modern conflict are Red Cross creations. Without them, international humanitarian law barely exists."
+    }},
   {id:"gatesfoundation",name:"Gates Foundation",born:2000,died:null,cat:"institutions",field:"Global Health",
     quote:"All lives have equal value.",
     contributions:["Malaria and polio eradication efforts","Vaccine funding globally","Agricultural development","Education initiatives"],
@@ -3879,7 +3903,19 @@ const INSTITUTIONS = [
       {year:2020,happened:"Foundation pivotal in COVID vaccine equity",alternate:"Vaccine distribution to poor countries even more unequal"},
       {year:2025,happened:"$70B+ committed to global health",alternate:"This funding doesn't exist; countless additional deaths"}
     ],
-    impact:{lives:"122M children's lives saved (with partners)",econ:"$77B endowment deployed",cultural:"Billionaire philanthropy model",reach:"Global health systems",timeline:"Global health funding gap"}},
+    impact:{lives:"122M children's lives saved (with partners)",econ:"$77B endowment deployed",cultural:"Billionaire philanthropy model",reach:"Global health systems",timeline:"Global health funding gap"},
+
+    cascade:[
+      {event:"Polio eradication stalls",consequence:"Without Gates funding, the WHO's polio campaign loses its largest private donor. The disease persists in more countries. Hundreds of thousands more children are paralyzed.",delay:"Immediate",severity:"high",icon:"💉"},
+      {event:"Malaria research underfunded",consequence:"Drug-resistant malaria spreads faster without aggressive research funding. Bed net distribution is smaller. Half a million more deaths annually in sub-Saharan Africa.",delay:"~5 years",severity:"high",icon:"🦟"},
+      {event:"No 'effective philanthropy' model",consequence:"The idea of billionaires treating global health like engineering problems doesn't crystallize. Philanthropy stays focused on arts, universities, local causes.",delay:"~10 years",severity:"medium",icon:"💰"},
+      {event:"GAVI vaccine alliance weaker",consequence:"Without Gates as anchor funder, the global vaccine alliance for developing countries is smaller. Millions of children miss routine immunizations.",delay:"~5 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"The mRNA vaccine platform that fought COVID was partly funded by Gates Foundation grants years before the pandemic. Without that early investment, vaccine development during COVID takes longer.",
+      culture:"The 'Giving Pledge' — billionaires promising to give away most of their wealth — was Gates and Buffett's creation. Without it, the social expectation around extreme wealth looks different.",
+      politics:"Global health policy is less centralized. The WHO has less private funding and more dependence on reluctant national governments."
+    }},
   {id:"worldbank",name:"World Bank",born:1944,died:null,cat:"institutions",field:"Development Finance",
     quote:"Our dream is a world free of poverty.",
     contributions:["Infrastructure financing globally","Poverty reduction programs","Development economics research","Climate finance"],
@@ -3897,7 +3933,19 @@ const INSTITUTIONS = [
       {year:1990,happened:"Washington Consensus shapes policy",alternate:"Different development orthodoxy or none"},
       {year:2020,happened:"$100B+ annual commitments",alternate:"Development finance more fragmented, less total"}
     ],
-    impact:{lives:"Billions affected by projects",econ:"$100B+ annual commitments",cultural:"Development paradigm setter",reach:"189 member countries",timeline:"Regional banks fill gap differently"}},
+    impact:{lives:"Billions affected by projects",econ:"$100B+ annual commitments",cultural:"Development paradigm setter",reach:"189 member countries",timeline:"Regional banks fill gap differently"},
+
+    cascade:[
+      {event:"No Marshall Plan lending institution",consequence:"European reconstruction after WWII is funded purely bilaterally by the US. Less coordination, more political strings, slower recovery.",delay:"Immediate",severity:"medium",icon:"🏗️"},
+      {event:"No development lending model",consequence:"Poor countries borrow from commercial banks at market rates or don't borrow at all. Infrastructure in Africa and Asia develops much slower.",delay:"~10 years",severity:"high",icon:"🏦"},
+      {event:"Structural adjustment never happens",consequence:"For better or worse, the World Bank's conditions on loans shaped economic policy across the developing world. Without them, more varied economic experiments.",delay:"~30 years",severity:"medium",icon:"📊"},
+      {event:"No global poverty measurement",consequence:"The World Bank defined the poverty line and tracks global poverty. Without their data, we literally don't know how many people are poor.",delay:"~40 years",severity:"medium",icon:"📉"}
+    ],
+    modernDay:{
+      tech:"World Bank data — GDP figures, poverty rates, development indicators — is the backbone of global economic statistics. Economists and journalists rely on it daily.",
+      culture:"The concept of 'developing' vs 'developed' countries, the $2.15/day poverty line — these are World Bank frameworks. We think about global poverty in their terms.",
+      politics:"Without conditional lending, countries like South Korea and India might have taken different economic paths. The Washington Consensus that shaped globalization was partly a World Bank product."
+    }},
   {id:"who",name:"World Health Organization",born:1948,died:null,cat:"institutions",field:"Global Health",
     quote:"Health is a state of complete physical, mental and social well-being.",
     contributions:["Smallpox eradication achieved","Disease surveillance globally","International health standards","Pandemic coordination"],
@@ -3915,7 +3963,19 @@ const INSTITUTIONS = [
       {year:1980,happened:"Smallpox declared eradicated",alternate:"Smallpox still endemic; 300M+ additional deaths over decades"},
       {year:2020,happened:"WHO coordinates COVID response",alternate:"Even more fragmented pandemic response; more deaths"}
     ],
-    impact:{lives:"Smallpox eradication: 300M+ would have died",econ:"Global health standards",cultural:"Health as human right",reach:"194 member states",timeline:"Disease eradication slower"}},
+    impact:{lives:"Smallpox eradication: 300M+ would have died",econ:"Global health standards",cultural:"Health as human right",reach:"194 member states",timeline:"Disease eradication slower"},
+
+    cascade:[
+      {event:"No global disease surveillance",consequence:"Outbreaks spread further before anyone notices patterns. The 1957 Asian Flu kills more because no coordinated tracking exists.",delay:"~9 years",severity:"high",icon:"🦠"},
+      {event:"Smallpox eradication never happens",consequence:"WHO coordinated the campaign that eliminated smallpox in 1980. Without them, the disease persists for decades longer. Millions more die.",delay:"~33 years",severity:"high",icon:"💉"},
+      {event:"No International Health Regulations",consequence:"Countries set their own quarantine rules. Travel restrictions during epidemics are chaotic and inconsistent. Trade suffers.",delay:"~20 years",severity:"medium",icon:"✈️"},
+      {event:"COVID response more fragmented",consequence:"No single body to declare pandemics, coordinate vaccine distribution, or set treatment guidelines. Each country improvises.",delay:"~72 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"WHO standards determine which drugs are approved globally, how diseases are classified (ICD codes your doctor uses), and vaccination schedules. All of this is less standardized without them.",
+      culture:"The idea that health is a global public good — not just each country's problem — is a WHO inheritance. Without it, international health cooperation is more transactional.",
+      politics:"COVID showed both WHO's importance and its limitations. Without WHO, pandemic responses are purely national. Poorer countries get even less support."
+    }},
   {id:"nato",name:"NATO",born:1949,died:null,cat:"institutions",field:"Military Alliance",
     quote:"An attack against one is an attack against all.",
     contributions:["Collective defense framework","Cold War deterrence","Post-Cold War expansion","Article 5 mutual defense"],
@@ -3933,7 +3993,19 @@ const INSTITUTIONS = [
       {year:1991,happened:"Cold War ends; NATO persists",alternate:"Without NATO, European security architecture very different"},
       {year:2022,happened:"NATO responds to Ukraine invasion",alternate:"European response to Russia more fragmented"}
     ],
-    impact:{lives:"Cold War stability for 600M+ Europeans",econ:"Defense spending coordination",cultural:"Western alliance symbol",reach:"32 member nations",timeline:"European security more fragmented"}},
+    impact:{lives:"Cold War stability for 600M+ Europeans",econ:"Defense spending coordination",cultural:"Western alliance symbol",reach:"32 member nations",timeline:"European security more fragmented"},
+
+    cascade:[
+      {event:"No collective defense in Europe",consequence:"Western European countries build separate militaries. France and Britain might develop nuclear weapons faster. West Germany's rearmament is more frightening to neighbors.",delay:"Immediate",severity:"high",icon:"🛡️"},
+      {event:"Berlin crises handled differently",consequence:"Without NATO's unified response, the Soviet Union tests Western resolve through bilateral pressure. Individual European nations might cave.",delay:"~4 years",severity:"high",icon:"🧱"},
+      {event:"Korean War response weaker",consequence:"Without NATO alliance structure, the US coalition in Korea is smaller. European allies contribute less. The war might end differently.",delay:"~5 years",severity:"medium",icon:"⚔️"},
+      {event:"Cold War is bilateral, not bloc-based",consequence:"The rigid East-West structure dissolves into shifting alliances. More unstable, potentially more dangerous. Nuclear proliferation accelerates.",delay:"~10 years",severity:"high",icon:"☢️"}
+    ],
+    modernDay:{
+      tech:"NATO standardization means allied armies can share ammunition, fuel, and communications. Without it, every European military has incompatible equipment.",
+      culture:"The idea that an attack on one is an attack on all — Article 5 — is NATO's philosophical core. It fundamentally changed how Europe thinks about security.",
+      politics:"Without NATO, European defense spending would be higher and less coordinated. The US military presence in Europe either doesn't exist or is purely bilateral. Russia faces a fragmented West."
+    }},
   {id:"eu",name:"European Union",born:1993,died:null,cat:"institutions",field:"Political & Economic Union",
     quote:"United in diversity.",
     contributions:["Single market creation","Free movement of people","Euro currency","Post-war peace in Europe"],
@@ -3951,7 +4023,19 @@ const INSTITUTIONS = [
       {year:1993,happened:"Maastricht creates EU, plans for euro",alternate:"No political union; no common currency"},
       {year:2024,happened:"EU with 27 members, single market",alternate:"Looser European arrangements; more national sovereignty, less coordination"}
     ],
-    impact:{lives:"Peace for 450M Europeans",econ:"$18T GDP bloc",cultural:"Post-war reconciliation model",reach:"27 member states",timeline:"European integration slower"}},
+    impact:{lives:"Peace for 450M Europeans",econ:"$18T GDP bloc",cultural:"Post-war reconciliation model",reach:"27 member states",timeline:"European integration slower"},
+
+    cascade:[
+      {event:"No Coal and Steel Community",consequence:"France and Germany rebuild competing heavy industries after WWII. Economic rivalry persists. The peace dividend of intertwined economies doesn't materialize.",delay:"~6 years",severity:"high",icon:"⚙️"},
+      {event:"No common market",consequence:"European trade barriers remain. Each country protects its industries. Economic growth in the 1960s-70s is slower. Brain drain to America is worse.",delay:"~12 years",severity:"high",icon:"📦"},
+      {event:"No freedom of movement",consequence:"Europeans need visas to work in neighboring countries. Labor markets are rigid. The Erasmus student exchange never happens.",delay:"~40 years",severity:"medium",icon:"✈️"},
+      {event:"No euro",consequence:"Currency exchange costs persist. Monetary crises hit individual countries harder. European financial markets are less integrated.",delay:"~54 years",severity:"medium",icon:"💶"}
+    ],
+    modernDay:{
+      tech:"EU regulations shape global tech — GDPR forced every company worldwide to rethink privacy. USB-C standardization, right-to-repair laws. The 'Brussels Effect' doesn't exist without the EU.",
+      culture:"Young Europeans travel, study, and work across borders freely. That ease of movement — and the identity it created — vanishes. 'European' as an identity is weaker.",
+      politics:"Without EU integration, Europe in 2024 looks more like pre-WWI: competing nation-states with shifting alliances. Franco-German rivalry might still dominate continental politics."
+    }},
   {id:"imf",name:"International Monetary Fund",born:1944,died:null,cat:"institutions",field:"Financial Stability",
     quote:"Working together to foster global monetary cooperation.",
     contributions:["Currency stability support","Balance of payments assistance","Economic surveillance","Crisis lending"],
@@ -3969,7 +4053,19 @@ const INSTITUTIONS = [
       {year:1997,happened:"Asian financial crisis; IMF conditionality",alternate:"Asian nations respond differently; different economic models"},
       {year:2024,happened:"IMF still central to global finance",alternate:"Different international financial architecture"}
     ],
-    impact:{lives:"Economic stability for billions",econ:"$1T lending capacity",cultural:"Controversial conditionality",reach:"190 member countries",timeline:"Financial crises more severe"}},
+    impact:{lives:"Economic stability for billions",econ:"$1T lending capacity",cultural:"Controversial conditionality",reach:"190 member countries",timeline:"Financial crises more severe"},
+
+    cascade:[
+      {event:"No Bretton Woods system",consequence:"Post-WWII monetary order is chaotic. Exchange rates fluctuate wildly. International trade recovers slower.",delay:"Immediate",severity:"high",icon:"💱"},
+      {event:"Currency crises go unmanaged",consequence:"When countries' currencies collapse, there's no lender of last resort. The 1997 Asian financial crisis destroys economies with no backstop.",delay:"~50 years",severity:"high",icon:"📉"},
+      {event:"No structural adjustment programs",consequence:"Developing countries face crises without conditional emergency lending. Some collapse; others find their own paths without IMF orthodoxy.",delay:"~30 years",severity:"medium",icon:"📊"},
+      {event:"Global financial coordination weaker",consequence:"The 2008 crisis has no coordinated international response. Each country handles its banking system alone.",delay:"~63 years",severity:"high",icon:"🌐"}
+    ],
+    modernDay:{
+      tech:"The IMF's Special Drawing Rights (SDR) system provides emergency liquidity to struggling nations. Its economic data and forecasts are used by every finance ministry on Earth.",
+      culture:"The IMF is simultaneously credited with preventing financial collapses and blamed for imposing austerity. Love it or hate it, global finance runs through their frameworks.",
+      politics:"Without IMF conditionality, economic policy in the developing world varies more widely. Some countries do better; many do worse. The 'Washington Consensus' never forms."
+    }},
   {id:"wwf",name:"World Wildlife Fund",born:1961,died:null,cat:"institutions",field:"Conservation",
     quote:"For a living planet.",
     contributions:["Species conservation programs","Protected area expansion","Climate advocacy","Sustainable development"],
@@ -3987,7 +4083,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"WWF partners with corporations",alternate:"Environmental movement more adversarial to business"},
       {year:2024,happened:"WWF largest conservation organization",alternate:"Different organizations dominate; different conservation model"}
     ],
-    impact:{lives:"Ecosystems for billions",econ:"$400M+ annual conservation",cultural:"Panda as global symbol",reach:"100+ countries",timeline:"Conservation movement weaker"}},
+    impact:{lives:"Ecosystems for billions",econ:"$400M+ annual conservation",cultural:"Panda as global symbol",reach:"100+ countries",timeline:"Conservation movement weaker"},
+
+    cascade:[
+      {event:"No global conservation brand",consequence:"Environmental protection stays national. No international coordination on endangered species. The panda logo that made conservation mainstream never exists.",delay:"Immediate",severity:"medium",icon:"🐼"},
+      {event:"Slower protected area expansion",consequence:"WWF funded and helped establish national parks across Africa and Asia. Without them, more habitat is lost to development in the 1970s-80s.",delay:"~10 years",severity:"medium",icon:"🌳"},
+      {event:"No debt-for-nature swaps",consequence:"WWF pioneered exchanging developing-country debt for conservation commitments. Without this model, rainforest destruction accelerates.",delay:"~25 years",severity:"medium",icon:"🌿"},
+      {event:"Weaker CITES enforcement",consequence:"The global endangered species trade treaty has less monitoring. Ivory, rhino horn, and exotic pet trades are bigger.",delay:"~15 years",severity:"medium",icon:"🦏"}
+    ],
+    modernDay:{
+      tech:"WWF's Living Planet Index tracks global biodiversity. Without it, we have less data on species decline. Conservation science is less internationally coordinated.",
+      culture:"The panda logo made conservation a mainstream cause. Without WWF, environmentalism is more about pollution and less about wildlife and habitat.",
+      politics:"International conservation agreements are weaker. National parks in developing countries receive less funding. Ecotourism develops differently."
+    }},
   {id:"amnesty",name:"Amnesty International",born:1961,died:null,cat:"institutions",field:"Human Rights",
     quote:"It is better to light a candle than curse the darkness.",
     contributions:["Prisoner of conscience campaigns","Death penalty opposition","Human rights documentation","Nobel Peace Prize 1977"],
@@ -4005,7 +4113,19 @@ const INSTITUTIONS = [
       {year:1990,happened:"Amnesty expands beyond prisoners",alternate:"Human rights movement organized differently"},
       {year:2024,happened:"Amnesty still leading human rights organization",alternate:"Different organizations dominate; different advocacy model"}
     ],
-    impact:{lives:"Thousands of prisoners freed",econ:"Human rights as policy factor",cultural:"Letter-writing activism model",reach:"150+ countries",timeline:"Human rights movement less grassroots"}},
+    impact:{lives:"Thousands of prisoners freed",econ:"Human rights as policy factor",cultural:"Letter-writing activism model",reach:"150+ countries",timeline:"Human rights movement less grassroots"},
+
+    cascade:[
+      {event:"No prisoners of conscience concept",consequence:"Amnesty invented the category. Without it, political prisoners are just 'criminals' in their home countries. International pressure is harder to organize.",delay:"Immediate",severity:"high",icon:"⛓️"},
+      {event:"Letter-writing campaigns never start",consequence:"Amnesty's model — ordinary people writing letters demanding prisoners' release — was new. Without it, human rights activism is more elite and less participatory.",delay:"~5 years",severity:"medium",icon:"✉️"},
+      {event:"No global torture documentation",consequence:"Amnesty's reports made state torture internationally visible. Without systematic documentation, abuses stay hidden longer.",delay:"~10 years",severity:"high",icon:"📋"},
+      {event:"Nobel Peace Prize 1977 goes elsewhere",consequence:"Amnesty's Nobel validated the human rights movement. Without it, human rights organizations have less legitimacy.",delay:"~16 years",severity:"medium",icon:"🏅"}
+    ],
+    modernDay:{
+      tech:"Amnesty pioneered using satellite imagery and digital evidence to document human rights abuses. Their methodology is now standard in international investigations.",
+      culture:"The concept that ordinary citizens can pressure foreign governments about human rights — that's Amnesty's inheritance. Before them, human rights was diplomats' business.",
+      politics:"Without Amnesty's documentation, the International Criminal Court has fewer cases. Dictators face less international scrutiny. The human rights 'shaming' model barely exists."
+    }},
   {id:"opec",name:"OPEC",born:1960,died:null,cat:"institutions",field:"Energy",
     quote:"Coordination and unification of petroleum policies.",
     contributions:["Oil price coordination","1973 oil crisis","Producer country solidarity","Energy geopolitics"],
@@ -4023,7 +4143,19 @@ const INSTITUTIONS = [
       {year:1980,happened:"OPEC's power peaks",alternate:"Producer countries never achieve this coordinated power"},
       {year:2024,happened:"OPEC+ still coordinates production",alternate:"Oil markets more competitive; different price dynamics"}
     ],
-    impact:{lives:"Energy prices for billions",econ:"Trillions in oil wealth transferred",cultural:"Resource nationalism",reach:"13 member countries",timeline:"Oil politics develops differently"}},
+    impact:{lives:"Energy prices for billions",econ:"Trillions in oil wealth transferred",cultural:"Resource nationalism",reach:"13 member countries",timeline:"Oil politics develops differently"},
+
+    cascade:[
+      {event:"No coordinated oil pricing",consequence:"Each oil-producing nation sells independently. Prices are lower and more volatile. Western oil companies retain more power over pricing.",delay:"Immediate",severity:"high",icon:"🛢️"},
+      {event:"1973 oil crisis doesn't happen",consequence:"Without OPEC coordination, Arab states can't weaponize oil during the Yom Kippur War. No gas lines, no energy crisis. The 1970s economy looks very different.",delay:"~13 years",severity:"high",icon:"⛽"},
+      {event:"No push for energy alternatives",consequence:"The oil shocks drove investment in nuclear, solar, and fuel efficiency. Without that urgency, renewable energy research is decades behind.",delay:"~15 years",severity:"high",icon:"☀️"},
+      {event:"Petrodollar system doesn't form",consequence:"OPEC's dollar-denominated oil propped up US currency. Without it, the dollar's reserve status weakens after Nixon leaves the gold standard.",delay:"~14 years",severity:"medium",icon:"💵"}
+    ],
+    modernDay:{
+      tech:"OPEC's oil shocks drove fuel efficiency research and renewable energy development. Without that pressure, electric cars and solar panels might be decades behind.",
+      culture:"The 1973 crisis created lasting American anxiety about energy dependence. Without it, SUVs might dominate even more — and climate change awareness comes later.",
+      politics:"Without OPEC, oil-rich Gulf states are poorer and less geopolitically influential. The Middle East's strategic importance is lower. US foreign policy looks different."
+    }},
   {id:"wto",name:"World Trade Organization",born:1995,died:null,cat:"institutions",field:"Trade",
     quote:"The WTO provides a forum for negotiating agreements aimed at reducing obstacles to international trade.",
     contributions:["Trade dispute resolution","Tariff reduction framework","GATT successor","Global trade rules"],
@@ -4041,7 +4173,19 @@ const INSTITUTIONS = [
       {year:2008,happened:"Doha Round stalls",alternate:"Trade negotiations always bilateral anyway"},
       {year:2024,happened:"WTO under pressure but surviving",alternate:"Trade system more fragmented, more bilateral"}
     ],
-    impact:{lives:"Global trade for billions",econ:"$25T+ annual trade facilitated",cultural:"Globalization framework",reach:"164 member countries",timeline:"Trade rules more fragmented"}},
+    impact:{lives:"Global trade for billions",econ:"$25T+ annual trade facilitated",cultural:"Globalization framework",reach:"164 member countries",timeline:"Trade rules more fragmented"},
+
+    cascade:[
+      {event:"No multilateral trade rules",consequence:"GATT continues informally, but disputes have no binding resolution. Trade wars are more common. Tariffs stay higher.",delay:"Immediate",severity:"medium",icon:"📦"},
+      {event:"China's WTO accession doesn't happen",consequence:"Without WTO, China's integration into global trade is slower and bilateral. The manufacturing shift that transformed the global economy happens at different pace.",delay:"~6 years",severity:"high",icon:"🇨🇳"},
+      {event:"No dispute settlement mechanism",consequence:"Countries resolve trade conflicts through raw economic power. Small nations have even less recourse against large ones.",delay:"Immediate",severity:"medium",icon:"⚖️"},
+      {event:"Globalization is less rules-based",consequence:"Trade still grows, but without common rules. More bilateral deals, more power imbalances, more unpredictability.",delay:"~10 years",severity:"medium",icon:"🌐"}
+    ],
+    modernDay:{
+      tech:"WTO rules govern how technology is traded globally — intellectual property, digital services, telecommunications. Without them, tech companies face wildly different rules in each country.",
+      culture:"The backlash against globalization — from Seattle 1999 to today's populism — specifically targets WTO. Without it, anti-globalization anger has different targets.",
+      politics:"Without WTO, China's rise looks different. More bilateral trade deals mean more explicit geopolitical competition over market access."
+    }},
   {id:"oxfam",name:"Oxfam International",born:1942,died:null,cat:"institutions",field:"Development & Poverty",
     quote:"The power of people against poverty.",
     contributions:["Famine relief since WWII","Inequality reports","Fair trade advocacy","Emergency response"],
@@ -4059,7 +4203,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"Oxfam inequality reports begin",alternate:"Inequality awareness develops through different channels"},
       {year:2024,happened:"Oxfam major global voice on poverty",alternate:"Different organization leads poverty discourse"}
     ],
-    impact:{lives:"Millions aided annually",econ:"$1B+ annual budget",cultural:"Inequality awareness",reach:"90+ countries",timeline:"Development sector slightly different"}},
+    impact:{lives:"Millions aided annually",econ:"$1B+ annual budget",cultural:"Inequality awareness",reach:"90+ countries",timeline:"Development sector slightly different"},
+
+    cascade:[
+      {event:"No famine relief during WWII",consequence:"Oxfam formed to feed starving Greeks under Nazi occupation. Without it, thousands more die during the blockade.",delay:"Immediate",severity:"high",icon:"🍞"},
+      {event:"No fair trade movement",consequence:"Oxfam pioneered fair trade shops and advocacy. Without them, the concept of consumers paying more for ethical production develops later.",delay:"~20 years",severity:"medium",icon:"☕"},
+      {event:"Inequality reports don't exist",consequence:"Oxfam's annual Davos inequality reports shaped global debate. Without them, extreme wealth concentration gets less public attention.",delay:"~50 years",severity:"medium",icon:"📊"},
+      {event:"Development advocacy weaker",consequence:"Oxfam's campaigns on debt relief, trade justice, and tax havens lose their loudest voice. Policy change is slower.",delay:"~30 years",severity:"medium",icon:"📢"}
+    ],
+    modernDay:{
+      tech:"Oxfam's research methodology for measuring inequality is used by economists worldwide. Their data on wealth concentration shapes policy debates.",
+      culture:"The Oxfam shop — secondhand goods funding development — was a cultural invention. The charity shop model spread from their example.",
+      politics:"Without Oxfam's advocacy, the debt relief movement for developing countries is weaker. More countries remain trapped in unpayable debt."
+    }},
   {id:"msf",name:"Médecins Sans Frontières",born:1971,died:null,cat:"institutions",field:"Medical Humanitarian",
     quote:"Medical care where it's needed most.",
     contributions:["Medical emergency response","Conflict zone healthcare","Disease outbreak response","Nobel Peace Prize 1999"],
@@ -4077,7 +4233,19 @@ const INSTITUTIONS = [
       {year:1999,happened:"MSF wins Nobel Peace Prize",alternate:"Different recognition of humanitarian medicine"},
       {year:2020,happened:"MSF in 70+ countries; COVID response",alternate:"Medical humanitarianism less mobile, less willing to act independently"}
     ],
-    impact:{lives:"Millions treated annually",econ:"$2B+ annual operations",cultural:"Humanitarian medicine model",reach:"70+ countries",timeline:"Medical humanitarianism less mobile"}},
+    impact:{lives:"Millions treated annually",econ:"$2B+ annual operations",cultural:"Humanitarian medicine model",reach:"70+ countries",timeline:"Medical humanitarianism less mobile"},
+
+    cascade:[
+      {event:"No 'without borders' concept",consequence:"Medical humanitarianism stays bound by national sovereignty. Doctors wait for government permission to enter crisis zones. People die waiting.",delay:"Immediate",severity:"high",icon:"🏥"},
+      {event:"No témoignage tradition",consequence:"MSF broke humanitarian silence — they reported what they witnessed. Without this model, atrocities in conflict zones stay hidden longer.",delay:"~5 years",severity:"high",icon:"📢"},
+      {event:"HIV/AIDS treatment access delayed",consequence:"MSF's campaign for affordable antiretrovirals in developing countries forced pharmaceutical companies to lower prices. Without it, millions more die.",delay:"~30 years",severity:"high",icon:"💊"},
+      {event:"Ebola response slower",consequence:"MSF was first to respond to every major Ebola outbreak. Without their rapid deployment model, the 2014 West Africa outbreak kills far more.",delay:"~43 years",severity:"high",icon:"🦠"}
+    ],
+    modernDay:{
+      tech:"MSF's field hospital designs and emergency medical kits are now standard in humanitarian response. Their treatment protocols for neglected tropical diseases save thousands.",
+      culture:"The idea of doctors defying governments to treat the wounded — that romantic ideal of medical heroism — is MSF's cultural contribution.",
+      politics:"Without MSF's public testimony, several genocides and humanitarian crises receive less international attention. Their reports are cited in war crimes tribunals."
+    }},
   {id:"greenpeace",name:"Greenpeace",born:1971,died:null,cat:"institutions",field:"Environmental Activism",
     quote:"There are no passengers on Spaceship Earth. We are all crew.",
     contributions:["Direct action environmentalism","Whale hunting opposition","Nuclear testing opposition","Climate campaigns"],
@@ -4095,7 +4263,19 @@ const INSTITUTIONS = [
       {year:1985,happened:"Rainbow Warrior bombed by France",alternate:"No martyrdom narrative; different movement history"},
       {year:2020,happened:"Greenpeace leads climate protests",alternate:"Climate activism exists but with different tactics and visibility"}
     ],
-    impact:{lives:"Environmental policy changes",econ:"Industry behavior changes",cultural:"Activist confrontation model",reach:"55+ countries",timeline:"Environmental movement less dramatic"}},
+    impact:{lives:"Environmental policy changes",econ:"Industry behavior changes",cultural:"Activist confrontation model",reach:"55+ countries",timeline:"Environmental movement less dramatic"},
+
+    cascade:[
+      {event:"No direct action environmentalism",consequence:"Environmental protest stays polite — petitions, lobbying, lawsuits. The dramatic confrontations that made headlines don't happen.",delay:"Immediate",severity:"medium",icon:"🚢"},
+      {event:"Nuclear testing continues longer",consequence:"Greenpeace's campaigns against nuclear testing in the Pacific drew global attention. Without them, France and others test for years longer.",delay:"~5 years",severity:"medium",icon:"☢️"},
+      {event:"Whaling ban delayed",consequence:"Greenpeace's whale campaigns shifted public opinion. Without them, the 1986 moratorium comes later or never. Several whale species go extinct.",delay:"~15 years",severity:"high",icon:"🐋"},
+      {event:"Environmental awareness slower",consequence:"Greenpeace made environmentalism visceral and media-friendly. Without them, it remains more academic and less urgent in public consciousness.",delay:"~10 years",severity:"medium",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Greenpeace's 'Detox' campaign forced major fashion brands to eliminate toxic chemicals. Their electronics sustainability ranking pushed tech companies toward recyclable materials.",
+      culture:"The image of a small boat confronting a whaling ship — David vs Goliath environmentalism — is Greenpeace's creation. It shaped how all protest movements think about media.",
+      politics:"Without Greenpeace, anti-nuclear movements are weaker. More nuclear power plants get built in the 1980s. The environmental policy landscape shifts."
+    }},
   {id:"unicef",name:"UNICEF",born:1946,died:null,cat:"institutions",field:"Children's Aid",
     quote:"For every child.",
     contributions:["Post-WWII child relief","Vaccination campaigns","Child rights advocacy","Emergency child protection"],
@@ -4113,7 +4293,19 @@ const INSTITUTIONS = [
       {year:1989,happened:"Convention on Rights of the Child",alternate:"Children's rights treaty might look different"},
       {year:2024,happened:"UNICEF vaccinates billions",alternate:"Vaccination campaigns less coordinated; more children die"}
     ],
-    impact:{lives:"Billions of children aided",econ:"$7B+ annual budget",cultural:"Children's rights global norm",reach:"190+ countries",timeline:"Child aid organized differently"}},
+    impact:{lives:"Billions of children aided",econ:"$7B+ annual budget",cultural:"Children's rights global norm",reach:"190+ countries",timeline:"Child aid organized differently"},
+
+    cascade:[
+      {event:"No post-war children's emergency fund",consequence:"European children after WWII receive less targeted aid. Child mortality in devastated countries stays higher for longer.",delay:"Immediate",severity:"high",icon:"👶"},
+      {event:"Oral rehydration therapy spreads slower",consequence:"UNICEF's mass distribution of ORT saved millions of children from diarrheal diseases. Without their logistics, the treatment reaches poor countries decades later.",delay:"~30 years",severity:"high",icon:"💧"},
+      {event:"Vaccination campaigns smaller",consequence:"UNICEF is the world's largest buyer of vaccines for developing countries. Without them, millions more children die of preventable diseases.",delay:"~15 years",severity:"high",icon:"💉"},
+      {event:"No Convention on the Rights of the Child",consequence:"The world's most ratified human rights treaty doesn't exist. Children's rights remain a national, not international, concern.",delay:"~44 years",severity:"medium",icon:"📜"}
+    ],
+    modernDay:{
+      tech:"UNICEF's supply chain delivers vaccines to the most remote places on Earth. Their cold chain logistics are models for delivering any temperature-sensitive product.",
+      culture:"The UNICEF card, the trick-or-treat campaign — they made children's welfare a cause ordinary people participate in, not just governments.",
+      politics:"Without UNICEF's data on child mortality, malnutrition, and education, policymakers have less pressure to address children's needs in developing countries."
+    }},
   {id:"unhcr",name:"UN Refugee Agency",born:1950,died:null,cat:"institutions",field:"Refugee Protection",
     quote:"Whoever saves one life, saves the world entire.",
     contributions:["Refugee protection mandate","Camp management","Resettlement coordination","Nobel Peace Prize twice"],
@@ -4131,7 +4323,19 @@ const INSTITUTIONS = [
       {year:1981,happened:"UNHCR wins second Nobel",alternate:"Different recognition of refugee protection"},
       {year:2024,happened:"100M+ displaced persons",alternate:"Same crises; possibly weaker protection framework"}
     ],
-    impact:{lives:"100M+ refugees aided",econ:"$10B+ annual operations",cultural:"Refugee protection norms",reach:"Global",timeline:"Refugee protection weaker"}},
+    impact:{lives:"100M+ refugees aided",econ:"$10B+ annual operations",cultural:"Refugee protection norms",reach:"Global",timeline:"Refugee protection weaker"},
+
+    cascade:[
+      {event:"No refugee status determination",consequence:"Without UNHCR, who counts as a refugee is decided by each country independently. Many more people are turned away at borders.",delay:"Immediate",severity:"high",icon:"🏕️"},
+      {event:"1951 Refugee Convention weaker",consequence:"UNHCR championed and monitors the convention. Without them, legal protections for refugees are thinner and less enforced.",delay:"~3 years",severity:"high",icon:"📜"},
+      {event:"Cold War refugee crises mishandled",consequence:"Hungarian refugees in 1956, Vietnamese boat people — without UNHCR coordination, resettlement is chaotic. More people stranded in limbo.",delay:"~8 years",severity:"high",icon:"🚤"},
+      {event:"Syrian refugee crisis even worse",consequence:"Without UNHCR camp management and aid coordination, the 5.6 million Syrian refugees have even less support. More die in transit.",delay:"~63 years",severity:"high",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"UNHCR pioneered biometric registration for refugees — iris scans and digital IDs that prevent fraud and speed up aid distribution.",
+      culture:"The idea that refugees have rights — not just charity — is a UNHCR contribution. Before them, displaced people were a problem to be managed, not rights-holders.",
+      politics:"Without UNHCR, the 100+ million displaced people worldwide have no institutional advocate. Refugee policy is even more dominated by host countries' political whims."
+    }},
   {id:"wfp",name:"World Food Programme",born:1961,died:null,cat:"institutions",field:"Food Aid",
     quote:"Saving lives, changing lives.",
     contributions:["Largest humanitarian organization","School feeding programs","Emergency food response","Nobel Peace Prize 2020"],
@@ -4149,7 +4353,19 @@ const INSTITUTIONS = [
       {year:2020,happened:"WFP wins Nobel Peace Prize",alternate:"Different recognition of food aid"},
       {year:2024,happened:"WFP feeds 100M+ in emergencies",alternate:"Fewer people fed; more die in famines"}
     ],
-    impact:{lives:"100M+ fed annually",econ:"$10B+ annual operations",cultural:"Food as human right",reach:"80+ countries",timeline:"Food aid less coordinated"}},
+    impact:{lives:"100M+ fed annually",econ:"$10B+ annual operations",cultural:"Food as human right",reach:"80+ countries",timeline:"Food aid less coordinated"},
+
+    cascade:[
+      {event:"No global food logistics network",consequence:"Famine response is ad hoc. Each crisis requires building supply chains from scratch. Response times are weeks longer.",delay:"Immediate",severity:"high",icon:"🚛"},
+      {event:"Ethiopian famine 1984 response slower",consequence:"Without WFP's pre-positioned supplies and logistics, the famine that killed 400,000 kills many more. The Live Aid moment still happens; the response capacity doesn't.",delay:"~21 years",severity:"high",icon:"🌾"},
+      {event:"School feeding programs don't scale",consequence:"WFP feeds 20 million children through school meals. Without them, millions of children don't attend school because there's no food incentive.",delay:"~30 years",severity:"medium",icon:"🏫"},
+      {event:"COVID food crisis uncoordinated",consequence:"Without WFP's surge capacity, the pandemic food crisis in developing countries is far worse. Acute hunger doubles with less organized response.",delay:"~57 years",severity:"high",icon:"🦠"}
+    ],
+    modernDay:{
+      tech:"WFP's logistics network is the world's most efficient humanitarian supply chain. When any disaster strikes anywhere, their warehouses and transport systems activate within hours.",
+      culture:"WFP's Nobel Peace Prize in 2020 highlighted that hunger is a political problem, not a scarcity problem. That framing shapes how we think about food insecurity.",
+      politics:"Without WFP, famine is weaponized more openly. In Yemen, South Sudan, and elsewhere, warring parties face less international pressure to allow food access."
+    }},
   {id:"icc",name:"International Criminal Court",born:2002,died:null,cat:"institutions",field:"International Justice",
     quote:"The International Criminal Court is a court of last resort.",
     contributions:["War crimes prosecution","Genocide trials","Crimes against humanity","International justice norm"],
@@ -4167,7 +4383,19 @@ const INSTITUTIONS = [
       {year:2023,happened:"ICC issues Putin arrest warrant",alternate:"No permanent court to issue such warrants"},
       {year:2024,happened:"ICC investigates multiple situations",alternate:"Some atrocities go uninvestigated without permanent body"}
     ],
-    impact:{lives:"Justice for victims globally",econ:"International law costs",cultural:"Accountability norm",reach:"123 member states",timeline:"International justice more ad hoc"}},
+    impact:{lives:"Justice for victims globally",econ:"International law costs",cultural:"Accountability norm",reach:"123 member states",timeline:"International justice more ad hoc"},
+
+    cascade:[
+      {event:"No permanent war crimes court",consequence:"Each atrocity requires a new ad hoc tribunal — expensive, slow, inconsistent. Many war criminals face no justice at all.",delay:"Immediate",severity:"medium",icon:"⚖️"},
+      {event:"No deterrence signal",consequence:"Without the ICC's existence, leaders calculate that mass atrocities carry no personal legal risk. The deterrent effect — however imperfect — vanishes.",delay:"~5 years",severity:"medium",icon:"🛡️"},
+      {event:"Darfur, Libya referrals don't happen",consequence:"The UN Security Council can't refer situations to a court that doesn't exist. Documentation of atrocities continues but prosecution doesn't.",delay:"~7 years",severity:"medium",icon:"📋"},
+      {event:"International criminal law stalls",consequence:"The body of law developed through ICC cases — on child soldiers, sexual violence in conflict, cultural destruction — doesn't develop.",delay:"~20 years",severity:"medium",icon:"📚"}
+    ],
+    modernDay:{
+      tech:"The ICC pioneered digital evidence collection for war crimes — satellite imagery, social media forensics, phone data. These techniques now influence domestic courts worldwide.",
+      culture:"The idea that heads of state can be personally prosecuted — that sovereignty doesn't equal impunity — is the ICC's contribution, even when enforcement falls short.",
+      politics:"Without the ICC, Vladimir Putin travels freely. Omar al-Bashir faces no arrest warrants. The political cost of atrocities is lower for leaders worldwide."
+    }},
   {id:"iaea",name:"Int'l Atomic Energy Agency",born:1957,died:null,cat:"institutions",field:"Nuclear Regulation",
     quote:"Atoms for Peace.",
     contributions:["Nuclear safeguards","Non-proliferation verification","Nuclear safety standards","Peaceful use promotion"],
@@ -4185,7 +4413,19 @@ const INSTITUTIONS = [
       {year:1986,happened:"IAEA responds to Chernobyl",alternate:"Different international response to nuclear accidents"},
       {year:2024,happened:"IAEA monitors Iran, inspects globally",alternate:"More politicized, less consistent nuclear oversight"}
     ],
-    impact:{lives:"Nuclear safety for billions",econ:"Nuclear industry regulation",cultural:"Non-proliferation norm",reach:"178 member states",timeline:"Nuclear oversight weaker"}},
+    impact:{lives:"Nuclear safety for billions",econ:"Nuclear industry regulation",cultural:"Non-proliferation norm",reach:"178 member states",timeline:"Nuclear oversight weaker"},
+
+    cascade:[
+      {event:"No nuclear inspections regime",consequence:"Countries develop nuclear programs without international oversight. Proliferation is faster and harder to detect.",delay:"Immediate",severity:"high",icon:"☢️"},
+      {event:"Nuclear Non-Proliferation Treaty weaker",consequence:"Without IAEA verification, the NPT has no teeth. More countries quietly develop weapons. By 2024, perhaps 20+ nuclear states.",delay:"~22 years",severity:"high",icon:"🌐"},
+      {event:"Chernobyl response uncoordinated",consequence:"Without IAEA safety standards, nuclear plant designs vary more widely. Chernobyl-type accidents might happen more often.",delay:"~29 years",severity:"high",icon:"⚠️"},
+      {event:"Iran nuclear crisis unmonitorable",consequence:"Without IAEA inspectors, there's no way to verify Iran's nuclear program. Diplomatic solutions are harder because no one trusts the data.",delay:"~55 years",severity:"high",icon:"🔬"}
+    ],
+    modernDay:{
+      tech:"IAEA sets safety standards for every nuclear power plant on Earth. Their radiation protection guidelines protect hospital workers, airline crews, and nuclear plant operators daily.",
+      culture:"The IAEA is the reason nuclear power is considered regulated rather than terrifying. Without their safety framework, public opposition to nuclear energy would be even stronger.",
+      politics:"Without IAEA inspections, nuclear arms control is nearly impossible. Every disarmament treaty lacks verification. The world has more nuclear weapons and less information about them."
+    }},
   {id:"interpol",name:"Interpol",born:1923,died:null,cat:"institutions",field:"Law Enforcement",
     quote:"Connecting police for a safer world.",
     contributions:["International police cooperation","Criminal database sharing","Fugitive tracking","Cybercrime coordination"],
@@ -4203,7 +4443,19 @@ const INSTITUTIONS = [
       {year:1990,happened:"Interpol databases go digital",alternate:"Less comprehensive criminal databases"},
       {year:2024,happened:"195 member countries",alternate:"Police cooperation more fragmented"}
     ],
-    impact:{lives:"Crime prevention globally",econ:"Law enforcement efficiency",cultural:"International policing norm",reach:"195 member countries",timeline:"Police cooperation more bilateral"}},
+    impact:{lives:"Crime prevention globally",econ:"Law enforcement efficiency",cultural:"International policing norm",reach:"195 member countries",timeline:"Police cooperation more bilateral"},
+
+    cascade:[
+      {event:"No international police cooperation",consequence:"Criminals who flee across borders are much harder to catch. Each country's police works in isolation.",delay:"Immediate",severity:"medium",icon:"🔍"},
+      {event:"No Red Notice system",consequence:"Without Interpol's alert system, fugitives disappear more easily. Countries share suspect information bilaterally, slowly.",delay:"~10 years",severity:"medium",icon:"🚨"},
+      {event:"Drug trafficking harder to combat",consequence:"Without Interpol coordination, transnational drug networks face less coordinated opposition. Cartels exploit jurisdictional gaps more easily.",delay:"~30 years",severity:"medium",icon:"💊"},
+      {event:"Cybercrime response fragmented",consequence:"Without Interpol's cybercrime center, international hacking and fraud investigations are slower. Each country builds separate capabilities.",delay:"~50 years",severity:"medium",icon:"💻"}
+    ],
+    modernDay:{
+      tech:"Interpol's databases — fingerprints, stolen passports, stolen vehicles — are checked millions of times daily at border crossings worldwide.",
+      culture:"The idea that police cooperate across borders — 'Interpol' as a concept in every spy movie — shapes how people think about international law enforcement.",
+      politics:"Without Interpol, terrorism investigations are more fragmented. The post-9/11 intelligence sharing that prevents attacks is weaker."
+    }},
   {id:"fifa",name:"FIFA",born:1904,died:null,cat:"institutions",cat2:"sports",field:"Sports",
     quote:"For the Game. For the World.",
     contributions:["World Cup organization","Football rules standardization","Global sport governance","Economic impact"],
@@ -4221,7 +4473,19 @@ const INSTITUTIONS = [
       {year:1974,happened:"FIFA expands globally under Havelange",alternate:"Football globalizes under different governance"},
       {year:2024,happened:"FIFA governs world's most popular sport",alternate:"Different body governs football; similar global reach"}
     ],
-    impact:{lives:"Billions of fans",econ:"$5B+ annual revenue",cultural:"Football as global culture",reach:"211 member associations",timeline:"Football governance different"}},
+    impact:{lives:"Billions of fans",econ:"$5B+ annual revenue",cultural:"Football as global culture",reach:"211 member associations",timeline:"Football governance different"},
+
+    cascade:[
+      {event:"No unified football rules",consequence:"Different regions play with different rules. International matches require lengthy negotiations about which version to use.",delay:"Immediate",severity:"low",icon:"⚽"},
+      {event:"No World Cup",consequence:"The most-watched sporting event on Earth doesn't exist. Football remains a collection of national leagues without a global pinnacle.",delay:"~24 years",severity:"medium",icon:"🏆"},
+      {event:"Football doesn't unify globally",consequence:"Without FIFA's standardization and World Cup, football is less universal. Cricket, rugby, or baseball might be more globally popular.",delay:"~50 years",severity:"medium",icon:"🌍"},
+      {event:"No football development funding",consequence:"FIFA's development programs brought football to every country. Without them, the sport is less global. African and Asian football develops slower.",delay:"~40 years",severity:"low",icon:"🏟️"}
+    ],
+    modernDay:{
+      tech:"FIFA's technology adoption — VAR, goal-line technology, semi-automated offside — sets standards that trickle down to other sports.",
+      culture:"The World Cup is the most unifying global cultural event. Without it, there's no equivalent moment when the entire planet watches the same thing.",
+      politics:"FIFA's corruption scandals revealed how sports governance concentrates power and money. Without FIFA, football is more regional but possibly less corrupt."
+    }},
   {id:"olympics",name:"Int'l Olympic Committee",born:1894,died:null,cat:"institutions",cat2:"sports",field:"Sports",
     quote:"Faster, Higher, Stronger – Together.",
     contributions:["Modern Olympics revival","International athletic competition","Olympic movement values","Cultural exchange"],
@@ -4257,7 +4521,19 @@ const INSTITUTIONS = [
       {year:2010,happened:"BRAC expands to 11 countries",alternate:"Model not exported; stays local"},
       {year:2024,happened:"BRAC reaches 100M+ people annually",alternate:"Development more fragmented; possibly less effective"}
     ],
-    impact:{lives:"100M+ reached annually",econ:"$1B+ budget",cultural:"NGO scaling model",reach:"11 countries",timeline:"Development less integrated"}},
+    impact:{lives:"100M+ reached annually",econ:"$1B+ budget",cultural:"NGO scaling model",reach:"11 countries",timeline:"Development less integrated"},
+
+    cascade:[
+      {event:"Bangladesh development more fragmented",consequence:"Without BRAC's integrated model — microfinance, education, health in one organization — Bangladeshi villages get piecemeal aid from dozens of smaller NGOs.",delay:"Immediate",severity:"high",icon:"🏘️"},
+      {event:"Microfinance develops differently",consequence:"BRAC's approach — larger loans for enterprises, not just microcredit — influenced the whole sector. Without it, microfinance stays smaller and more focused on tiny loans.",delay:"~10 years",severity:"medium",icon:"💰"},
+      {event:"Girls' education program missing",consequence:"BRAC's schools educated millions of girls in Bangladesh. Without them, female literacy is lower and child marriage rates are higher.",delay:"~15 years",severity:"high",icon:"📚"},
+      {event:"No southern-led development model",consequence:"BRAC proved that developing countries could build world-class NGOs. Without this example, development stays more dominated by Western organizations.",delay:"~30 years",severity:"medium",icon:"🌏"}
+    ],
+    modernDay:{
+      tech:"BRAC's model of scaling simple interventions — oral rehydration, basic education, small loans — influenced how development organizations worldwide think about efficiency.",
+      culture:"BRAC proved that the Global South could lead its own development, not just receive it. That shift in power dynamics changed the aid industry.",
+      politics:"Bangladesh's dramatic poverty reduction — one of the great development success stories — is substantially BRAC's achievement. Without it, Bangladesh looks more like its neighbors."
+    }},
   {id:"savechildren",name:"Save the Children",born:1919,died:null,cat:"institutions",field:"Children's Aid",
     quote:"Every child deserves a future.",
     contributions:["Child rights advocacy since WWI","Emergency child protection","Education programs","Health interventions"],
@@ -4275,7 +4551,19 @@ const INSTITUTIONS = [
       {year:1989,happened:"UN Convention on Rights of the Child",alternate:"Convention might look different without Save's influence"},
       {year:2024,happened:"Save the Children in 120+ countries",alternate:"Similar reach through different organizations"}
     ],
-    impact:{lives:"Millions of children annually",econ:"$2B+ annual budget",cultural:"Child rights foundation",reach:"120+ countries",timeline:"Children's aid organized similarly"}},
+    impact:{lives:"Millions of children annually",econ:"$2B+ annual budget",cultural:"Child rights foundation",reach:"120+ countries",timeline:"Children's aid organized similarly"},
+
+    cascade:[
+      {event:"No children's rights declaration",consequence:"Eglantyne Jebb's Declaration of the Rights of the Child — which influenced the UN Convention — never gets written. Children's rights as a concept develops later.",delay:"~5 years",severity:"medium",icon:"📜"},
+      {event:"Post-WWI child famine response weaker",consequence:"Save the Children formed to feed starving children in Germany and Austria. Without them, thousands more children die in the postwar chaos.",delay:"Immediate",severity:"high",icon:"🍞"},
+      {event:"Child protection standards missing",consequence:"Save the Children developed safeguarding standards used by humanitarian organizations worldwide. Without them, children in crisis zones are more vulnerable.",delay:"~30 years",severity:"medium",icon:"🛡️"},
+      {event:"Fewer child-focused emergency responses",consequence:"When disasters strike, children's specific needs — nutrition, education continuity, family reunification — get less systematic attention.",delay:"~40 years",severity:"medium",icon:"🆘"}
+    ],
+    modernDay:{
+      tech:"Save the Children's research on childhood development in crisis zones shaped how humanitarian agencies design interventions for children.",
+      culture:"The idea that children have specific rights — not just smaller adults' rights — traces partly to their founding. Child labor laws and education rights built on their advocacy.",
+      politics:"Without Save the Children's advocacy, the UN Convention on the Rights of the Child either doesn't exist or lacks enforcement mechanisms."
+    }},
   {id:"worldvision",name:"World Vision",born:1950,died:null,cat:"institutions",field:"Humanitarian Aid",
     quote:"For every child, life in all its fullness.",
     contributions:["Child sponsorship model","Emergency relief","Community development","Christian humanitarian work"],
@@ -4293,7 +4581,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"World Vision becomes largest relief org",alternate:"Different organization at this scale"},
       {year:2024,happened:"World Vision in 100+ countries",alternate:"Similar reach through different organizations"}
     ],
-    impact:{lives:"100M+ annually",econ:"$3B+ annual budget",cultural:"Sponsorship model",reach:"100+ countries",timeline:"Christian aid organized similarly"}},
+    impact:{lives:"100M+ annually",econ:"$3B+ annual budget",cultural:"Sponsorship model",reach:"100+ countries",timeline:"Christian aid organized similarly"},
+
+    cascade:[
+      {event:"No child sponsorship model",consequence:"World Vision popularized individual child sponsorship. Without it, development funding relies more on government grants and less on individual donors.",delay:"~5 years",severity:"medium",icon:"👶"},
+      {event:"Christian development sector smaller",consequence:"World Vision is the largest faith-based development organization. Without it, religious communities contribute less to international development.",delay:"~10 years",severity:"medium",icon:"⛪"},
+      {event:"Emergency response capacity reduced",consequence:"World Vision's pre-positioned supplies and local staff respond to disasters fast. Without them, response in many countries is slower.",delay:"~20 years",severity:"medium",icon:"🆘"},
+      {event:"Less community development in conflict zones",consequence:"World Vision operates in many fragile states. Without their long-term presence, communities in conflict areas get less consistent support.",delay:"~30 years",severity:"medium",icon:"🏘️"}
+    ],
+    modernDay:{
+      tech:"World Vision's child sponsorship platform pioneered direct donor-beneficiary connections that influenced crowdfunding and microgiving platforms.",
+      culture:"The sponsored child letter — connecting a donor in the West to a child in the developing world — humanized foreign aid for millions of donors.",
+      politics:"Without World Vision's advocacy on child welfare and poverty, evangelical Christian engagement with global development is smaller."
+    }},
   {id:"aclu",name:"ACLU",born:1920,died:null,cat:"institutions",field:"Civil Liberties",
     quote:"Because freedom can't protect itself.",
     contributions:["Constitutional rights defense","Free speech advocacy","Civil rights litigation","Privacy protection"],
@@ -4311,7 +4611,19 @@ const INSTITUTIONS = [
       {year:1966,happened:"Miranda v. Arizona (ACLU amicus)",alternate:"Miranda rights might look different"},
       {year:2024,happened:"ACLU shapes rights debates",alternate:"Different organization or approach to civil liberties"}
     ],
-    impact:{lives:"US civil liberties",econ:"Legal precedents",cultural:"Rights culture",reach:"United States",timeline:"Civil liberties defense weaker"}},
+    impact:{lives:"US civil liberties",econ:"Legal precedents",cultural:"Rights culture",reach:"United States",timeline:"Civil liberties defense weaker"},
+
+    cascade:[
+      {event:"No impact litigation model",consequence:"The strategy of using test cases to change constitutional law doesn't develop the same way. Civil liberties advance through legislation instead — slower and more political.",delay:"Immediate",severity:"high",icon:"⚖️"},
+      {event:"Scopes trial has no defenders",consequence:"The ACLU recruited Clarence Darrow to defend teaching evolution. Without them, anti-evolution laws go unchallenged longer.",delay:"~5 years",severity:"medium",icon:"📖"},
+      {event:"Japanese internment less contested",consequence:"The ACLU challenged internment during WWII. Without them, this violation of civil liberties has even less legal opposition.",delay:"~22 years",severity:"medium",icon:"🏛️"},
+      {event:"Free speech doctrine narrower",consequence:"Many landmark First Amendment cases were ACLU cases. Without them, free speech protections in the US are weaker, especially for unpopular speech.",delay:"~30 years",severity:"high",icon:"📢"}
+    ],
+    modernDay:{
+      tech:"The ACLU's fight against warrantless surveillance shaped how tech companies handle government data requests. Without their cases, digital privacy protections are weaker.",
+      culture:"The ACLU's willingness to defend the speech rights of people they disagree with — Nazis, the KKK — defined a particular American approach to free expression.",
+      politics:"Without ACLU litigation, the American Bill of Rights is interpreted more narrowly. Government power to restrict speech, religion, and assembly is greater."
+    }},
   {id:"naacp",name:"NAACP",born:1909,died:null,cat:"institutions",field:"Civil Rights",
     quote:"Oldest and boldest civil rights organization.",
     contributions:["Brown v. Board of Education","Anti-lynching campaigns","Voting rights advocacy","Legal strategy for equality"],
@@ -4329,7 +4641,19 @@ const INSTITUTIONS = [
       {year:1954,happened:"Brown v. Board of Education",alternate:"Desegregation through different path, different timing"},
       {year:2024,happened:"NAACP continues advocacy",alternate:"Different organization leads racial justice work"}
     ],
-    impact:{lives:"African American rights",econ:"Economic integration",cultural:"Civil rights movement foundation",reach:"United States",timeline:"Civil rights develops differently"}},
+    impact:{lives:"African American rights",econ:"Economic integration",cultural:"Civil rights movement foundation",reach:"United States",timeline:"Civil rights develops differently"},
+
+    cascade:[
+      {event:"No legal strategy toward desegregation",consequence:"Without NAACP's decades-long litigation strategy, Brown v. Board happens later or not at all. School segregation persists into the 1970s or beyond.",delay:"Immediate",severity:"high",icon:"⚖️"},
+      {event:"Antilynching campaign weaker",consequence:"NAACP documented lynchings and campaigned for federal antilynching laws. Without them, the horror of racial violence stays more hidden.",delay:"~5 years",severity:"high",icon:"📰"},
+      {event:"Civil rights movement lacks institutional base",consequence:"The NAACP provided infrastructure for the broader civil rights movement. Without it, organizing is more ad hoc and local.",delay:"~40 years",severity:"high",icon:"✊"},
+      {event:"Voting rights advance slower",consequence:"NAACP voter registration drives and legal challenges expanded Black voting. Without them, the Voting Rights Act might be delayed or weaker.",delay:"~56 years",severity:"high",icon:"🗳️"}
+    ],
+    modernDay:{
+      tech:"The NAACP's litigation strategy — using courts to change society — became the model for every civil rights movement. Disability rights, LGBT rights, and environmental groups all copied it.",
+      culture:"Without Brown v. Board, American public schools might still be legally segregated. The entire trajectory of race in America shifts.",
+      politics:"Without NAACP's groundwork, the Civil Rights Act of 1964 and Voting Rights Act of 1965 are delayed or look very different."
+    }},
   {id:"unesco",name:"UNESCO",born:1945,died:null,cat:"institutions",field:"Culture & Education",
     quote:"Building peace in the minds of men and women.",
     contributions:["World Heritage Sites","Education for all","Cultural preservation","Science cooperation"],
@@ -4347,11 +4671,23 @@ const INSTITUTIONS = [
       {year:1990,happened:"Education for All launched",alternate:"Different framework for global education"},
       {year:2024,happened:"UNESCO shapes cultural norms globally",alternate:"Cultural cooperation less coordinated"}
     ],
-    impact:{lives:"Cultural preservation globally",econ:"Heritage tourism",cultural:"World heritage concept",reach:"193 member states",timeline:"Cultural preservation less coordinated"}},
+    impact:{lives:"Cultural preservation globally",econ:"Heritage tourism",cultural:"World heritage concept",reach:"193 member states",timeline:"Cultural preservation less coordinated"},
+
+    cascade:[
+      {event:"No World Heritage Sites",consequence:"The Pyramids, Machu Picchu, Venice — none have UNESCO protection status. National governments protect sites unilaterally, with less funding and less international oversight.",delay:"~27 years",severity:"medium",icon:"🏛️"},
+      {event:"No universal education standards",consequence:"UNESCO's Education for All framework doesn't exist. Developing countries have less international support for building school systems.",delay:"~15 years",severity:"medium",icon:"🏫"},
+      {event:"Cultural heritage destroyed in wars",consequence:"Without UNESCO's cultural protection conventions, more heritage sites are destroyed during conflicts. The Hague Convention doesn't exist.",delay:"~9 years",severity:"medium",icon:"💣"},
+      {event:"Science cooperation weaker",consequence:"UNESCO's International Hydrological Programme, Man and the Biosphere — these scientific cooperation frameworks don't exist. Environmental science is less international.",delay:"~20 years",severity:"low",icon:"🔬"}
+    ],
+    modernDay:{
+      tech:"UNESCO's digital preservation efforts protect humanity's digital heritage. Their science cooperation programs support research in developing countries.",
+      culture:"World Heritage status drives tourism worth billions. Without UNESCO's list, many historic sites get less funding and protection. Some are destroyed.",
+      politics:"Without UNESCO's education programs, literacy rates in developing countries are lower. The organization's cultural diplomacy — the idea that shared heritage prevents conflict — doesn't exist."
+    }},
   {id:"habitat",name:"UN-Habitat",born:1978,died:null,cat:"institutions",field:"Urban Development",
     quote:"For a better urban future.",
     contributions:["Urban development policy","Housing rights advocacy","Sustainable cities","Slum upgrading"],
-    r:0.60,reasoning:"Urbanization was happening regardless. UN-Habitat has influenced policy but urban development would proceed. Its specific programs are less irreplaceable.",
+    r:0.60,reasoning:"Urbanization was happening regardless. UN-Habitat has influenced policy but urban development would proceed. Its specific programs carried modest weight.",
     counterfactual:"Without UN-Habitat, urbanization still happens — it's driven by economics, not institutions. Cities grow regardless. But UN-Habitat has shaped how we think about urban development: housing rights, sustainable cities, slum upgrading methodologies. Without it, urban policy is more national, less coordinated. The right to adequate housing is less established as global norm. Some best practices don't spread as quickly.",
     ripples:[
       {category:"Urbanization",detail:"Cities grow regardless. UN-Habitat doesn't cause or prevent urbanization."},
@@ -4383,7 +4719,19 @@ const INSTITUTIONS = [
       {year:1949,happened:"Fourth Geneva Convention (civilians)",alternate:"Civilian protection in war less established"},
       {year:2024,happened:"ICRC works in conflicts globally",alternate:"Neutral humanitarian access less established"}
     ],
-    impact:{lives:"War victims protected",econ:"Humanitarian law compliance",cultural:"Laws of war norm",reach:"Global conflicts",timeline:"Humanitarian law weaker"}},
+    impact:{lives:"War victims protected",econ:"Humanitarian law compliance",cultural:"Laws of war norm",reach:"Global conflicts",timeline:"Humanitarian law weaker"},
+
+    cascade:[
+      {event:"Geneva Conventions lack a guardian",consequence:"Without ICRC monitoring, compliance with laws of war drops. Prisoner abuse, civilian targeting, and use of prohibited weapons increase.",delay:"Immediate",severity:"high",icon:"⚖️"},
+      {event:"No prisoner visits in conflicts",consequence:"ICRC visits prisoners of war to ensure humane treatment. Without them, POW abuse is worse in every conflict since WWI.",delay:"~5 years",severity:"high",icon:"⛓️"},
+      {event:"No neutral intermediary in wars",consequence:"ICRC serves as neutral go-between for warring parties. Prisoner exchanges, humanitarian corridors, ceasefire negotiations — all harder without them.",delay:"~10 years",severity:"high",icon:"🕊️"},
+      {event:"Family tracing doesn't exist",consequence:"After every war and disaster, ICRC reconnects separated families. Without them, millions never find their relatives.",delay:"~20 years",severity:"medium",icon:"👨‍👩‍👧‍👦"}
+    ],
+    modernDay:{
+      tech:"ICRC's family tracing database and forensic identification methods set standards used after every disaster and conflict worldwide.",
+      culture:"The idea of neutral humanitarian access — that some spaces in war should be protected — is ICRC's intellectual creation. It changed how civilization thinks about conflict.",
+      politics:"Without ICRC, the laws of war are less enforced. Guantanamo, Abu Ghraib — ICRC was the only organization with access. Without their reports, abuse stays hidden longer."
+    }},
   {id:"rotary",name:"Rotary International",born:1905,died:null,cat:"institutions",field:"Service Organization",
     quote:"Service above self.",
     contributions:["Polio eradication funding","Community service","Youth exchange","Professional networking with purpose"],
@@ -4401,7 +4749,19 @@ const INSTITUTIONS = [
       {year:2020,happened:"Wild polio nearly eradicated",alternate:"Polio still endemic in many countries"},
       {year:2024,happened:"1.4M Rotary members globally",alternate:"Similar service club membership through different organizations"}
     ],
-    impact:{lives:"Polio nearly eradicated",econ:"Billions in service projects",cultural:"Service ethic",reach:"1.4M members globally",timeline:"Service clubs develop similarly"}},
+    impact:{lives:"Polio nearly eradicated",econ:"Billions in service projects",cultural:"Service ethic",reach:"1.4M members globally",timeline:"Service clubs develop similarly"},
+
+    cascade:[
+      {event:"No Rotary polio campaign",consequence:"Rotary's PolioPlus initiative raised $2.1B and vaccinated 2.5 billion children. Without them, polio eradication is decades behind.",delay:"~80 years",severity:"high",icon:"💉"},
+      {event:"Service club model doesn't spread",consequence:"Rotary invented the service club concept in 1905. Without it, Lions, Kiwanis, and similar organizations develop differently or not at all.",delay:"Immediate",severity:"medium",icon:"🤝"},
+      {event:"Fewer community projects worldwide",consequence:"Rotary's 46,000 clubs do local projects — wells, schools, medical clinics — in every country. Without them, millions of small projects don't happen.",delay:"~20 years",severity:"medium",icon:"🏗️"},
+      {event:"Exchange programs smaller",consequence:"Rotary's youth exchange program sends thousands of students abroad annually. Without it, international understanding develops differently at the grassroots.",delay:"~30 years",severity:"low",icon:"🌍"}
+    ],
+    modernDay:{
+      tech:"Rotary's local club structure proved that distributed organizations can tackle global problems. Their model influenced how other service organizations operate.",
+      culture:"Rotary's Four-Way Test of ethical business conduct influenced corporate ethics culture. The service club as a middle-class civic institution was their invention.",
+      politics:"Without Rotary's $2.1 billion contribution, the polio eradication campaign is significantly underfunded. The disease persists in more countries."
+    }},
   {id:"nature",name:"The Nature Conservancy",born:1951,died:null,cat:"institutions",field:"Conservation",
     quote:"Protecting nature. Preserving life.",
     contributions:["Land preservation","Conservation easements","Science-based conservation","Corporate partnerships"],
@@ -4437,7 +4797,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"HRW shapes international debates",alternate:"Amnesty dominates; different approach prevails"},
       {year:2024,happened:"HRW investigates globally",alternate:"Human rights documentation less professionalized"}
     ],
-    impact:{lives:"Human rights protection",econ:"Policy influence",cultural:"Accountability norm",reach:"90+ countries",timeline:"Human rights documentation different"}},
+    impact:{lives:"Human rights protection",econ:"Policy influence",cultural:"Accountability norm",reach:"90+ countries",timeline:"Human rights documentation different"},
+
+    cascade:[
+      {event:"No 'naming and shaming' methodology",consequence:"HRW perfected research-based human rights documentation. Without their rigorous reports, abuses are harder to prove and easier to deny.",delay:"Immediate",severity:"high",icon:"📋"},
+      {event:"Less media coverage of abuses",consequence:"HRW's reports are designed for journalists. Without them, human rights stories get less international press coverage.",delay:"~5 years",severity:"medium",icon:"📰"},
+      {event:"Arms trade less scrutinized",consequence:"HRW's campaigns on landmines and cluster munitions led to international treaties banning them. Without their advocacy, these weapons are still widely used.",delay:"~15 years",severity:"high",icon:"💣"},
+      {event:"War crimes documentation weaker",consequence:"HRW's field research in conflict zones builds the evidence base for prosecution. Without them, the ICC has fewer cases.",delay:"~20 years",severity:"medium",icon:"⚖️"}
+    ],
+    modernDay:{
+      tech:"HRW pioneered the use of satellite imagery and open-source intelligence to document human rights abuses remotely. Their digital methodology is now standard.",
+      culture:"HRW made human rights reporting a profession — with standards, methodology, and career paths. Without them, the field is more amateur.",
+      politics:"Without HRW's landmine campaign, the Ottawa Treaty banning landmines doesn't happen. More children lose limbs in post-conflict countries."
+    }},
   {id:"redcrescentsocieties",name:"Int'l Fed. of Red Cross/Crescent",born:1919,died:null,cat:"institutions",field:"Disaster Response",
     quote:"Together for humanity.",
     contributions:["Disaster response coordination","National society support","Blood services","Community resilience"],
@@ -4473,7 +4845,19 @@ const INSTITUTIONS = [
       {year:2012,happened:"Higgs boson discovered at LHC",alternate:"Higgs discovery delayed; different accelerator, different timing"},
       {year:2024,happened:"CERN largest particle physics center",alternate:"Particle physics more fragmented; smaller accelerators"}
     ],
-    impact:{lives:"Scientific knowledge",econ:"Technology spinoffs",cultural:"Big science model",reach:"23 member states",timeline:"Particle physics advances slower"}},
+    impact:{lives:"Scientific knowledge",econ:"Technology spinoffs",cultural:"Big science model",reach:"23 member states",timeline:"Particle physics advances slower"},
+
+    cascade:[
+      {event:"No World Wide Web",consequence:"Tim Berners-Lee invented the web at CERN. Without the specific environment of international physics collaboration, the web doesn't emerge in 1989. The internet exists but stays text-based longer.",delay:"~35 years",severity:"high",icon:"🌐"},
+      {event:"Particle physics fragmented",consequence:"Without CERN, Europe builds national accelerators. Each is smaller and less capable. The Higgs boson is found later or not at all.",delay:"~10 years",severity:"high",icon:"⚛️"},
+      {event:"No European scientific unity",consequence:"CERN was one of the first pan-European projects. Without it, European scientific cooperation develops slower. Brain drain to America is worse.",delay:"~5 years",severity:"medium",icon:"🇪🇺"},
+      {event:"Antimatter research delayed",consequence:"CERN's antimatter experiments pushed physics forward. Medical applications — PET scans — develop differently.",delay:"~30 years",severity:"medium",icon:"🔬"}
+    ],
+    modernDay:{
+      tech:"The World Wide Web. That alone makes CERN one of the most consequential institutions in history. Also: grid computing, particle accelerator technology used in cancer treatment.",
+      culture:"CERN proved that big science — requiring billions and international cooperation — could work. It became the model for mega-projects from the ISS to the Human Genome Project.",
+      politics:"Without CERN, European integration has one less success story. The model of international scientific cooperation that avoided the brain drain to America doesn't exist."
+    }},
   {id:"ieee",name:"IEEE",born:1884,died:null,cat:"institutions",field:"Technology Standards",
     quote:"Advancing technology for humanity.",
     contributions:["Technical standards (WiFi, Ethernet)","Engineering education","Professional community","Innovation ecosystem"],
@@ -4491,7 +4875,19 @@ const INSTITUTIONS = [
       {year:1997,happened:"WiFi standard (802.11)",alternate:"Wireless networking standard from different body"},
       {year:2024,happened:"IEEE standards underpin global technology",alternate:"Different standards bodies; similar function but different specs"}
     ],
-    impact:{lives:"Technology users globally",econ:"Standards enable $trillions",cultural:"Engineering profession",reach:"160+ countries",timeline:"Standards develop differently"}},
+    impact:{lives:"Technology users globally",econ:"Standards enable $trillions",cultural:"Engineering profession",reach:"160+ countries",timeline:"Standards develop differently"},
+
+    cascade:[
+      {event:"No electrical engineering standards",consequence:"Without IEEE standards, every company's electrical systems are incompatible. Plugs, voltages, and frequencies vary within countries, not just between them.",delay:"Immediate",severity:"medium",icon:"⚡"},
+      {event:"Wi-Fi standards don't unify",consequence:"IEEE 802.11 is the Wi-Fi standard. Without it, competing wireless protocols fragment the market. Your laptop might not connect to your router.",delay:"~93 years",severity:"high",icon:"📶"},
+      {event:"Ethernet doesn't standardize",consequence:"IEEE 802.3 made Ethernet universal. Without this standard, office networks use competing incompatible protocols. The internet backbone develops differently.",delay:"~80 years",severity:"high",icon:"🔌"},
+      {event:"Engineering profession less cohesive",consequence:"IEEE's conferences and journals are where electrical and computer engineers share knowledge. Without them, innovation is siloed and slower.",delay:"~20 years",severity:"medium",icon:"📚"}
+    ],
+    modernDay:{
+      tech:"Wi-Fi, Bluetooth, Ethernet, USB — IEEE standards underlie virtually every electronic connection in your life. Without them, nothing talks to anything else.",
+      culture:"IEEE's professional standards and ethics codes shaped what it means to be an engineer. The profession is less standardized without them.",
+      politics:"Without IEEE standards, technology markets are more fragmented by region. Global tech interoperability — your phone working in another country — is less reliable."
+    }},
   {id:"wikimedia",name:"Wikimedia Foundation",born:2003,died:null,cat:"institutions",field:"Knowledge",
     quote:"Imagine a world in which every single human being can freely share in the sum of all knowledge.",
     contributions:["Wikipedia","Free knowledge movement","Crowdsourced encyclopedia","Open content model"],
@@ -4509,7 +4905,19 @@ const INSTITUTIONS = [
       {year:2010,happened:"Wikipedia becomes 5th most visited site",alternate:"Commercial sites dominate knowledge access"},
       {year:2024,happened:"6B+ monthly users access free knowledge",alternate:"Knowledge access more commercial, less equal"}
     ],
-    impact:{lives:"6B+ monthly users",econ:"Knowledge access democratized",cultural:"Information commons",reach:"Global",timeline:"Encyclopedic knowledge less accessible"}},
+    impact:{lives:"6B+ monthly users",econ:"Knowledge access democratized",cultural:"Information commons",reach:"Global",timeline:"Encyclopedic knowledge less accessible"},
+
+    cascade:[
+      {event:"No free encyclopedia",consequence:"Wikipedia's model — anyone can edit, everything is free — doesn't emerge. Online encyclopedias remain paid products like Encarta or Britannica Online.",delay:"Immediate",severity:"high",icon:"📖"},
+      {event:"Knowledge stays behind paywalls",consequence:"The principle that the sum of human knowledge should be free doesn't crystallize. Open access movements are weaker without Wikipedia's example.",delay:"~5 years",severity:"high",icon:"🔒"},
+      {event:"No collaborative knowledge model",consequence:"Wikipedia proved millions could collaborate to create something accurate. Without that proof, the open-source movement has one less success story.",delay:"~5 years",severity:"medium",icon:"🤝"},
+      {event:"AI training lacks free data",consequence:"Wikipedia is a major training source for AI language models. Without it, AI development has a larger data gap and more reliance on copyrighted sources.",delay:"~15 years",severity:"medium",icon:"🤖"}
+    ],
+    modernDay:{
+      tech:"Every voice assistant, every search engine knowledge panel, every AI chatbot draws on Wikipedia's data. It's the invisible backbone of how the internet knows things.",
+      culture:"Wikipedia changed the relationship between expertise and access. The idea that a teenager and a professor can both contribute to knowledge was radical.",
+      politics:"Without Wikipedia's free model, information inequality is worse. People who can't afford encyclopedia subscriptions know less. The digital divide is wider."
+    }},
   {id:"rockefeller",name:"Rockefeller Foundation",born:1913,died:null,cat:"institutions",field:"Philanthropy",
     quote:"For the well-being of humanity throughout the world.",
     contributions:["Public health modernization","Green Revolution funding","University funding","Medical education"],
@@ -4527,7 +4935,19 @@ const INSTITUTIONS = [
       {year:1960,happened:"Green Revolution spreads globally",alternate:"Asian famines persist; hundreds of millions at risk"},
       {year:2024,happened:"Rockefeller Foundation continues global health work",alternate:"Different philanthropic landscape; less strategic focus"}
     ],
-    impact:{lives:"Billions via Green Revolution",econ:"$5B+ grants over history",cultural:"Scientific philanthropy model",reach:"Global",timeline:"Philanthropy develops differently"}},
+    impact:{lives:"Billions via Green Revolution",econ:"$5B+ grants over history",cultural:"Scientific philanthropy model",reach:"Global",timeline:"Philanthropy develops differently"},
+
+    cascade:[
+      {event:"Green Revolution doesn't start",consequence:"Rockefeller funded Norman Borlaug's research that created high-yield wheat and rice. Without it, the famines predicted for the 1970s actually happen. Hundreds of millions die.",delay:"~30 years",severity:"high",icon:"🌾"},
+      {event:"Public health infrastructure weaker",consequence:"Rockefeller founded schools of public health worldwide. Without them, the profession develops slower. Disease prevention is less systematic.",delay:"~10 years",severity:"high",icon:"🏥"},
+      {event:"Social science research underfunded",consequence:"Rockefeller funded the social sciences when nobody else would. Economics, sociology, and political science develop as academic disciplines more slowly.",delay:"~15 years",severity:"medium",icon:"📊"},
+      {event:"University of Chicago stays small",consequence:"Rockefeller's donations built the University of Chicago into a world-class institution. Without that investment, the Chicago school of economics doesn't form.",delay:"~10 years",severity:"medium",icon:"🎓"}
+    ],
+    modernDay:{
+      tech:"The Green Revolution that feeds billions traces to Rockefeller Foundation funding. Without it, agricultural science is behind and more people are hungry.",
+      culture:"Rockefeller invented modern philanthropy — the idea that wealth should be strategically deployed for social good. Every foundation since follows their model.",
+      politics:"Without the Green Revolution, political instability from famine is far worse in South and Southeast Asia during the Cold War. The geopolitical map changes."
+    }},
   {id:"fordfd",name:"Ford Foundation",born:1936,died:null,cat:"institutions",field:"Social Change",
     quote:"Working with visionaries on the frontlines of social change worldwide.",
     contributions:["Civil rights funding","International development","Arts and culture","Social justice advocacy"],
@@ -4563,7 +4983,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"Human Genome Project completed",alternate:"Genome project takes longer or led by others"},
       {year:2024,happened:"NIH funds $45B+ annually",alternate:"US medical research smaller, slower, more fragmented"}
     ],
-    impact:{lives:"Medical advances for billions",econ:"Biomedical industry",cultural:"Science funding model",reach:"United States, global influence",timeline:"US medical research slower"}},
+    impact:{lives:"Medical advances for billions",econ:"Biomedical industry",cultural:"Science funding model",reach:"United States, global influence",timeline:"US medical research slower"},
+
+    cascade:[
+      {event:"Medical research loses biggest funder",consequence:"NIH's $47 billion annual budget dwarfs all other medical research funding. Without it, drug development is slower, more dependent on pharmaceutical companies.",delay:"Immediate",severity:"high",icon:"🔬"},
+      {event:"Human Genome Project doesn't happen",consequence:"NIH led the $2.7 billion project to sequence human DNA. Without it, genomic medicine is decades behind. Personalized treatment doesn't exist yet.",delay:"~40 years",severity:"high",icon:"🧬"},
+      {event:"Cancer research underfunded",consequence:"NIH's National Cancer Institute funds most cancer research. Without it, treatments that now save millions arrive later. Five-year survival rates are lower.",delay:"~30 years",severity:"high",icon:"🎗️"},
+      {event:"No COVID vaccine in 11 months",consequence:"NIH funded the foundational mRNA research and helped coordinate Operation Warp Speed. Without it, COVID vaccines take 2-3 years longer.",delay:"~75 years",severity:"high",icon:"💉"}
+    ],
+    modernDay:{
+      tech:"Most drugs you take were developed using NIH-funded research. The Human Genome Project, mRNA vaccines, antiretroviral HIV drugs — all NIH-supported.",
+      culture:"The idea that government should fund basic medical research — even when commercial applications aren't obvious — is an NIH legacy. Without it, research follows profit.",
+      politics:"Without NIH, the US isn't the center of global biomedical research. Pharmaceutical companies have less basic science to build on. Drug development is slower worldwide."
+    }},
   {id:"undp",name:"UN Development Programme",born:1966,died:null,cat:"institutions",field:"Development",
     quote:"Empowered lives. Resilient nations.",
     contributions:["Human Development Index","Development coordination","Technical assistance","Millennium/Sustainable Development Goals"],
@@ -4581,7 +5013,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"Millennium Development Goals",alternate:"Development goals framed differently"},
       {year:2024,happened:"UNDP in 170 countries",alternate:"Development coordination exists but with different framing"}
     ],
-    impact:{lives:"Development in 170+ countries",econ:"$5B+ annual spending",cultural:"Human development concept",reach:"170 countries",timeline:"Development framed differently"}},
+    impact:{lives:"Development in 170+ countries",econ:"$5B+ annual spending",cultural:"Human development concept",reach:"170 countries",timeline:"Development framed differently"},
+
+    cascade:[
+      {event:"No Human Development Index",consequence:"UNDP created the HDI — measuring countries by health, education, and income, not just GDP. Without it, development success is measured purely by economic growth.",delay:"~45 years",severity:"medium",icon:"📊"},
+      {event:"Millennium Development Goals weaker",consequence:"UNDP was central to creating and tracking the MDGs. Without them, global development targets are less coordinated.",delay:"~55 years",severity:"medium",icon:"🎯"},
+      {event:"Less development capacity in poor countries",consequence:"UNDP builds government capacity in developing nations — training civil servants, strengthening institutions. Without it, governance in fragile states is weaker.",delay:"~10 years",severity:"medium",icon:"🏛️"},
+      {event:"Crisis recovery slower",consequence:"UNDP coordinates post-disaster and post-conflict recovery. Without them, countries rebuild more slowly and with less international support.",delay:"~20 years",severity:"medium",icon:"🔄"}
+    ],
+    modernDay:{
+      tech:"The Human Development Index changed how economists and policymakers measure progress. Without it, GDP is the only metric that matters. Countries optimize for growth, not wellbeing.",
+      culture:"UNDP's Human Development Reports shifted the conversation from 'economic growth' to 'human development.' That reframing influenced a generation of policymakers.",
+      politics:"Without UNDP's capacity building, many developing countries have weaker governance institutions. Democratic transitions are harder without technical support."
+    }},
   {id:"irc",name:"International Rescue Committee",born:1933,died:null,cat:"institutions",field:"Refugee Aid",
     quote:"From harm to home.",
     contributions:["Refugee resettlement","Emergency response","Post-conflict recovery","Integration services"],
@@ -4599,7 +5043,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"IRC major resettlement agency",alternate:"US resettlement organized differently"},
       {year:2024,happened:"IRC in 40+ countries",alternate:"Similar reach through different organizations"}
     ],
-    impact:{lives:"Millions of refugees aided",econ:"$1B+ annual budget",cultural:"Refugee integration model",reach:"40+ countries",timeline:"Refugee aid organized similarly"}},
+    impact:{lives:"Millions of refugees aided",econ:"$1B+ annual budget",cultural:"Refugee integration model",reach:"40+ countries",timeline:"Refugee aid organized similarly"},
+
+    cascade:[
+      {event:"No refugee resettlement expertise",consequence:"IRC helped hundreds of thousands of refugees build new lives in the US. Without them, resettlement programs are smaller and less effective.",delay:"~10 years",severity:"medium",icon:"🏠"},
+      {event:"WWII refugee response weaker",consequence:"Founded at Einstein's suggestion to rescue people fleeing Nazis, IRC saved thousands of lives. Without them, more intellectuals and refugees perished.",delay:"Immediate",severity:"high",icon:"🚢"},
+      {event:"Post-conflict recovery programs missing",consequence:"IRC works in countries after wars end — rebuilding education, health, governance. Without them, post-conflict societies are more fragile.",delay:"~30 years",severity:"medium",icon:"🏗️"},
+      {event:"Less humanitarian innovation",consequence:"IRC pioneered using evidence in humanitarian aid — testing what works rather than assuming. Without this, aid effectiveness is lower.",delay:"~40 years",severity:"medium",icon:"📊"}
+    ],
+    modernDay:{
+      tech:"IRC's evidence-based approach to humanitarian aid influenced how all relief organizations measure and improve their programs.",
+      culture:"Albert Einstein helped found the IRC — connecting intellectual conscience to humanitarian action. That link between academia and aid persists in the organization's culture.",
+      politics:"Without IRC's resettlement programs, hundreds of thousands of refugees in the US never arrive. American immigrant communities — and their contributions — look different."
+    }},
   {id:"mercycorps",name:"Mercy Corps",born:1979,died:null,cat:"institutions",field:"Humanitarian Aid",
     quote:"Mercy Corps is a global team of humanitarians.",
     contributions:["Crisis response","Market-based development","Youth programs","Climate resilience"],
@@ -4617,7 +5073,19 @@ const INSTITUTIONS = [
       {year:2020,happened:"Mercy Corps reaches 50M+ people",alternate:"Similar reach through different organizations"},
       {year:2024,happened:"Mercy Corps leads climate resilience work",alternate:"Climate adaptation through other channels"}
     ],
-    impact:{lives:"50M+ annually",econ:"$600M+ annual budget",cultural:"Market-based aid model",reach:"40+ countries",timeline:"Market-based aid develops anyway"}},
+    impact:{lives:"50M+ annually",econ:"$600M+ annual budget",cultural:"Market-based aid model",reach:"40+ countries",timeline:"Market-based aid develops anyway"},
+
+    cascade:[
+      {event:"Less market-based aid",consequence:"Mercy Corps pioneered using market systems in humanitarian aid. Without them, more aid is direct handouts rather than economic empowerment.",delay:"~10 years",severity:"medium",icon:"💰"},
+      {event:"Youth programs in conflict zones missing",consequence:"Mercy Corps runs programs for young people in fragile states. Without them, more youth are recruited by armed groups.",delay:"~20 years",severity:"medium",icon:"👥"},
+      {event:"Climate adaptation gaps",consequence:"Mercy Corps works on climate adaptation with vulnerable communities. Without them, more farmers lose livelihoods as conditions change.",delay:"~30 years",severity:"medium",icon:"🌡️"},
+      {event:"Less rapid disaster response",consequence:"Mercy Corps is among the first responders to earthquakes, floods, and conflicts. Without them, some communities wait longer for help.",delay:"~15 years",severity:"medium",icon:"🆘"}
+    ],
+    modernDay:{
+      tech:"Mercy Corps' market-based approaches — using mobile money, local entrepreneurs, and economic incentives in aid — influenced how the humanitarian sector thinks about sustainability.",
+      culture:"Mercy Corps helped shift humanitarian thinking from 'give people things' to 'help people build economies.' That market-based philosophy changed the aid industry.",
+      politics:"Without Mercy Corps' programs in fragile states, youth radicalization in some regions is worse. Their conflict-prevention work is less visible but significant."
+    }},
   {id:"wef",name:"World Economic Forum",born:1971,died:null,cat:"institutions",field:"Global Governance",
     quote:"Committed to improving the state of the world.",
     contributions:["Davos meetings","Global competitiveness rankings","Stakeholder capitalism advocacy","Public-private partnerships"],
@@ -4635,7 +5103,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"Davos becomes global elite shorthand",alternate:"Different shorthand for elite gatherings"},
       {year:2024,happened:"WEF shapes global economic discourse",alternate:"Similar functions through different channels"}
     ],
-    impact:{lives:"Policy influence globally",econ:"Business-government interface",cultural:"Davos culture",reach:"Global elites",timeline:"Elite forums develop similarly"}},
+    impact:{lives:"Policy influence globally",econ:"Business-government interface",cultural:"Davos culture",reach:"Global elites",timeline:"Elite forums develop similarly"},
+
+    cascade:[
+      {event:"No Davos gathering",consequence:"The annual meeting of world leaders, CEOs, and thinkers doesn't exist. Elite coordination happens through other channels — less structured, more bilateral.",delay:"Immediate",severity:"low",icon:"🏔️"},
+      {event:"No Global Competitiveness Report",consequence:"WEF's annual rankings shape how countries think about economic policy. Without them, fewer benchmarks drive reform.",delay:"~10 years",severity:"low",icon:"📊"},
+      {event:"Stakeholder capitalism develops differently",consequence:"Klaus Schwab coined 'stakeholder capitalism.' Without WEF promoting it, the idea that companies serve more than shareholders takes different form.",delay:"~20 years",severity:"low",icon:"🤝"},
+      {event:"Fourth Industrial Revolution unnamed",consequence:"WEF framed the current technological shift. Without their terminology and framework, we think about AI and automation differently.",delay:"~45 years",severity:"low",icon:"🤖"}
+    ],
+    modernDay:{
+      tech:"WEF's 'Fourth Industrial Revolution' framework — AI, IoT, biotech converging — shapes how governments and companies think about technology policy.",
+      culture:"Davos became shorthand for global elite consensus. Without it, the backlash against globalization lacks its most visible symbol.",
+      politics:"Without WEF, global elites still coordinate — but the specific Davos consensus that shaped 1990s-2000s globalization looks different."
+    }},
   {id:"aspen",name:"Aspen Institute",born:1949,died:null,cat:"institutions",field:"Policy & Leadership",
     quote:"Leadership principles, ideas in action.",
     contributions:["Executive seminars","Policy programs","Leadership development","Great ideas exploration"],
@@ -4653,7 +5133,19 @@ const INSTITUTIONS = [
       {year:2005,happened:"Aspen Ideas Festival launches",alternate:"Ideas conferences through different venues"},
       {year:2024,happened:"Aspen shapes leadership culture",alternate:"Leadership development exists but with different flavor"}
     ],
-    impact:{lives:"Leaders shaped",econ:"Policy influence",cultural:"Ideas-based leadership",reach:"United States, global",timeline:"Leadership development continues"}},
+    impact:{lives:"Leaders shaped",econ:"Policy influence",cultural:"Ideas-based leadership",reach:"United States, global",timeline:"Leadership development continues"},
+
+    cascade:[
+      {event:"No leadership seminar model",consequence:"Aspen's Great Books-based leadership program influenced a generation of American leaders. Without it, executive education is more business-focused, less humanistic.",delay:"~10 years",severity:"low",icon:"📚"},
+      {event:"No Aspen Ideas Festival",consequence:"The festival that brings together thinkers across disciplines doesn't exist. Cross-pollination between fields is slightly less structured.",delay:"~40 years",severity:"low",icon:"💡"},
+      {event:"Policy fellowship gap",consequence:"Aspen's policy programs bring together leaders from different sectors. Without them, policy conversations are more siloed.",delay:"~20 years",severity:"low",icon:"🏛️"},
+      {event:"Values-based leadership weaker",consequence:"Aspen's approach — rooting leadership in philosophical reflection — influenced how many organizations train leaders. Without it, leadership training is more technique-focused.",delay:"~15 years",severity:"low",icon:"🎓"}
+    ],
+    modernDay:{
+      tech:"Aspen's convening model — bringing diverse experts together for structured dialogue — influenced how think tanks, conferences, and idea festivals operate.",
+      culture:"The idea that leaders should read philosophy and engage with big ideas — not just strategy and management — is partly Aspen's contribution to American culture.",
+      politics:"Without Aspen's cross-partisan convenings, some bipartisan relationships that enable compromise in Washington don't form."
+    }},
   {id:"cfr",name:"Council on Foreign Relations",born:1921,died:null,cat:"institutions",field:"Foreign Policy",
     quote:"An independent, nonpartisan membership organization, think tank, and publisher.",
     contributions:["Foreign Affairs journal","Policy expertise","Elite network","US foreign policy influence"],
@@ -4671,7 +5163,19 @@ const INSTITUTIONS = [
       {year:1970,happened:"CFR seen as establishment center",alternate:"Foreign policy establishment less centralized"},
       {year:2024,happened:"CFR continues shaping policy debate",alternate:"Foreign policy debate through different forums"}
     ],
-    impact:{lives:"US foreign policy shaped",econ:"Policy research",cultural:"Foreign policy establishment",reach:"United States",timeline:"Foreign policy think tanks emerge"}},
+    impact:{lives:"US foreign policy shaped",econ:"Policy research",cultural:"Foreign policy establishment",reach:"United States",timeline:"Foreign policy think tanks emerge"},
+
+    cascade:[
+      {event:"No Foreign Affairs journal",consequence:"The most influential foreign policy journal doesn't exist. American foreign policy debate has a different intellectual center.",delay:"~1 year",severity:"medium",icon:"📰"},
+      {event:"Post-WWII consensus less structured",consequence:"CFR members shaped the Marshall Plan, NATO, and the UN. Without CFR as a meeting ground, these institutions might look different.",delay:"~24 years",severity:"medium",icon:"🏛️"},
+      {event:"Foreign policy expertise more scattered",consequence:"CFR trains and connects foreign policy professionals. Without it, the American foreign policy establishment is less cohesive.",delay:"~20 years",severity:"medium",icon:"🌐"},
+      {event:"War on Terror framework different",consequence:"CFR task forces shaped post-9/11 policy debates. Without their analysis, American responses might differ.",delay:"~80 years",severity:"low",icon:"🛡️"}
+    ],
+    modernDay:{
+      tech:"CFR's daily analysis and background briefings inform how journalists, diplomats, and policymakers understand international events.",
+      culture:"The 'foreign policy establishment' that critics love to attack was partly built at CFR. Without it, American foreign policy debate is less institutionalized.",
+      politics:"Without CFR's convenings, the bipartisan foreign policy consensus that held from WWII through the Cold War might not have formed as strongly."
+    }},
   {id:"brookings",name:"Brookings Institution",born:1916,died:null,cat:"institutions",field:"Policy Research",
     quote:"Quality. Independence. Impact.",
     contributions:["Centrist policy research","Government expertise pool","Economic policy analysis","Evidence-based policy"],
@@ -4689,7 +5193,19 @@ const INSTITUTIONS = [
       {year:1980,happened:"Brookings scholars fill government roles",alternate:"Different expertise pipeline for government"},
       {year:2024,happened:"Brookings shapes centrist policy debate",alternate:"Policy debate might be more partisan without this anchor"}
     ],
-    impact:{lives:"US policy shaped",econ:"Policy analysis model",cultural:"Nonpartisan expertise ideal",reach:"United States, global influence",timeline:"Policy research continues"}},
+    impact:{lives:"US policy shaped",econ:"Policy analysis model",cultural:"Nonpartisan expertise ideal",reach:"United States, global influence",timeline:"Policy research continues"},
+
+    cascade:[
+      {event:"No centrist policy research anchor",consequence:"Brookings has been the 'establishment' think tank since 1916. Without it, policy research is more ideologically polarized from the start.",delay:"Immediate",severity:"medium",icon:"📊"},
+      {event:"Marshall Plan design different",consequence:"Brookings economists helped design post-WWII economic policy. Without their analysis, reconstruction programs differ.",delay:"~31 years",severity:"medium",icon:"🏗️"},
+      {event:"Budget analysis less independent",consequence:"Brookings' economic analysis provided nonpartisan grounding for budget debates. Without it, fiscal policy is more politically driven.",delay:"~30 years",severity:"medium",icon:"💰"},
+      {event:"Less urban policy research",consequence:"Brookings' Metro program shapes how America thinks about cities. Without their data, urban policy gets less attention.",delay:"~50 years",severity:"low",icon:"🏙️"}
+    ],
+    modernDay:{
+      tech:"Brookings' research on technology policy — AI governance, platform regulation, cybersecurity — is cited in every congressional hearing on tech.",
+      culture:"Brookings established the model of the nonpartisan policy expert — the analyst whose credibility comes from methodology, not ideology.",
+      politics:"Without Brookings, the center of American policy debate shifts. There's less institutional ballast against partisan extremes in policy research."
+    }},
   {id:"rand",name:"RAND Corporation",born:1948,died:null,cat:"institutions",field:"Research & Analysis",
     quote:"Research and analysis to inform public policy decisions.",
     contributions:["Systems analysis development","Game theory applications","Nuclear strategy analysis","Think tank model pioneer"],
@@ -4707,7 +5223,19 @@ const INSTITUTIONS = [
       {year:1970,happened:"RAND alumni spread methodology",alternate:"Systems analysis spreads more slowly"},
       {year:2024,happened:"RAND continues defense and policy analysis",alternate:"Policy analysis exists but with different methodology traditions"}
     ],
-    impact:{lives:"Cold War policy shaped",econ:"Defense analysis industry",cultural:"Rational analysis culture",reach:"US, allied nations",timeline:"Strategic analysis develops differently"}},
+    impact:{lives:"Cold War policy shaped",econ:"Defense analysis industry",cultural:"Rational analysis culture",reach:"US, allied nations",timeline:"Strategic analysis develops differently"},
+
+    cascade:[
+      {event:"No game theory applications to policy",consequence:"RAND pioneered applying mathematical analysis to military and policy decisions. Without them, the Cold War is navigated with less strategic rigor.",delay:"Immediate",severity:"high",icon:"🎯"},
+      {event:"No systems analysis in government",consequence:"RAND invented systems analysis — using data to evaluate policy options. Without it, government decisions rely more on intuition and politics.",delay:"~5 years",severity:"medium",icon:"📊"},
+      {event:"Nuclear strategy less theorized",consequence:"RAND analysts developed deterrence theory, mutually assured destruction, and nuclear strategy. Without them, nuclear policy is more improvised.",delay:"~10 years",severity:"high",icon:"☢️"},
+      {event:"Internet develops differently",consequence:"RAND's Paul Baran designed packet switching — the basis of the internet. ARPANET might not use this architecture, changing the internet's design.",delay:"~19 years",severity:"high",icon:"🌐"}
+    ],
+    modernDay:{
+      tech:"Packet switching — the fundamental architecture of the internet — was designed at RAND. Their influence on how computer networks work is permanent.",
+      culture:"RAND created the archetype of the technocratic policy analyst — using data and models to make decisions. The think tank as a concept owes much to their model.",
+      politics:"Without RAND's nuclear deterrence theory, the Cold War is navigated differently. More dangerous, potentially. The intellectual framework for avoiding nuclear war partly came from RAND."
+    }},
   {id:"carnegieendow",name:"Carnegie Endowment for International Peace",born:1910,died:null,cat:"institutions",field:"International Affairs",
     quote:"Global network of policy experts for conflict resolution.",
     contributions:["International peace research","Policy dialogue across nations","Nuclear nonproliferation work","Democracy promotion"],
@@ -4725,27 +5253,19 @@ const INSTITUTIONS = [
       {year:1990,happened:"Carnegie expands nonproliferation work",alternate:"Nonproliferation research through different institutions"},
       {year:2024,happened:"Carnegie continues international affairs analysis",alternate:"International affairs analysis exists; different institutional landscape"}
     ],
-    impact:{lives:"International relations shaped",econ:"Policy research",cultural:"Peace research field",reach:"Global",timeline:"Peace research continues via others"}},
-  {id:"rockfound",name:"Rockefeller Foundation",born:1913,died:null,cat:"institutions",field:"Philanthropy",
-    quote:"Promoting the well-being of humanity throughout the world.",
-    contributions:["Green Revolution funding","Public health globally","Social science development","University funding"],
-    r:0.40,reasoning:"The Green Revolution specifically — funding agricultural research that averted famines — was Rockefeller's major impact. Norman Borlaug's work depended on their support. Billions didn't starve because of this specific program.",
-    counterfactual:"Without Rockefeller Foundation (duplicate entry — see main entry above), the Green Revolution might be delayed significantly. Rockefeller funded Norman Borlaug's work that fed billions. Without it, famines of the 1960s-70s might have killed hundreds of millions more.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Rockefeller Foundation entry for full analysis."}],
-    timeline:[{year:1913,happened:"Rockefeller Foundation established",alternate:"See main entry"}],
-    impact:{lives:"Green Revolution: 1B+ lives",econ:"Agricultural transformation",cultural:"Strategic philanthropy model",reach:"Global agriculture",timeline:"Green Revolution delayed; more famines"}},
-  {id:"fordfound",name:"Ford Foundation",born:1936,died:null,cat:"institutions",field:"Philanthropy",
-    quote:"Working with visionaries on the frontlines of social change.",
-    contributions:["Civil rights funding","Public broadcasting support","International development","Arts funding"],
-    r:0.50,reasoning:"Large philanthropy was growing. Ford's specific programs mattered — PBS, civil rights legal work — but wealthy families were establishing foundations. Alternative funders would have emerged.",
-    counterfactual:"Without Ford Foundation (duplicate entry), see main Ford Foundation entry above for full counterfactual analysis. Progressive philanthropy develops through other wealthy donors.",
-    ripples:[
-      {category:"Duplicate Entry",detail:"See main Ford Foundation entry for full analysis."}
+    impact:{lives:"International relations shaped",econ:"Policy research",cultural:"Peace research field",reach:"Global",timeline:"Peace research continues via others"},
+
+    cascade:[
+      {event:"No international peace research",consequence:"Carnegie was the first institution dedicated to studying how to prevent war. Without it, peace studies as a field develops later.",delay:"Immediate",severity:"medium",icon:"🕊️"},
+      {event:"Arms control research thinner",consequence:"Carnegie's nonproliferation program shaped how the world thinks about nuclear weapons. Without their analysis, arms control treaties have less intellectual grounding.",delay:"~30 years",severity:"medium",icon:"☢️"},
+      {event:"Less track-two diplomacy",consequence:"Carnegie facilitates unofficial diplomatic channels. Without them, some conflicts lack back-channel communication.",delay:"~30 years",severity:"low",icon:"🤝"},
+      {event:"Democracy promotion research missing",consequence:"Carnegie's work on democratic transitions influenced how the US supports democracy abroad. Without it, democracy promotion is more ad hoc.",delay:"~50 years",severity:"low",icon:"🗳️"}
     ],
-    timeline:[
-      {year:1936,happened:"Ford Foundation established",alternate:"See main entry"}
-    ],
-    impact:{lives:"Social movements supported",econ:"$16B endowment deployed",cultural:"Progressive philanthropy",reach:"Global",timeline:"Progressive causes find other funding"}},
+    modernDay:{
+      tech:"Carnegie's research on nuclear nonproliferation shapes how governments approach Iran, North Korea, and other proliferation challenges.",
+      culture:"Andrew Carnegie's belief that peace could be studied and engineered — like a business problem — created the model for policy research institutions.",
+      politics:"Without Carnegie's nonproliferation research, arms control treaties have less intellectual foundation. Nuclear weapons policy is made with less expert analysis."
+    }},
   {id:"trilateral",name:"Trilateral Commission",born:1973,died:null,cat:"institutions",field:"International Relations",
     quote:"Foster closer cooperation among core democratic industrialized areas.",
     contributions:["US-Europe-Japan elite coordination","Policy recommendations","Elite consensus building","Globalization framework"],
@@ -4763,7 +5283,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"Trilateral continues meetings",alternate:"Similar coordination through CFR, WEF"},
       {year:2024,happened:"Trilateral lower profile",alternate:"Elite coordination exists; different organizations"}
     ],
-    impact:{lives:"Elite policy coordination",econ:"International cooperation",cultural:"Conspiracy theory target",reach:"Democratic industrial nations",timeline:"Elite coordination happens anyway"}},
+    impact:{lives:"Elite policy coordination",econ:"International cooperation",cultural:"Conspiracy theory target",reach:"Democratic industrial nations",timeline:"Elite coordination happens anyway"},
+
+    cascade:[
+      {event:"Less US-Europe-Japan coordination",consequence:"The trilateral economic relationship develops through bilateral channels. Less coordination means more trade friction between democracies.",delay:"Immediate",severity:"low",icon:"🌐"},
+      {event:"No 'Crisis of Democracy' report",consequence:"The Trilateral Commission's 1975 report on democratic governance shaped political thinking. Without it, the debate about democratic overload takes different form.",delay:"~2 years",severity:"low",icon:"📋"},
+      {event:"Conspiracy theories target others",consequence:"Without the Trilateral Commission, conspiracy theorists focus on Bilderberg, CFR, or other elite groups. The target changes; the phenomenon doesn't.",delay:"~10 years",severity:"low",icon:"👁️"},
+      {event:"G7 coordination slightly different",consequence:"Many G7 members were Trilateral participants. Without this prior relationship-building, G7 summits might be less collegial.",delay:"~2 years",severity:"low",icon:"🤝"}
+    ],
+    modernDay:{
+      tech:"The Trilateral Commission's influence is less about technology and more about the policy frameworks that governed technology trade between democracies.",
+      culture:"The Trilateral Commission became a symbol of elite coordination — for better or worse. Without it, a different institution fills that role in conspiracy theories.",
+      politics:"Without the Trilateral Commission, US-Europe-Japan coordination is slightly less personal. The same policies likely emerge through other channels."
+    }},
   {id:"heritage",name:"Heritage Foundation",born:1973,died:null,cat:"institutions",field:"Conservative Policy",
     quote:"Building an America where freedom, opportunity, prosperity, and civil society flourish.",
     contributions:["Reagan revolution intellectual foundation","Mandate for Leadership","Conservative policy analysis","Quick-turnaround research"],
@@ -4781,123 +5313,19 @@ const INSTITUTIONS = [
       {year:2000,happened:"Heritage shapes conservative policy",alternate:"Conservative policy through different channels"},
       {year:2024,happened:"Heritage continues policy work",alternate:"Conservative infrastructure exists; different form"}
     ],
-    impact:{lives:"US conservative policy",econ:"Policy research model",cultural:"Conservative intellectual infrastructure",reach:"United States",timeline:"Conservative policy development continues"}},
-  {id:"aclu",name:"American Civil Liberties Union",born:1920,died:null,cat:"institutions",field:"Civil Liberties",
-    quote:"Defend the rights of all people — not just those with whom you agree.",
-    contributions:["First Amendment defense","Criminal justice reform","Privacy rights","Free speech absolutism"],
-    r:0.40,reasoning:"Legal defense of civil liberties required institutional capacity. ACLU pioneered impact litigation strategies that shaped American law. Other organizations might have filled the role, but ACLU defined how it was done.",
-    counterfactual:"Without ACLU (duplicate entry — see main ACLU entry above), civil liberties still need defenders. The legal strategy model ACLU pioneered — test cases, impact litigation, defending unpopular speech — shaped American constitutional law. Without this specific organization's cases, the First Amendment might be interpreted differently.",
-    ripples:[
-      {category:"Duplicate Entry",detail:"See main ACLU entry for full analysis."}
+    impact:{lives:"US conservative policy",econ:"Policy research model",cultural:"Conservative intellectual infrastructure",reach:"United States",timeline:"Conservative policy development continues"},
+
+    cascade:[
+      {event:"No Mandate for Leadership",consequence:"Heritage's policy playbook for incoming Republican administrations doesn't exist. Reagan's team improvises more; conservative policy is less systematically implemented.",delay:"~7 years",severity:"medium",icon:"📋"},
+      {event:"Conservative quick-response gap",consequence:"Heritage invented rapid policy briefs for legislators. Without them, conservative lawmakers rely more on personal staff and lobbyists for policy ideas.",delay:"~5 years",severity:"medium",icon:"⚡"},
+      {event:"Reagan revolution less programmatic",consequence:"Heritage provided the intellectual infrastructure for Reaganism. Without it, conservative governance is more instinctive and less organized.",delay:"~7 years",severity:"medium",icon:"🏛️"},
+      {event:"Different think tank ecosystem",consequence:"Heritage's success spawned imitators. Without it, the activist think tank model develops differently. Policy is shaped more by academia and lobbying.",delay:"~15 years",severity:"medium",icon:"📊"}
     ],
-    timeline:[
-      {year:1920,happened:"ACLU founded",alternate:"See main entry"}
-    ],
-    impact:{lives:"American rights protected",econ:"Legal strategy model",cultural:"Free speech advocacy",reach:"United States",timeline:"Civil liberties defense less systematic"}},
-  {id:"naacp",name:"NAACP",born:1909,died:null,cat:"institutions",field:"Civil Rights",
-    quote:"To ensure the political, educational, social, and economic equality of rights of all persons.",
-    contributions:["Brown v. Board of Education","Antilynching campaigns","Voter registration","Legal civil rights strategy"],
-    r:0.35,reasoning:"Black civil rights required organized institutional power. NAACP's legal strategy — culminating in Brown — changed American law. The movement would have taken different form without it.",
-    counterfactual:"Without NAACP (duplicate entry — see main NAACP entry above), the civil rights movement takes different form. The legal strategy toward Brown v. Board was specific to NAACP's approach. Without it, desegregation comes through different means, possibly later.",
-    ripples:[
-      {category:"Duplicate Entry",detail:"See main NAACP entry for full analysis."}
-    ],
-    timeline:[
-      {year:1909,happened:"NAACP founded",alternate:"See main entry"}
-    ],
-    impact:{lives:"40M+ African Americans",econ:"Integration economics",cultural:"Legal civil rights model",reach:"United States",timeline:"Civil rights progress slower, different strategy"}},
-  {id:"irc_org",name:"International Rescue Committee",born:1933,died:null,cat:"institutions",field:"Refugee Aid",
-    quote:"At the request of Albert Einstein, we help people fleeing war and persecution.",
-    contributions:["Refugee resettlement","Emergency response","Development programs","31.5 million people reached annually"],
-    r:0.50,reasoning:"Refugee crises create organizations to respond. IRC emerged from specific moment (Nazi persecution) but similar organizations would have formed to address refugee needs.",
-    counterfactual:"Without IRC (duplicate entry — see main IRC entry above), refugee aid continues through other channels. The specific founding with Einstein's involvement gave it credibility; other organizations fill the space.",
-    ripples:[
-      {category:"Duplicate Entry",detail:"See main IRC entry for full analysis."}
-    ],
-    timeline:[
-      {year:1933,happened:"IRC founded",alternate:"See main entry"}
-    ],
-    impact:{lives:"Millions of refugees aided",econ:"Resettlement services",cultural:"Refugee support model",reach:"40+ countries",timeline:"Refugee services develop differently"}},
-  {id:"savechildren",name:"Save the Children",born:1919,died:null,cat:"institutions",field:"Children's Welfare",
-    quote:"Every child deserves a future.",
-    contributions:["Child welfare global standard","Emergency response","Child rights advocacy","120+ countries operations"],
-    r:0.45,reasoning:"Children's welfare organizations were forming after WWI. Save the Children was first specifically child-focused international NGO. Others would have emerged, but it set the template.",
-    counterfactual:"Without Save the Children (duplicate entry — see main entry above), children's aid develops through other channels. Eglantyne Jebb's Declaration of the Rights of the Child influenced UN documents.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Save the Children entry for full analysis."}],
-    timeline:[{year:1919,happened:"Save the Children founded",alternate:"See main entry"}],
-    impact:{lives:"Millions of children annually",econ:"Child welfare sector",cultural:"Children's rights framework",reach:"Global",timeline:"Child welfare develops similarly"}},
-  {id:"greenpeace",name:"Greenpeace",born:1971,died:null,cat:"institutions",field:"Environmental Activism",
-    quote:"We believe in the power of people to change the world.",
-    contributions:["Direct action environmentalism","Anti-nuclear campaigns","Whale conservation","Media-savvy activism"],
-    r:0.40,reasoning:"Environmental activism was growing. Greenpeace's specific innovation was media-friendly direct action. The environmental movement would have found similar tactics; Greenpeace refined them.",
-    counterfactual:"Without Greenpeace (duplicate entry — see main entry above), environmental activism exists but with different tactics and visibility. The direct action model might develop more slowly.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Greenpeace entry for full analysis."}],
-    timeline:[{year:1971,happened:"Greenpeace founded",alternate:"See main entry"}],
-    impact:{lives:"Environmental awareness globally",econ:"Corporate environmental policies",cultural:"Environmental activism model",reach:"Global",timeline:"Environmental activism less media-focused"}},
-  {id:"hrw",name:"Human Rights Watch",born:1978,died:null,cat:"institutions",field:"Human Rights",
-    quote:"Defending the rights of people worldwide.",
-    contributions:["Human rights documentation","War crimes investigation","Media impact strategy","Policy advocacy"],
-    r:0.45,reasoning:"Human rights documentation was needed. HRW pioneered research-based naming and shaming. Similar organizations would have emerged; HRW defined the methodology.",
-    counterfactual:"Without HRW (duplicate entry — see main entry above), human rights documentation continues through Amnesty and others. HRW's specific investigative approach and Washington advocacy shaped the field.",
-    ripples:[{category:"Duplicate Entry",detail:"See main HRW entry for full analysis."}],
-    timeline:[{year:1978,happened:"HRW founded",alternate:"See main entry"}],
-    impact:{lives:"Human rights accountability",econ:"Rights advocacy sector",cultural:"Documentation standard",reach:"Global",timeline:"Rights documentation continues differently"}},
-  {id:"oxfam",name:"Oxfam International",born:1942,died:null,cat:"institutions",field:"Poverty Relief",
-    quote:"Fighting inequality to end poverty and injustice.",
-    contributions:["Famine relief","Development programs","Inequality research","Advocacy campaigns"],
-    r:0.50,reasoning:"Poverty relief organizations were forming. Oxfam's confederation model and advocacy focus were influential but not unique. Multiple organizations do similar work.",
-    counterfactual:"Without Oxfam (duplicate entry — see main entry above), poverty relief continues through other channels. Oxfam's inequality reports and fair trade advocacy had specific influence.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Oxfam entry for full analysis."}],
-    timeline:[{year:1942,happened:"Oxfam founded",alternate:"See main entry"}],
-    impact:{lives:"15M+ reached in emergencies annually",econ:"Development sector",cultural:"Poverty advocacy",reach:"90+ countries",timeline:"Poverty relief continues similarly"}},
-  {id:"brac",name:"BRAC",born:1972,died:null,cat:"institutions",field:"Development",
-    quote:"Creating opportunity to realize potential.",
-    contributions:["Largest NGO in developing world","Microfinance programs","Education initiatives","Scalable development model"],
-    r:0.35,reasoning:"Fazle Hasan Abed's vision of scalable development was unique. BRAC's model — treating poverty alleviation as science — was distinctive. Others did development work; BRAC showed how to do it at scale.",
-    counterfactual:"Without BRAC (duplicate entry — see main entry above), Bangladeshi development is more fragmented. BRAC's scale and integrated model was unique to Fazle Hasan Abed's vision.",
-    ripples:[{category:"Duplicate Entry",detail:"See main BRAC entry for full analysis."}],
-    timeline:[{year:1972,happened:"BRAC founded",alternate:"See main entry"}],
-    impact:{lives:"100M+ people reached",econ:"Development at scale",cultural:"Southern-led development",reach:"Bangladesh, 10+ countries",timeline:"Development less scaled, less systematic"}},
-  {id:"doctorswithout",name:"Doctors Without Borders (MSF)",born:1971,died:null,cat:"institutions",field:"Medical Humanitarian",
-    quote:"Medical care where it's needed most.",
-    contributions:["Medical neutrality in conflicts","Emergency medical response","Pharmaceutical access advocacy","Nobel Peace Prize 1999"],
-    r:0.40,reasoning:"Medical relief in conflict zones was needed. MSF's innovation was willingness to speak out about what they witnessed, breaking humanitarian silence. This 'témoignage' approach was distinctive.",
-    counterfactual:"Without MSF (duplicate entry — see main entry above), medical humanitarianism exists but is less willing to bear witness. The 'without borders' model and willingness to speak publicly about atrocities was MSF's innovation.",
-    ripples:[{category:"Duplicate Entry",detail:"See main MSF entry for full analysis."}],
-    timeline:[{year:1971,happened:"MSF founded",alternate:"See main entry"}],
-    impact:{lives:"Millions treated annually",econ:"Humanitarian medicine model",cultural:"Medical neutrality",reach:"70+ countries",timeline:"Medical humanitarianism less politically vocal"}},
-  {id:"acumen_org",name:"Acumen",born:2001,died:null,cat:"institutions",field:"Impact Investing",
-    quote:"Changing the way the world tackles poverty.",
-    contributions:["Impact investing pioneer","Patient capital model","Social enterprise support","Moral imagination concept"],
-    r:0.45,reasoning:"Impact investing was emerging from multiple sources. Acumen's specific model — patient capital, moral imagination — was influential but the sector was developing. Omidyar, Skoll also pioneered.",
-    counterfactual:"Without Acumen (duplicate entry — see main entry above), impact investing still emerges through Omidyar, Skoll, and others. Acumen's 'patient capital' framing was influential but not unique.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Acumen entry for full analysis."}],
-    timeline:[{year:2001,happened:"Acumen founded",alternate:"See main entry"}],
-    impact:{lives:"Millions served by investees",econ:"Impact investing sector",cultural:"Business as development tool",reach:"Africa, South Asia, Latin America",timeline:"Impact investing develops similarly"}},
-  {id:"khanacademy",name:"Khan Academy",born:2008,died:null,cat:"institutions",field:"Education",
-    quote:"A free, world-class education for anyone, anywhere.",
-    contributions:["Free online education","Mastery learning model","Personalized learning","150M+ registered users"],
-    r:0.50,reasoning:"Online education was coming — Coursera, edX followed. Sal Khan's specific approach (video tutoring, free access) was influential but digital education would have developed. He accelerated and democratized it.",
-    counterfactual:"Without Khan Academy (duplicate entry — see main entry above), online education still comes. Khan's free K-12 focus democratized access; without it, online education is more university-focused.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Khan Academy entry for full analysis."}],
-    timeline:[{year:2008,happened:"Khan Academy founded",alternate:"See main entry"}],
-    impact:{lives:"Millions educated free",econ:"EdTech model",cultural:"Learning democratization",reach:"Global",timeline:"Online education develops slightly slower"}},
-  {id:"wikimedia",name:"Wikimedia Foundation",born:2003,died:null,cat:"institutions",field:"Knowledge",
-    quote:"Imagine a world in which every single person can freely share in the sum of all knowledge.",
-    contributions:["Wikipedia stewardship","Free knowledge advocacy","Open source encyclopedia model","6.7M+ English articles"],
-    r:0.40,reasoning:"Collaborative online encyclopedias were being attempted. Wikipedia succeeded where others failed. The specific governance model, community norms, and timing made it work. Others might have eventually succeeded differently.",
-    counterfactual:"Without Wikimedia/Wikipedia (duplicate entry — see main entry above), free encyclopedic knowledge is less accessible. The crowdsourced model that succeeded was specific to Wikipedia's approach.",
-    ripples:[{category:"Duplicate Entry",detail:"See main Wikimedia entry for full analysis."}],
-    timeline:[{year:2003,happened:"Wikimedia Foundation established",alternate:"See main entry"}],
-    impact:{lives:"Billions access free knowledge",econ:"Disrupted encyclopedia industry",cultural:"Collaborative knowledge",reach:"300+ language editions",timeline:"Free encyclopedia emerges eventually, differently"}},
-  {id:"eff",name:"Electronic Frontier Foundation",born:1990,died:null,cat:"institutions",field:"Digital Rights",
-    quote:"Defending your rights in the digital world.",
-    contributions:["Digital privacy advocacy","Internet free speech","Encryption rights","Surveillance opposition"],
-    r:0.45,reasoning:"Digital rights needed defenders as internet grew. EFF was early and influential but similar organizations would have formed. The issues demanded institutional response.",
-    counterfactual:"Without EFF (duplicate entry — see main entry above), digital rights advocacy still emerges. EFF's early wins in encryption rights and internet freedom shaped the landscape; different outcomes without their specific cases.",
-    ripples:[{category:"Duplicate Entry",detail:"See main EFF entry for full analysis."}],
-    timeline:[{year:1990,happened:"EFF founded",alternate:"See main entry"}],
-    impact:{lives:"Digital rights globally",econ:"Tech policy shaped",cultural:"Privacy advocacy",reach:"Global",timeline:"Digital rights defended differently"}},
+    modernDay:{
+      tech:"Heritage's model of quick-turnaround policy analysis — responding to news within hours with policy briefs — is now standard across the political spectrum.",
+      culture:"Heritage proved that think tanks could be activist organizations, not just academic ones. That shift changed how policy is made in Washington.",
+      politics:"Without Heritage's transition playbooks, Republican administrations are less prepared on day one. The 'Project 2025' model has a different lineage."
+    }},
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -5478,7 +5906,7 @@ const INVENTIONS = [
     quote:"What we didn't realize then was that the integrated circuit would reduce the cost of electronic functions by a factor of a million. — Jack Kilby",
     contributions:["Microelectronics enabled","Computers miniaturized","Smartphones possible","Moore's Law begins"],
     r:0.70,reasoning:"Kilby and Noyce invented integrated circuits independently within months. The need was obvious; planar technology was advancing. Multiple paths would have led there. Someone would have integrated circuits onto chips very soon.",
-    counterfactual:"The integrated circuit was independently invented by Kilby and Noyce within months of each other. This simultaneous invention proves the technology was ready — the need was obvious, the components were there. Without either inventor, the other gets credit. Without both, someone else invents it within 2-3 years. The entire computing revolution proceeds on nearly identical timeline. This is one of the most replaceable major inventions.",
+    counterfactual:"The integrated circuit was independently invented by Kilby and Noyce within months of each other. This simultaneous invention proves the technology was ready — the need was obvious, the components were there. Without either inventor, the other gets credit. Without both, someone else invents it within 2-3 years. The entire computing revolution proceeds on nearly identical timeline. This is one of the lowest-weight major inventions.",
     ripples:[
       {category:"Timing",detail:"Integrated circuits arrive within 2-3 years regardless. Different inventor gets credit."},
       {category:"Computing",detail:"Same computing revolution. Same miniaturization. Same smartphones and laptops."},
@@ -6797,7 +7225,7 @@ const CASCADE_DATA = {
       {event:"Several mathematical results delayed decades",consequence:"His work on partition functions, mock theta functions, and modular forms anticipated entire fields. Without him, some results arrive 20-50 years later when others rediscover them.",delay:"~20-50 years",severity:"medium",icon:"📐"},
       {event:"Hardy-Ramanujan collaboration doesn't happen",consequence:"Their partnership produced foundational work in number theory. Hardy called Ramanujan the most remarkable mathematician he'd ever met. Without this collaboration, Hardy's own work takes different directions.",delay:"~5 years",severity:"medium",icon:"🤝"},
       {event:"Mock theta functions discovered much later",consequence:"Ramanujan's deathbed letter to Hardy about mock theta functions wasn't fully understood until the 2000s. Without it, this entire area of mathematics develops from different origins — if at all.",delay:"~80 years",severity:"medium",icon:"🔮"},
-      {event:"Mathematics loses irreplaceable beauty",consequence:"Many of Ramanujan's results have been independently proven. But his specific style — intuitive leaps that took formal mathematics decades to catch up with — represents a genuinely unique mathematical mind.",delay:"Permanent",severity:"medium",icon:"✨"}
+      {event:"Mathematics loses singular beauty",consequence:"Many of Ramanujan's results have been independently proven. But his specific style — intuitive leaps that took formal mathematics decades to catch up with — represents a genuinely unique mathematical mind.",delay:"Permanent",severity:"medium",icon:"✨"}
     ],
     modernDay:{
       daily:"No direct difference. Ramanujan's mathematics has no consumer applications — it's pure number theory.",
@@ -7712,7 +8140,7 @@ const CASCADE_DATA = {
       {event:"Opera develops differently",consequence:"The Marriage of Figaro, Don Giovanni, The Magic Flute — Mozart's operas fused comedy and tragedy in ways no one had achieved. Without them, opera remains more rigidly divided between serious and comic forms.",delay:"~10 years",severity:"high",icon:"🎭"},
       {event:"Classical style peaks differently",consequence:"Mozart was the ultimate expression of the Classical style — perfect proportion, emotional depth within formal restraint. Without him, Beethoven's transition from Classical to Romantic has a different starting point.",delay:"~20 years",severity:"medium",icon:"🎼"},
       {event:"Beethoven's development changes",consequence:"Young Beethoven traveled to Vienna to study with Mozart (who reportedly said 'this young man will make a great noise in the world'). Without Mozart's example, Beethoven develops from Haydn alone.",delay:"~10 years",severity:"medium",icon:"🎹"},
-      {event:"Same musical evolution, missing a peak",consequence:"Classical music was evolving toward Romanticism regardless. But Mozart represents a pinnacle of human achievement in music — a unique combination of craft and inspiration that can't be replaced, only mourned.",delay:"~50 years",severity:"medium",icon:"🌍"}
+      {event:"Same musical evolution, missing a peak",consequence:"Classical music was evolving toward Romanticism regardless. But Mozart represents a pinnacle of human achievement in music — a unique combination of craft and inspiration that no one else could have produced.",delay:"~50 years",severity:"medium",icon:"🌍"}
     ],
     modernDay:{
       daily:"The 'Mozart effect' (playing Mozart for babies) doesn't exist, though the underlying research on music and cognition still happens.",
@@ -8597,7 +9025,7 @@ const CASCADE_DATA = {
       {event:"Computer science develops more slowly",consequence:"Von Neumann contributed to virtually every field he touched: game theory, quantum mechanics, nuclear weapons, cellular automata, computing. Without him, each field loses its most versatile mind.",delay:"~5 years",severity:"high",icon:"🧠"},
       {event:"Game theory delayed",consequence:"Von Neumann co-authored the foundational text of game theory (1944). Without it, strategic thinking in economics, military planning, and evolutionary biology develops from different roots.",delay:"~10 years",severity:"high",icon:"🎲"},
       {event:"Manhattan Project less efficient",consequence:"Von Neumann designed the implosion lenses for the plutonium bomb. Without his mathematical contributions, the bomb design takes longer or is less efficient.",delay:"~1 year",severity:"medium",icon:"☢️"},
-      {event:"Same computing revolution, slightly later",consequence:"Computers were being built by multiple teams — Turing, Zuse, Eckert, Mauchly. The stored-program concept would have emerged. But von Neumann's unique ability to synthesize across fields is irreplaceable.",delay:"~10 years",severity:"medium",icon:"🌍"}
+      {event:"Same computing revolution, slightly later",consequence:"Computers were being built by multiple teams — Turing, Zuse, Eckert, Mauchly. The stored-program concept would have emerged. But von Neumann's unique ability to synthesize across fields is unmatched.",delay:"~10 years",severity:"medium",icon:"🌍"}
     ],
     modernDay:{
       daily:"Your computer probably still uses the von Neumann architecture — sequential processing, shared memory. Without him, a different architecture might have become standard, with unknown implications for how computers evolved.",
@@ -8969,7 +9397,7 @@ const CASCADE_DATA = {
   armstrong: {
     cascade:[
       {event:"No first Moon landing (July 1969)",consequence:"Apollo 11 was a team effort. Without Armstrong specifically, Aldrin or another astronaut makes the first step. The landing happens on the same timeline.",delay:"~0 months",severity:"low",icon:"🌙"},
-      {event:"Same space race outcome",consequence:"The Moon landing was a national project involving 400,000 people. No single astronaut was irreplaceable. The mission succeeds with a different crew.",delay:"~0 months",severity:"low",icon:"🚀"},
+      {event:"Same space race outcome",consequence:"The Moon landing was a national project involving 400,000 people. No single astronaut was the deciding factor. The mission succeeds with a different crew.",delay:"~0 months",severity:"low",icon:"🚀"},
       {event:"Different 'first words on the Moon'",consequence:"'One small step for man, one giant leap for mankind' doesn't exist. A different astronaut says something different. The cultural moment is the same; the quote is different.",delay:"Immediate",severity:"low",icon:"💬"},
       {event:"Same Cold War dynamics",consequence:"The geopolitical impact of the Moon landing — proving American technological superiority — is identical regardless of which astronaut steps out first.",delay:"~0",severity:"low",icon:"🇺🇸"},
       {event:"Same space history",consequence:"Armstrong's modesty and reluctance to capitalize on fame made him a specific kind of hero. A different astronaut might have been more public, changing the narrative slightly.",delay:"Cultural",severity:"low",icon:"🌍"}
@@ -9604,7 +10032,7 @@ const DIFFICULTY_MULTIPLIER = (r) => {
 const WARMUP_TIPS = [
   "Start with your gut — how much did this specific entry change history compared to the forces around it?",
   "Think about it this way: if this never existed or never happened, would the same outcome have arrived anyway?",
-  "Low scores mean 'easily replaced' — the outcome was in the air. High scores mean 'truly irreplaceable' — history hinged on this specific moment.",
+  "Low weight means the outcome was in the air — it was happening with or without this entry. High weight means history hinged on this specific moment.",
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -9621,13 +10049,13 @@ const getScoreLabel = (score, subject) => {
   if (score >= 0.80) return { label: "History-Defining", color: "#b91c1c", desc:
     isEvent ? "This didn't have to happen — and without it, the world becomes unrecognizable"
     : isInvention ? "This specific invention reshaped everything — nothing else was converging on the same solution"
-    : isInstitution ? "Without this institution, the systems it built have no clear replacement"
+    : isInstitution ? "Without this institution, the systems it built don't emerge on their own"
     : "Without them, the world looks fundamentally different — no one else was close" };
   if (score >= 0.50) return { label: "High Weight", color: "#c2410c", desc:
     isEvent ? "The specific way this unfolded mattered — a different version of events changes the outcome"
     : isInvention ? "The specific form of this invention mattered — a different version changes what followed"
     : isInstitution ? "This institution shaped its domain in ways that weren't guaranteed by the underlying need"
-    : "Shaped history in ways that would have been hard for anyone else to replicate" };
+    : "Shaped history in ways no one else was positioned to" };
   if (score >= 0.20) return { label: "Moderate Weight", color: "#a16207", desc:
     isEvent ? "The underlying forces were real, but the timing and shape weren't guaranteed"
     : isInvention ? "The need was real, but the specific timing and form weren't guaranteed"
@@ -9675,7 +10103,7 @@ const getAccuracyFeedback = (diff, pts, subject, prediction) => {
     ? `${name}'s impact was less singular than you assumed.`
     : `${name} left a deeper mark on history than most people realize.`, tier: "miss" };
   return { emoji: "😮", msg: over
-    ? `Way off — ${name} was far more replaceable than you guessed.`
+    ? `Way off — ${name} carried far less weight than you guessed.`
     : `Way off — ${name} was far more impactful than you thought.`, tier: "far" };
 };
 
@@ -9735,7 +10163,7 @@ const getInterludePhases = (subject, prediction) => {
   
   // Opening: set the scene with what the player committed to
   const predPct = Math.round(prediction * 100);
-  const predWord = predPct >= 70 ? "history-defining" : predPct >= 40 ? "moderately impactful" : "fairly replaceable";
+  const predWord = predPct >= 70 ? "history-defining" : predPct >= 40 ? "moderately consequential" : "low-weight";
   phases.push({
     icon: "🎯",
     text: `You called ${name} ${predWord} at ${predPct}% weight. Let's see...`,
@@ -9805,9 +10233,9 @@ const getDirectionInsight = (prediction, rValue, subject) => {
       return `${name} was important, but the underlying conditions were doing more of the work than it appears. ${detail}`.trim();
     }
   } else {
-    // Player underestimated impact (thought more replaceable than analysis says)
+    // Player underestimated impact (thought less consequential than analysis says)
     if (actual > 0.70) {
-      return `${name} was harder to replace than you thought. ${detail || `Nothing else in ${field.toLowerCase()} was converging on this specific outcome.`}`;
+      return `${name} carried more weight than you thought. ${detail || `Nothing else in ${field.toLowerCase()} was converging on this specific outcome.`}`;
     } else if (actual > 0.50) {
       return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened — how it happened shaped what came after.`}`;
     } else {
@@ -9950,7 +10378,7 @@ const CATEGORY_HEURISTICS = {
   },
   arts: {
     over: [
-      { at: 4, title: "Art Isn't Convergent", text: (n, total) => `You've overestimated ${n} of ${total} arts entries. Unlike science, a different artist wouldn't produce the same work. No one else writes Hamlet. Art is personal in a way that makes the creator harder to replace.` },
+      { at: 4, title: "Art Isn't Convergent", text: (n, total) => `You've overestimated ${n} of ${total} arts entries. Unlike science, a different artist wouldn't produce the same work. No one else writes Hamlet. Art is personal — the creator's specific vision carries enormous weight.` },
     ],
     under: [
       { at: 4, title: "Movements vs. Artists", text: (n, total) => `You've underestimated ${n} of ${total} arts entries. Artistic movements often have structural causes — cultural conditions that produce Impressionism or hip-hop regardless of any single artist. The movement was coming; the specific masterpieces weren't.` },
@@ -9967,10 +10395,10 @@ const CATEGORY_HEURISTICS = {
   },
   military: {
     over: [
-      { at: 4, title: "Wars Have Many Generals", text: (n, total) => `You've overestimated ${n} of ${total} military entries. Most armies have deep benches of competent officers. Wars are won by logistics, resources, and institutional strength as much as individual brilliance. Ask: would a merely competent replacement have lost?` },
+      { at: 4, title: "Wars Have Many Generals", text: (n, total) => `You've overestimated ${n} of ${total} military entries. Most armies have deep benches of competent officers. Wars are won by logistics, resources, and institutional strength as much as individual brilliance. Ask: would a merely competent commander have lost?` },
     ],
     under: [
-      { at: 4, title: "Tactical Genius Is Real", text: (n, total) => `You've underestimated ${n} of ${total} military entries. Some commanders made decisions so unconventional that no replacement would have attempted them. When victory hinged on a specific bold move, the individual mattered enormously.` },
+      { at: 4, title: "Tactical Genius Is Real", text: (n, total) => `You've underestimated ${n} of ${total} military entries. Some commanders made decisions so unconventional that no one else would have attempted them. When victory hinged on a specific bold move, the individual mattered enormously.` },
     ],
   },
   social: {
@@ -10161,7 +10589,7 @@ const getPatternInsights = (history) => {
       if (worst.avgErr - best.avgErr > 5) {
         insights.push({
           icon: "🔍", title: "Category Gap",
-          text: `Your ${bestLabel} predictions average ${Math.round(best.avgErr)} points off — strong intuition. But ${worstLabel} averages ${Math.round(worst.avgErr)} points off. What's different about how replaceability works in ${worstLabel.toLowerCase()}?`,
+          text: `Your ${bestLabel} predictions average ${Math.round(best.avgErr)} points off — strong intuition. But ${worstLabel} averages ${Math.round(worst.avgErr)} points off. What's different about how historical weight works in ${worstLabel.toLowerCase()}?`,
           cross: true,
         });
       }
@@ -10441,6 +10869,31 @@ const globalCSS = `
     0%, 100% { box-shadow: 0 2px 12px rgba(217,119,6,0.12); }
     50% { box-shadow: 0 4px 20px rgba(217,119,6,0.22); }
   }
+  @keyframes celebShake {
+    0%, 100% { transform: translateX(0); }
+    10% { transform: translateX(-6px) rotate(-0.5deg); }
+    20% { transform: translateX(5px) rotate(0.4deg); }
+    30% { transform: translateX(-4px) rotate(-0.3deg); }
+    40% { transform: translateX(3px) rotate(0.2deg); }
+    50% { transform: translateX(-2px); }
+    60% { transform: translateX(1px); }
+  }
+  @keyframes scorePop {
+    0% { transform: scale(0.6); opacity: 0; }
+    50% { transform: scale(1.15); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes glowRing {
+    0% { transform: scale(0.3); opacity: 0.8; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes emojiDrop {
+    0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+    50% { transform: scale(1.3) rotate(5deg); opacity: 1; }
+    70% { transform: scale(0.9) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
   details summary::-webkit-details-marker { display: none; }
   details summary::marker { display: none; content: ""; }
   details[open] .chevron-icon { transform: rotate(180deg); }
@@ -10459,6 +10912,8 @@ const globalCSS = `
   }
   .collection-scroll { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .collection-scroll::-webkit-scrollbar { display: none; }
+  .result-scroll { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .result-scroll::-webkit-scrollbar { display: none; }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -10481,6 +10936,33 @@ const globalCSS = `
   input[type=range]:focus { outline: none; }
   input[type=range]:focus::-webkit-slider-thumb {
     box-shadow: 0 0 0 3px rgba(26,26,26,0.15), 0 2px 6px rgba(0,0,0,0.25);
+  }
+  @keyframes gaugePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  @keyframes lockFlash {
+    0% { opacity: 0; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0; transform: scale(1.3); }
+  }
+  @keyframes needleBounce {
+    0% { transform-origin: 150px 150px; }
+    30% { filter: brightness(1.3); }
+    100% { filter: brightness(1); }
+  }
+  @keyframes lockShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-3px) rotate(-0.5deg); }
+    30% { transform: translateX(3px) rotate(0.5deg); }
+    45% { transform: translateX(-2px); }
+    60% { transform: translateX(2px); }
+    75% { transform: translateX(-1px); }
+  }
+  @keyframes lockBtnFill {
+    0% { background-size: 0% 100%; }
+    100% { background-size: 100% 100%; }
   }
 `;
 
@@ -10627,8 +11109,12 @@ const S = {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function App() {
   const [screen, setScreen] = useState("home");
+  const [activeTab, setActiveTab] = useState("play"); // "play" | "browse" | "stats"
   const [subject, setSubject] = useState(null);
   const [prediction, setPrediction] = useState(0.5);
+  const [lockingIn, setLockingIn] = useState(false);
+  const gaugeRef = useRef(null);
+  const lastZoneRef = useRef(null);
   const [revealed, setRevealed] = useState(false);
   const [score, setScore] = useState(0);
   const [played, setPlayed] = useState([]);
@@ -10641,7 +11127,13 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [animateResult, setAnimateResult] = useState(false);
   const [revealPhase, setRevealPhase] = useState(0);
+  const [animatedActual, setAnimatedActual] = useState(null);
+  const [shakeActive, setShakeActive] = useState(false);
   const [cascadeStep, setCascadeStep] = useState(0);
+  const [activeResultCard, setActiveResultCard] = useState(0);
+  const [visitedResultCards, setVisitedResultCards] = useState({});
+  const resultScrollRef = useRef(null);
+  const celebCanvasRef = useRef(null);
   const [selectedScenario, setSelectedScenario] = useState(null);
   const [navHistory, setNavHistory] = useState([]);
   const [interludeStep, setInterludeStep] = useState(0);
@@ -10825,6 +11317,8 @@ export default function App() {
 
   const startRandom = () => {
     SFX.click();
+    setLockingIn(false);
+    lastZoneRef.current = null;
     const unplayed = ALL_SUBJECTS.filter(s => !played.includes(s.id));
     if (unplayed.length === 0) {
       showToast("🔄 All subjects played! Resetting for another round...");
@@ -10897,6 +11391,8 @@ export default function App() {
     setNavHistory(prev => [...prev, screen]);
     setSubject(s);
     setPrediction(0.5);
+    setLockingIn(false);
+    lastZoneRef.current = null;
     setRevealed(false);
     setIsDaily(false);
     setStreakMilestone(null);
@@ -10912,6 +11408,8 @@ export default function App() {
     const fig = getDailyFigure();
     setSubject(fig);
     setPrediction(0.5);
+    setLockingIn(false);
+    lastZoneRef.current = null;
     setRevealed(false);
     setIsDaily(true);
     setStreakMilestone(null);
@@ -11099,15 +11597,166 @@ export default function App() {
     return () => clearInterval(timer);
   }, [screen, lastPts]);
 
-  // Progressive reveal — cascade result sections
+  // ─── Celebration canvas drawing ───
+  const fireCelebration = (canvas, type) => {
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+
+    const particles = [];
+    const cx = W / 2;
+    const cy = type === "confetti" ? 0 : H * 0.35;
+    const count = type === "confetti" ? 80 : type === "burst" ? 40 : 20;
+
+    const colors = type === "confetti"
+      ? ["#6d28d9", "#d97706", "#dc2626", "#15803d", "#2563eb", "#f59e0b", "#ec4899"]
+      : type === "burst"
+        ? ["#6d28d9", "#a855f7", "#f59e0b", "#fbbf24", "#fff"]
+        : ["#fbbf24", "#fde68a", "#fff", "#f59e0b"];
+
+    for (let i = 0; i < count; i++) {
+      const angle = type === "confetti"
+        ? (Math.PI * 0.2) + Math.random() * (Math.PI * 0.6)
+        : Math.random() * Math.PI * 2;
+      const speed = type === "confetti"
+        ? 2 + Math.random() * 6
+        : type === "burst"
+          ? 3 + Math.random() * 8
+          : 1.5 + Math.random() * 4;
+      particles.push({
+        x: type === "confetti" ? Math.random() * W : cx,
+        y: cy,
+        vx: Math.cos(angle) * speed * (type === "confetti" ? (Math.random() - 0.5) * 2 : 1),
+        vy: type === "confetti" ? 1 + Math.random() * 3 : Math.sin(angle) * speed - 2,
+        size: type === "confetti" ? 4 + Math.random() * 4 : 2 + Math.random() * 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        decay: 0.012 + Math.random() * 0.015,
+        gravity: type === "confetti" ? 0.08 : 0.12,
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 8,
+        shape: type === "confetti" ? (Math.random() > 0.5 ? "rect" : "circle") : "circle",
+        w: 3 + Math.random() * 5,
+        h: 6 + Math.random() * 4,
+      });
+    }
+
+    let frame = 0;
+    const maxFrames = type === "confetti" ? 150 : 90;
+    const animate = () => {
+      ctx.clearRect(0, 0, W, H);
+      let alive = 0;
+      for (const p of particles) {
+        if (p.alpha <= 0) continue;
+        alive++;
+        p.x += p.vx;
+        p.vy += p.gravity;
+        p.y += p.vy;
+        p.vx *= 0.99;
+        p.alpha -= p.decay;
+        p.rotation += p.rotSpeed;
+        if (p.alpha <= 0) continue;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillStyle = p.color;
+        if (p.shape === "rect") {
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        } else {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+      frame++;
+      if (alive > 0 && frame < maxFrames) {
+        requestAnimationFrame(animate);
+      } else {
+        ctx.clearRect(0, 0, W, H);
+      }
+    };
+    requestAnimationFrame(animate);
+  };
+
+  // Progressive reveal — horizontal result cards + celebrations
   useEffect(() => {
     if (screen !== "result") return;
-    // Phase 0 = emoji/feedback (instant), 1 = scores (0.6s), 2 = verdict (1.4s), 3 = deep content (2.2s), 4 = actions (2.8s)
-    const delays = [0, 600, 1400, 2200, 2800];
-    const timers = delays.map((delay, phase) =>
-      setTimeout(() => setRevealPhase(phase), delay)
-    );
-    return () => timers.forEach(clearTimeout);
+    setActiveResultCard(0);
+    setVisitedResultCards({ 0: true });
+    setAnimatedActual(null);
+    setShakeActive(false);
+    setRevealPhase(0);
+
+    // Phase 1: start number countdown
+    const t1 = setTimeout(() => {
+      setRevealPhase(1);
+      // Animated number countdown from prediction to actual
+      const sub = subject;
+      if (!sub) return;
+      const actW = toWeight(sub.r ?? sub._r ?? 0.5);
+      const predPct = Math.round(prediction * 100);
+      const actPct = Math.round(actW * 100);
+      const startTime = performance.now();
+      const duration = 800;
+      const ease = t => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; // easeInOutQuad
+      const tick = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = ease(progress);
+        const current = Math.round(predPct + (actPct - predPct) * eased);
+        setAnimatedActual(current);
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          // Countdown complete — fire celebrations
+          setAnimatedActual(actPct);
+          const d = Math.abs(prediction - actW);
+          const p = lastPts;
+          // Screen shake on big miss
+          if (d > 0.24) {
+            setShakeActive(true);
+            setTimeout(() => setShakeActive(false), 500);
+          }
+          // Canvas celebrations
+          const canvas = celebCanvasRef.current;
+          if (canvas && p > 0) {
+            if (p >= 81) fireCelebration(canvas, "confetti");
+            else if (p >= 49) fireCelebration(canvas, "burst");
+            else fireCelebration(canvas, "sparkle");
+          }
+        }
+      };
+      requestAnimationFrame(tick);
+    }, 600);
+
+    // Phase 2: streak badge
+    const t2 = setTimeout(() => setRevealPhase(2), 1800);
+
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [screen]);
+
+  // Track horizontal scroll position for result cards
+  useEffect(() => {
+    const el = resultScrollRef.current;
+    if (!el || screen !== "result") return;
+    const handler = () => {
+      const idx = Math.round(el.scrollLeft / el.clientWidth);
+      setActiveResultCard(prev => {
+        if (idx !== prev && idx >= 0) {
+          setVisitedResultCards(v => ({ ...v, [idx]: true }));
+          return idx;
+        }
+        return prev;
+      });
+    };
+    el.addEventListener("scroll", handler, { passive: true });
+    return () => el.removeEventListener("scroll", handler);
   }, [screen]);
 
   const handleCustomSubmit = async () => {
@@ -11262,6 +11911,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
   const goHome = () => {
     setScreen("home");
+    setActiveTab("play");
     setSubject(null);
     setRevealed(false);
     setCustomResult(null);
@@ -11295,7 +11945,33 @@ Be historically precise. The cascade should show a chain reaction where each dom
     setSubject(null);
     setRevealed(false);
     setCascadeStep(0);
-    setScreen(target);
+    // Map target to correct tab
+    const BROWSE_SCREENS = ["category", "era", "collection", "scenario"];
+    if (target === "home") {
+      setScreen("home");
+      // Keep current tab when returning to home
+    } else if (BROWSE_SCREENS.includes(target)) {
+      setScreen(target);
+      setActiveTab("browse");
+    } else if (target === "stats") {
+      setScreen(target);
+      setActiveTab("stats");
+    } else {
+      setScreen(target);
+    }
+    window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    scrollTop();
+  };
+
+  // Navigate to browse root
+  const goToBrowse = () => {
+    setScreen("home");
+    setActiveTab("browse");
+    setActiveCategory(null);
+    setActiveEra(null);
+    setActiveCollection(null);
+    setSelectedScenario(null);
+    setSearchQuery("");
     window.history.replaceState({}, '', window.location.pathname + window.location.search);
     scrollTop();
   };
@@ -11748,15 +12424,40 @@ Be historically precise. The cascade should show a chain reaction where each dom
     </svg>
   );
 
-  const BackButton = () => {
+  const BackButton = ({ label, icon, action }) => {
+    // Smart defaults: check where we came from via navHistory
+    const BROWSE_SCREENS = ["category", "era", "collection", "scenario"];
     const backTarget = [...navHistory].reverse().find(s => s !== "predict" && s !== "interlude" && s !== "result");
-    const labels = { category: "Category", collection: "Collection", era: "Era", scenario: "Scenarios", stats: "Stats", home: "Home" };
-    const icons = { category: "📂", collection: "📚", era: "🕰️", scenario: "🦋", stats: "📊", home: "🏠" };
-    const label = labels[backTarget] || "Home";
-    const icon = icons[backTarget] || "🏠";
-    const action = backTarget && backTarget !== "home" ? goBack : goHome;
+    
+    let defaultAction, defaultLabel, defaultIcon;
+    if (action) {
+      defaultAction = action; defaultLabel = label || "Back"; defaultIcon = icon || "←";
+    } else if (BROWSE_SCREENS.includes(screen)) {
+      // Currently IN a browse sub-view → back to browse root
+      defaultAction = goToBrowse;
+      defaultLabel = "Browse";
+      defaultIcon = "📂";
+    } else if (backTarget && BROWSE_SCREENS.includes(backTarget)) {
+      // Came FROM a browse sub-view → go back there
+      defaultAction = goBack;
+      const labels = { category: "Category", collection: "Collection", era: "Era", scenario: "Scenarios" };
+      const icons = { category: "📂", collection: "📚", era: "🕰️", scenario: "🦋" };
+      defaultLabel = labels[backTarget] || "Browse";
+      defaultIcon = icons[backTarget] || "📂";
+    } else if (backTarget === "stats") {
+      defaultAction = () => { setActiveTab("stats"); setScreen("stats"); scrollTop(); };
+      defaultLabel = "Stats";
+      defaultIcon = "📊";
+    } else {
+      defaultAction = goHome;
+      defaultLabel = "Home";
+      defaultIcon = "🏠";
+    }
+    const btnAction = action || defaultAction;
+    const btnLabel = label || defaultLabel;
+    const btnIcon = icon || defaultIcon;
     return (
-      <button onClick={action} style={{
+      <button onClick={btnAction} style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         padding: "8px 14px", borderRadius: 10, fontSize: 13, fontWeight: 600,
         background: "#f7f6f3", color: "#7a7770", border: "1px solid #e5e2db",
@@ -11766,8 +12467,71 @@ Be historically precise. The cascade should show a chain reaction where each dom
         onMouseEnter={e => { e.currentTarget.style.background = "#f0efec"; e.currentTarget.style.color = "#3a3a3a"; }}
         onMouseLeave={e => { e.currentTarget.style.background = "#f7f6f3"; e.currentTarget.style.color = "#7a7770"; }}
       >
-        <span style={{ fontSize: 14 }}>←</span> {icon} {label}
+        <span style={{ fontSize: 14 }}>←</span> {btnIcon} {btnLabel}
       </button>
+    );
+  };
+
+  // ─── TAB BAR ─────────────────────────────────────────────────────────
+  const GAME_SCREENS = ["predict", "interlude", "result", "h2h_lobby", "h2h_summary", "custom_confirm"];
+  const TabBar = () => {
+    if (GAME_SCREENS.includes(screen)) return null;
+    if (!hasSeenIntro && played.length === 0) return null;
+    const tabs = [
+      { id: "play", label: "Play", icon: "🎯", activeIcon: "🎯" },
+      { id: "browse", label: "Browse", icon: "📂", activeIcon: "📂" },
+      { id: "stats", label: "Stats", icon: "📊", activeIcon: "📊" },
+    ];
+    return (
+      <div style={{
+        position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
+        background: "rgba(255,255,255,0.92)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        borderTop: "1px solid #e5e2db",
+        display: "flex", justifyContent: "center", padding: "0 0 env(safe-area-inset-bottom, 0px)",
+      }}>
+        <div style={{ display: "flex", maxWidth: 420, width: "100%", justifyContent: "space-around" }}>
+          {tabs.map(tab => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button key={tab.id} onClick={() => {
+                SFX.click();
+                setActiveTab(tab.id);
+                if (tab.id === "play") {
+                  setScreen("home");
+                  setActiveCategory(null); setActiveEra(null);
+                  setActiveCollection(null); setSelectedScenario(null);
+                  scrollTop();
+                } else if (tab.id === "browse") {
+                  setScreen("home");
+                  setActiveCategory(null); setActiveEra(null);
+                  setActiveCollection(null); setSelectedScenario(null);
+                  scrollTop();
+                } else if (tab.id === "stats") {
+                  setScreen("stats");
+                  scrollTop();
+                }
+              }} style={{
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+                padding: "10px 20px 8px", background: "none", border: "none",
+                cursor: "pointer", transition: "all 0.15s ease",
+                position: "relative",
+              }}>
+                {isActive && <div style={{
+                  position: "absolute", top: -1, left: "25%", right: "25%", height: 2,
+                  background: "#1a1a1a", borderRadius: "0 0 2px 2px",
+                }} />}
+                <span style={{ fontSize: 18, filter: isActive ? "none" : "grayscale(0.6)", opacity: isActive ? 1 : 0.5 }}>
+                  {tab.icon}
+                </span>
+                <span style={{
+                  fontSize: 10, fontWeight: isActive ? 700 : 500, letterSpacing: "0.02em",
+                  color: isActive ? "#1a1a1a" : "#9a9890", fontFamily: sansStack,
+                }}>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     );
   };
 
@@ -12070,43 +12834,44 @@ Be historically precise. The cascade should show a chain reaction where each dom
   // GUIDED ONBOARDING
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "home" && !hasSeenIntro && played.length === 0) {
-    const tutorialFig = ALL_SUBJECTS.find(s => s.id === "galileo");
+    const tutorialFig = ALL_SUBJECTS.find(s => s.id === "telephone");
     const tutR = tutorialFig.r;
     const tutW = toWeight(tutR);
     const tutPredNorm = onboardPred / 100;
     const tutDiff = Math.abs(tutPredNorm - tutW);
     const tutPts = calculatePoints(tutDiff);
     const step = onboardStep;
-
-    const accentColor = "#92400e";
+    const tutLabel = getScoreLabel(tutW, tutorialFig);
 
     return (
       <div style={S.page}>
         <style>{globalCSS}</style>
         <div style={{ ...S.inner, maxWidth: 520, paddingTop: 40 }}>
 
-          {/* Step 0: Welcome */}
+          {/* Step 0: Hook — no rules, just a question */}
           {step === 0 && (
             <div style={{ textAlign: "center", animation: "fadeUp 0.4s ease both" }}>
-              <h1 style={{ ...S.h1, fontSize: 44, marginBottom: 12 }}>
+              <h1 style={{ ...S.h1, fontSize: 42, marginBottom: 16 }}>
                 <span style={{ fontStyle: "italic" }}>Counterfactual</span>
               </h1>
-              <p style={{ fontSize: 17, color: "#5a5750", lineHeight: 1.65, maxWidth: 400, margin: "0 auto 36px" }}>
-                History's biggest question, turned into a game: was this outcome inevitable — or did it hinge on a specific person, moment, or invention?
+              <p style={{ fontSize: 17, color: "#5a5750", lineHeight: 1.65, maxWidth: 400, margin: "0 auto 32px" }}>
+                Could history have happened without <em>that</em> person, invention, or moment? You predict. We'll see how close you get.
               </p>
 
               <div style={{
-                ...S.card, textAlign: "left", padding: "22px 26px", marginBottom: 32,
-                background: "#fffbeb", border: "1px solid #fde68a",
+                ...S.card, padding: "22px 26px", marginBottom: 32,
+                textAlign: "left",
               }}>
-                <div style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7 }}>
-                  <p style={{ margin: "0 0 12px" }}>
-                    You'll see a historical figure, event, or invention and learn its story. Then you predict: on a scale of 0–100%, how much <strong>historical weight</strong> did it carry?
-                  </p>
-                  <p style={{ margin: 0 }}>
-                    <strong>0%</strong> = it was happening no matter what.
-                    <strong> 100%</strong> = nothing else could have produced this outcome.
-                  </p>
+                <p style={{ margin: "0 0 10px", fontSize: 14, color: "#3a3a3a", lineHeight: 1.6 }}>
+                  Every entry gets a <strong>historical weight</strong> from 0–100%.
+                </p>
+                <div style={{ display: "flex", gap: 12, fontSize: 13, color: "#5a5750", lineHeight: 1.5 }}>
+                  <div style={{ flex: 1, padding: "10px 12px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #bbf7d0" }}>
+                    <strong style={{ color: "#15803d" }}>0%</strong> means it was bound to happen — someone else would've done it.
+                  </div>
+                  <div style={{ flex: 1, padding: "10px 12px", background: "#fef2f2", borderRadius: 8, border: "1px solid #fecaca" }}>
+                    <strong style={{ color: "#b91c1c" }}>100%</strong> means nothing else could've produced this outcome.
+                  </div>
                 </div>
               </div>
 
@@ -12114,22 +12879,22 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 onClick={() => setOnboardStep(1)}
                 style={{
                   ...S.btn, padding: "16px 40px", fontSize: 17, fontWeight: 700,
-                  background: accentColor, color: "#fff", border: "none",
+                  background: "#1a1a1a", color: "#fff", border: "none",
                 }}
               >
-                Let's try one →
+                Try one →
               </button>
             </div>
           )}
 
-          {/* Step 1: Meet the figure */}
+          {/* Step 1: The telephone — presented like a real round */}
           {step === 1 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
               <div style={{
-                fontSize: 11, fontWeight: 700, color: accentColor, letterSpacing: "0.08em",
+                fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.08em",
                 textTransform: "uppercase", marginBottom: 16, textAlign: "center",
               }}>
-                Step 1 of 3 · Read
+                Your first prediction
               </div>
 
               <div style={{ ...S.card, padding: "28px", marginBottom: 20 }}>
@@ -12140,23 +12905,18 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 </div>
                 <h2 style={{ ...S.h2, fontSize: 30, marginBottom: 4 }}>{tutorialFig.name}</h2>
                 <p style={{ ...S.muted, fontSize: 14, marginBottom: 16 }}>
-                  {tutorialFig.field} · {formatLifespan(tutorialFig.born, tutorialFig.died)}
+                  {tutorialFig.field} · {tutorialFig.born}
                 </p>
 
-                {tutorialFig.quote && (
-                  <blockquote style={{
-                    margin: "0 0 18px", padding: "12px 18px",
-                    borderLeft: `3px solid ${accentColor}30`,
-                    fontStyle: "italic", color: "#7a7770", fontSize: 14, lineHeight: 1.55,
-                  }}>
-                    "{tutorialFig.quote}"
-                  </blockquote>
-                )}
+                <blockquote style={{
+                  margin: "0 0 18px", padding: "12px 18px",
+                  borderLeft: "3px solid rgba(146,64,14,0.25)",
+                  fontStyle: "italic", color: "#7a7770", fontSize: 14, lineHeight: 1.55,
+                }}>
+                  "{tutorialFig.quote}"
+                </blockquote>
 
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", marginBottom: 8 }}>
-                  Key contributions:
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 4 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {tutorialFig.contributions.map((c, i) => (
                     <span key={i} style={{
                       fontSize: 12, padding: "4px 10px", borderRadius: 6,
@@ -12166,46 +12926,36 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 </div>
               </div>
 
-              <div style={{
-                ...S.card, padding: "16px 20px", marginBottom: 24,
-                background: "#f0fdfa", border: "1px solid #ccfbf1",
-              }}>
-                <p style={{ margin: 0, fontSize: 14, color: "#115e59", lineHeight: 1.6 }}>
-                  📖 Now ask yourself: if Galileo had never existed, how different would the world be? Would someone else have made these discoveries around the same time, or did history need exactly him?
-                </p>
-              </div>
-
               <button
                 onClick={() => setOnboardStep(2)}
                 style={{
                   ...S.btn, width: "100%", padding: "16px", fontSize: 16, fontWeight: 700,
-                  background: accentColor, color: "#fff", border: "none",
+                  background: "#1a1a1a", color: "#fff", border: "none",
                 }}
               >
-                I'm ready to predict →
+                Make my prediction →
               </button>
             </div>
           )}
 
-          {/* Step 2: Make prediction */}
+          {/* Step 2: Predict */}
           {step === 2 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
               <div style={{
-                fontSize: 11, fontWeight: 700, color: accentColor, letterSpacing: "0.08em",
+                fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.08em",
                 textTransform: "uppercase", marginBottom: 16, textAlign: "center",
               }}>
-                Step 2 of 3 · Predict
+                Your prediction
               </div>
 
               <div style={{ ...S.card, padding: "28px", marginBottom: 20 }}>
-                <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 6, textAlign: "center" }}>
-                  {tutorialFig.name}
+                <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 4, textAlign: "center" }}>
+                  The Telephone
                 </h3>
                 <p style={{ fontSize: 13, color: "#9a9890", textAlign: "center", marginBottom: 28 }}>
-                  How much historical weight did they carry?
+                  If the telephone had never been invented in 1876, how different would history be?
                 </p>
 
-                {/* Scale labels */}
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, padding: "0 4px" }}>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#15803d" }}>0%</div>
@@ -12217,11 +12967,10 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#b91c1c" }}>100%</div>
-                    <div style={{ fontSize: 10, color: "#9a9890" }}>Only Galileo</div>
+                    <div style={{ fontSize: 10, color: "#9a9890" }}>History-defining</div>
                   </div>
                 </div>
 
-                {/* Slider */}
                 <input
                   type="range" min="0" max="100" step="1"
                   value={onboardPred}
@@ -12241,28 +12990,19 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 <div style={{
                   textAlign: "center", fontSize: 13, color: "#9a9890", marginBottom: 4,
                 }}>
-                  {onboardPred < 20 ? "Low weight — history finds another way without him"
+                  {onboardPred < 20 ? "Low weight — someone else invents it anyway"
                     : onboardPred < 40 ? "Modest weight — others were close"
-                    : onboardPred < 60 ? "Mixed — some parts needed him, some didn't"
-                    : onboardPred < 80 ? "High weight — hard to replicate this"
-                    : "History-defining — irreplaceable"}
+                    : onboardPred < 60 ? "Mixed — some parts were inevitable, some weren't"
+                    : onboardPred < 80 ? "High weight — history doesn't look the same without this"
+                    : "History-defining — the world changes without it"}
                 </div>
-              </div>
-
-              <div style={{
-                ...S.card, padding: "14px 18px", marginBottom: 24,
-                background: "#fffbeb", border: "1px solid #fde68a",
-              }}>
-                <p style={{ margin: 0, fontSize: 13, color: "#92400e", lineHeight: 1.5 }}>
-                  💡 There's no trick here — go with your gut. The closer you are to the expert analysis, the more points you score.
-                </p>
               </div>
 
               <button
                 onClick={() => setOnboardStep(3)}
                 style={{
                   ...S.btn, width: "100%", padding: "16px", fontSize: 16, fontWeight: 700,
-                  background: accentColor, color: "#fff", border: "none",
+                  background: "#1a1a1a", color: "#fff", border: "none",
                 }}
               >
                 Lock it in →
@@ -12270,106 +13010,120 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </div>
           )}
 
-          {/* Step 3: Result reveal */}
+          {/* Step 3: The reveal — the surprise */}
           {step === 3 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
-              <div style={{
-                fontSize: 11, fontWeight: 700, color: accentColor, letterSpacing: "0.08em",
-                textTransform: "uppercase", marginBottom: 16, textAlign: "center",
-              }}>
-                Step 3 of 3 · Result
-              </div>
 
               <div style={{ ...S.card, padding: "28px", marginBottom: 20, textAlign: "center" }}>
-                <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 20 }}>
-                  {tutorialFig.name}
+                <div style={{ fontSize: 48, marginBottom: 8 }}>
+                  {tutDiff < 0.15 ? "🎯" : tutPredNorm > tutW ? "😮" : "👏"}
+                </div>
+                <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 16 }}>
+                  The Telephone
                 </h3>
 
-                {/* Visual comparison */}
-                <div style={{ marginBottom: 24 }}>
-                  <div style={{
-                    position: "relative", height: 40, background: "#f5f4f0",
-                    borderRadius: 8, overflow: "visible", marginBottom: 12,
-                  }}>
-                    {/* Actual marker */}
-                    <div style={{
-                      position: "absolute", left: `${tutW * 100}%`, top: -6,
-                      transform: "translateX(-50%)", zIndex: 2,
-                    }}>
-                      <div style={{
-                        width: 14, height: 52, borderRadius: 7,
-                        background: accentColor, opacity: 0.9,
-                      }} />
-                      <div style={{
-                        position: "absolute", top: -22, left: "50%", transform: "translateX(-50%)",
-                        fontSize: 11, fontWeight: 800, color: accentColor, whiteSpace: "nowrap",
-                      }}>
-                        Actual: {Math.round(tutW * 100)}%
-                      </div>
-                    </div>
-
-                    {/* Your prediction marker */}
-                    <div style={{
-                      position: "absolute", left: `${onboardPred}%`, top: -2,
-                      transform: "translateX(-50%)", zIndex: 1,
-                    }}>
-                      <div style={{
-                        width: 10, height: 44, borderRadius: 5,
-                        background: "#4f46e5", opacity: 0.7,
-                      }} />
-                      <div style={{
-                        position: "absolute", bottom: -20, left: "50%", transform: "translateX(-50%)",
-                        fontSize: 11, fontWeight: 800, color: "#4f46e5", whiteSpace: "nowrap",
-                      }}>
-                        You: {onboardPred}%
-                      </div>
-                    </div>
+                {/* Score comparison grid */}
+                <div style={{
+                  display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
+                  marginBottom: 20, textAlign: "center", padding: "18px 0",
+                  borderTop: "1px solid #e8e6e1", borderBottom: "1px solid #e8e6e1",
+                }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>You Said</div>
+                    <div style={{ fontSize: 32, fontWeight: 400, color: "#1a1a1a", fontFamily: fontStack }}>{onboardPred}%</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Actual</div>
+                    <div style={{ fontSize: 32, fontWeight: 400, color: tutLabel.color, fontFamily: fontStack }}>{Math.round(tutW * 100)}%</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Points</div>
+                    <div style={{ fontSize: 32, fontWeight: 400, color: tutPts >= 64 ? "#6d28d9" : "#b0ada6", fontFamily: fontStack }}>+{tutPts}</div>
                   </div>
                 </div>
 
-                {/* Points earned */}
-                <div style={{
-                  fontSize: 56, fontWeight: 300, fontFamily: fontStack,
-                  color: tutPts >= 64 ? "#16a34a" : tutPts >= 36 ? "#ca8a04" : "#dc2626",
-                  letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 4,
-                }}>
-                  +{tutPts}
-                </div>
-                <div style={{ fontSize: 13, color: "#9a9890", marginBottom: 20 }}>
-                  {tutDiff < 0.05 ? "Incredible read!" : tutDiff < 0.15 ? "Solid intuition." : tutDiff < 0.25 ? "Not bad for your first try." : "Tough one — you'll calibrate quickly."}
+                {/* Weight bar */}
+                <div style={{ marginBottom: 20, padding: "0 4px" }}>
+                  <div style={{
+                    position: "relative", height: 12, borderRadius: 6,
+                    background: "linear-gradient(90deg, #15803d, #a16207 40%, #c2410c 65%, #b91c1c)",
+                    overflow: "visible",
+                  }}>
+                    {tutDiff > 0.08 && (() => {
+                      const lo = Math.min(tutPredNorm, tutW), hi = Math.max(tutPredNorm, tutW);
+                      return <div style={{
+                        position: "absolute", top: -2, bottom: -2,
+                        left: `${lo * 100}%`, width: `${(hi - lo) * 100}%`,
+                        background: "rgba(255,255,255,0.35)", borderRadius: 4,
+                        border: "1px solid rgba(255,255,255,0.5)",
+                      }} />;
+                    })()}
+                    <div style={{
+                      position: "absolute", top: "50%", transform: "translate(-50%,-50%)",
+                      left: `${onboardPred}%`, width: 16, height: 16, borderRadius: "50%",
+                      background: "#fff", border: "3px solid #1a1a1a",
+                      boxShadow: "0 1px 4px rgba(0,0,0,0.2)", zIndex: 2,
+                    }} />
+                    <div style={{
+                      position: "absolute", top: "50%", transform: "translate(-50%,-50%)",
+                      left: `${Math.round(tutW * 100)}%`, width: 16, height: 16, borderRadius: "50%",
+                      background: tutLabel.color, border: "3px solid #fff",
+                      boxShadow: "0 1px 4px rgba(0,0,0,0.25)", zIndex: 3,
+                    }} />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                    <span style={{ fontSize: 10, color: "#9a9890" }}>0%</span>
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <span style={{ fontSize: 10, color: "#9a9890", display: "flex", alignItems: "center", gap: 4 }}>
+                        <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#fff", border: "2px solid #1a1a1a" }} /> You
+                      </span>
+                      <span style={{ fontSize: 10, color: "#9a9890", display: "flex", alignItems: "center", gap: 4 }}>
+                        <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: tutLabel.color, border: "2px solid #fff" }} /> Actual
+                      </span>
+                    </div>
+                    <span style={{ fontSize: 10, color: "#9a9890" }}>100%</span>
+                  </div>
                 </div>
 
-                {/* Brief reasoning */}
-                <div style={{
-                  textAlign: "left", padding: "16px 18px", borderRadius: 10,
-                  background: "#fafaf9", border: "1px solid #e5e2db",
-                  fontSize: 13, color: "#5a5750", lineHeight: 1.65,
-                }}>
-                  <div style={{ fontWeight: 700, color: "#1a1a1a", marginBottom: 6 }}>Why {Math.round(tutW * 100)}% weight?</div>
-                  {tutorialFig.reasoning.split('.').slice(0, 3).join('.') + '.'}
+                <div style={{ fontSize: 13, color: "#9a9890", marginBottom: 0 }}>
+                  {tutDiff < 0.05 ? "Incredible — you already think like a historian."
+                    : tutDiff < 0.15 ? "Strong intuition. You've got the instinct."
+                    : tutDiff < 0.25 ? "Not bad for your first try."
+                    : "Most people miss this one. That's what makes it fun."}
                 </div>
               </div>
 
-              {/* Scoring explanation */}
+              {/* The surprise — this is the teaching moment */}
               <div style={{
-                ...S.card, padding: "18px 22px", marginBottom: 24,
-                background: "#f0fdf4", border: "1px solid #bbf7d0",
+                ...S.card, padding: "20px 22px", marginBottom: 16,
+                background: "#fffbeb", borderColor: "#fde68a",
               }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#166534", marginBottom: 8 }}>
-                  How scoring works
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#92400e", marginBottom: 8, fontFamily: sansStack }}>
+                  Wait — only {Math.round(tutW * 100)}%?
                 </div>
-                <div style={{ fontSize: 13, color: "#15803d", lineHeight: 1.6 }}>
-                  <p style={{ margin: "0 0 6px" }}>
-                    You were off by <strong>{Math.round(tutDiff * 100)}%</strong> from the analysis.
-                    Points = (100 − distance)². So being off by 10% scores 81 points, but off by 30% scores just 49.
-                  </p>
-                  <p style={{ margin: "0 0 6px" }}>
-                    <strong>Conviction bonus:</strong> Predictions near 50% get a penalty — that's hedging, not predicting.
-                    Move away from the middle to earn up to a 25% bonus. Bold and right beats safe and lucky.
-                  </p>
-                  <p style={{ margin: 0 }}>
-                    Land within 15% to build streaks. Climb from Novice all the way to Oracle.
-                  </p>
+                <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0 }}>
+                  Elisha Gray filed a telephone patent <strong>the same day</strong> as Alexander Graham Bell — February 14, 1876. Antonio Meucci had a working device years earlier. Philipp Reis transmitted speech in 1861. The science of electromagnetism made the telephone inevitable. Bell won a patent race, but if he'd never been born, you'd still be making phone calls.
+                </p>
+              </div>
+
+              <div style={{
+                ...S.card, padding: "20px 22px", marginBottom: 20,
+                background: `${tutLabel.color}06`, borderLeft: `4px solid ${tutLabel.color}`,
+              }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", marginBottom: 6, fontFamily: sansStack }}>
+                  That's what this game is about.
+                </div>
+                <p style={{ fontSize: 13, color: "#5a5750", lineHeight: 1.65, margin: 0 }}>
+                  Not whether something mattered — the telephone obviously changed everything — but whether it needed <em>that specific person</em>. Some inventions were inevitable. Some people shaped history in ways no one else could have. The fun is figuring out which is which.
+                </p>
+              </div>
+
+              {/* Scoring — brief, embedded, not a separate lesson */}
+              <div style={{
+                ...S.card, padding: "16px 20px", marginBottom: 24,
+              }}>
+                <div style={{ fontSize: 13, color: "#5a5750", lineHeight: 1.6 }}>
+                  <strong style={{ color: "#1a1a1a" }}>Scoring:</strong> The closer your prediction, the more points. Harder figures earn bonus multipliers. Bold predictions (away from 50%) earn a conviction bonus. Build streaks by landing within 15%.
                 </div>
               </div>
 
@@ -12381,11 +13135,10 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 }}
                 style={{
                   ...S.btn, width: "100%", padding: "16px", fontSize: 17, fontWeight: 700,
-                  background: "linear-gradient(135deg, #1a1a1a, #3a3a3a)",
-                  color: "#fff", border: "none",
+                  background: "#1a1a1a", color: "#fff", border: "none",
                 }}
               >
-                I'm ready — show me everything →
+                Start playing →
               </button>
             </div>
           )}
@@ -12405,7 +13158,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       <div style={S.page}>
         <style>{globalCSS}</style>
         <ToastOverlay />
-        <div style={S.inner}>
+        <div style={{...S.inner, paddingBottom: 70}}>
           {/* Header */}
           <div style={{ textAlign: "center", marginBottom: 24, paddingTop: 16, position: "relative" }}>
             {/* Sound toggle */}
@@ -12421,18 +13174,19 @@ Be historically precise. The cascade should show a chain reaction where each dom
             >
               {sfxEnabled ? "🔊" : "🔇"}
             </button>
-            <h1 style={{ ...S.h1, fontSize: 44, marginBottom: 4 }}>
+            <h1 style={{ ...S.h1, fontSize: activeTab === "browse" ? 32 : 44, marginBottom: 4, transition: "font-size 0.2s ease" }}>
               <span style={{ fontStyle: "italic" }}>Counterfactual</span>
             </h1>
             <p style={{ ...S.muted, fontSize: 14, margin: "0 auto" }}>
-              Could history have gone another way?
+              {activeTab === "browse" ? `${ALL_SUBJECTS.length} figures across history` : "Could history have gone another way?"}
             </p>
           </div>
 
+          {activeTab === "play" && (<>
           {/* Rank card — clickable → stats */}
           {played.length > 0 && (
             <div
-              onClick={() => { SFX.click(); setNavHistory(prev => [...prev, "home"]); setScreen("stats"); scrollTop(); }}
+              onClick={() => { SFX.click(); setActiveTab("stats"); setScreen("stats"); scrollTop(); }}
               style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "12px 18px", marginBottom: 16, borderRadius: 12,
@@ -12642,6 +13396,110 @@ Be historically precise. The cascade should show a chain reaction where each dom
             );
           })()}
 
+          {/* Analyze Any Figure — compact */}
+          <div style={{
+            padding: "14px 18px", borderRadius: 12, marginBottom: 24,
+            background: "#fff", border: "1px solid #e5e2db",
+          }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <span style={{ fontSize: 16, flexShrink: 0 }}>🔍</span>
+              <input
+                type="text" value={customName}
+                onChange={e => setCustomName(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleCustomSubmit()}
+                placeholder="Analyze any figure not in the database..."
+                style={{ ...S.input, flex: 1, border: "none", background: "transparent", padding: "4px 0" }}
+              />
+              <button
+                onClick={handleCustomSubmit}
+                disabled={!customName.trim() || customLoading}
+                style={{
+                  ...S.btn, ...S.btnPrimary, whiteSpace: "nowrap", padding: "8px 16px", fontSize: 13,
+                  opacity: (!customName.trim() || customLoading) ? 0.4 : 1,
+                  cursor: (!customName.trim() || customLoading) ? "not-allowed" : "pointer",
+                }}
+              >
+                {customLoading ? "..." : "Go →"}
+              </button>
+            </div>
+            {customLoading && (
+              <div style={{ marginTop: 10, textAlign: "center", color: "#7a7770", fontSize: 13 }}>
+                <div style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #ddd9d0", borderTopColor: "#1a1a1a", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 8, verticalAlign: "middle" }} />
+                Researching {customName}...
+              </div>
+            )}
+          </div>
+          </>)}
+
+          {activeTab === "browse" && (<>
+          {/* Browse search bar */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "10px 16px", marginBottom: 20, borderRadius: 12,
+            background: "#fff", border: "1px solid #e5e2db",
+          }}>
+            <span style={{ fontSize: 15, color: "#b0ada6" }}>🔍</span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search all figures..."
+              style={{ ...S.input, flex: 1, border: "none", background: "transparent", padding: "6px 0", fontSize: 14 }}
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "#9a9890", padding: "4px" }}>✕</button>
+            )}
+          </div>
+
+          {/* Browse search results */}
+          {searchQuery.trim() && (() => {
+            const q = searchQuery.toLowerCase().trim();
+            const results = ALL_SUBJECTS.filter(s =>
+              s.name.toLowerCase().includes(q) ||
+              s.field.toLowerCase().includes(q) ||
+              (s.cat && s.cat.toLowerCase().includes(q))
+            ).slice(0, 12);
+            if (results.length === 0) return (
+              <div style={{ textAlign: "center", padding: "20px 0 24px", color: "#9a9890", fontSize: 14 }}>
+                No figures found for "{searchQuery}"
+              </div>
+            );
+            return (
+              <div style={{ marginBottom: 24 }}>
+                <div style={{ fontSize: 12, color: "#9a9890", marginBottom: 10, fontWeight: 600 }}>
+                  {results.length} result{results.length !== 1 ? "s" : ""}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {results.map(s => {
+                    const cat = CATS[s.cat] || { color: "#64748b" };
+                    const isPlayed = played.includes(s.id);
+                    return (
+                      <button key={s.id} onClick={() => selectSubject(s)} style={{
+                        display: "flex", alignItems: "center", gap: 10,
+                        padding: "10px 14px", borderRadius: 10,
+                        background: isPlayed ? "#f5f4f0" : "#fff",
+                        border: "1px solid #e5e2db",
+                        cursor: "pointer", width: "100%", textAlign: "left",
+                        transition: "all 0.15s ease",
+                      }}
+                        onMouseOver={e => { e.currentTarget.style.borderColor = "#d1cdc4"; }}
+                        onMouseOut={e => { e.currentTarget.style.borderColor = "#e5e2db"; }}
+                      >
+                        <span style={{ fontSize: 16 }}>{CAT_ICONS[s.cat] || "👤"}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: "#1a1a1a" }}>{s.name}</div>
+                          <div style={{ fontSize: 11, color: "#9a9890" }}>{s.field}</div>
+                        </div>
+                        {isPlayed && <span style={{ fontSize: 10, color: "#16a34a", fontWeight: 600 }}>✓</span>}
+                        <span style={{ fontSize: 12, color: "#ccc8c0" }}>›</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Browse by Category — horizontal scroll (replaces grid) */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
@@ -12658,7 +13516,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 return (
                   <div
                     key={key}
-                    onClick={() => { setNavHistory(prev => [...prev, "home"]); setActiveCategory(key); setSearchQuery(""); setScreen("category"); scrollTop(); }}
+                    onClick={() => { setActiveTab("browse"); setActiveCategory(key); setSearchQuery(""); setScreen("category"); scrollTop(); }}
                     style={{
                       flex: "0 0 180px", scrollSnapAlign: "start",
                       padding: "14px 16px", borderRadius: 12,
@@ -12698,7 +13556,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 return (
                   <div
                     key={col.id}
-                    onClick={() => { setNavHistory(prev => [...prev, "home"]); setActiveCollection(col); setScreen("collection"); scrollTop(); }}
+                    onClick={() => { setActiveTab("browse"); setActiveCollection(col); setScreen("collection"); scrollTop(); }}
                     style={{
                       flex: "0 0 180px", scrollSnapAlign: "start",
                       padding: "14px 16px", borderRadius: 12,
@@ -12739,7 +13597,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 return (
                   <div
                     key={era.id}
-                    onClick={() => { setNavHistory(prev => [...prev, "home"]); setActiveEra(era); setScreen("era"); scrollTop(); }}
+                    onClick={() => { setActiveTab("browse"); setActiveEra(era); setScreen("era"); scrollTop(); }}
                     style={{
                       flex: "0 0 180px", scrollSnapAlign: "start",
                       padding: "14px 16px", borderRadius: 12,
@@ -12781,7 +13639,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <div
                     key={sc.id}
                     onClick={() => {
-                      if (unlocked) { setNavHistory(prev => [...prev, "home"]); setSelectedScenario(sc); setScreen("scenario"); scrollTop(); }
+                      if (unlocked) { setActiveTab("browse"); setSelectedScenario(sc); setScreen("scenario"); scrollTop(); }
                       else if (unplayedFigs.length === 1) { selectSubject(unplayedFigs[0]); }
                     }}
                     style={{
@@ -12850,41 +13708,10 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </ScrollRow>
           </div>
 
-          {/* Analyze Any Figure — compact */}
-          <div style={{
-            padding: "14px 18px", borderRadius: 12, marginBottom: 24,
-            background: "#fff", border: "1px solid #e5e2db",
-          }}>
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <span style={{ fontSize: 16, flexShrink: 0 }}>🔍</span>
-              <input
-                type="text" value={customName}
-                onChange={e => setCustomName(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleCustomSubmit()}
-                placeholder="Analyze any figure not in the database..."
-                style={{ ...S.input, flex: 1, border: "none", background: "transparent", padding: "4px 0" }}
-              />
-              <button
-                onClick={handleCustomSubmit}
-                disabled={!customName.trim() || customLoading}
-                style={{
-                  ...S.btn, ...S.btnPrimary, whiteSpace: "nowrap", padding: "8px 16px", fontSize: 13,
-                  opacity: (!customName.trim() || customLoading) ? 0.4 : 1,
-                  cursor: (!customName.trim() || customLoading) ? "not-allowed" : "pointer",
-                }}
-              >
-                {customLoading ? "..." : "Go →"}
-              </button>
-            </div>
-            {customLoading && (
-              <div style={{ marginTop: 10, textAlign: "center", color: "#7a7770", fontSize: 13 }}>
-                <div style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #ddd9d0", borderTopColor: "#1a1a1a", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 8, verticalAlign: "middle" }} />
-                Researching {customName}...
-              </div>
-            )}
-          </div>
+          </>)}
         </div>
       </div>
+      <TabBar />
     );
   }
 
@@ -12899,7 +13726,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       <div style={S.page}>
         <style>{globalCSS}</style>
         <ToastOverlay />
-        <div style={{ ...S.inner, maxWidth: 680 }}>
+        <div style={{ ...S.inner, maxWidth: 680, paddingBottom: 70 }}>
           <BackButton />
           <div style={{ ...S.card, padding: 32 }}>
 
@@ -13034,6 +13861,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           </div>
         </div>
       </div>
+      <TabBar />
     );
   }
 
@@ -13096,8 +13924,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
         <style>{globalCSS}</style>
         <ToastOverlay />
         <ShareModal />
-        <div style={S.inner}>
-          <BackButton />
+        <div style={{...S.inner, paddingBottom: 70}}>
 
           {/* Profile card — rank hero + stats banner + horizontal ladder */}
           <div style={{
@@ -13229,7 +14056,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             // Build insight sentences
             const insights = [];
             if (biasDir === "over") {
-              insights.push({ icon: "📐", text: `You tend to overestimate historical weight by about ${biasAbs} points. Many entries are more replaceable than your gut says.` });
+              insights.push({ icon: "📐", text: `You tend to overestimate historical weight by about ${biasAbs} points. Many entries carried less weight than your gut says.` });
             } else if (biasDir === "under") {
               insights.push({ icon: "📐", text: `You tend to underestimate historical weight by about ${biasAbs} points. The specific form matters more than you think.` });
             } else {
@@ -13568,7 +14395,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {colProgress.map(col => (
-                <div key={col.id} onClick={() => { setNavHistory(prev => [...prev, "stats"]); setActiveCollection(col); setScreen("collection"); scrollTop(); }} style={{
+                <div key={col.id} onClick={() => { setActiveTab("browse"); setActiveCollection(col); setScreen("collection"); scrollTop(); }} style={{
                   display: "flex", alignItems: "center", gap: 12,
                   padding: "10px 14px", borderRadius: 10, cursor: "pointer",
                   background: col.complete ? col.bg : "#fafaf9",
@@ -13596,6 +14423,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
         </div>
       </div>
+      <TabBar />
     );
   }
 
@@ -13619,7 +14447,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       <div style={S.page}>
         <style>{globalCSS}</style>
         <ToastOverlay />
-        <div style={S.inner}>
+        <div style={{...S.inner, paddingBottom: 70}}>
           <BackButton />
 
           {/* Category header */}
@@ -13730,6 +14558,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           )}
         </div>
       </div>
+      <TabBar />
     );
   }
 
@@ -13750,7 +14579,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       <div style={S.page}>
         <style>{globalCSS}</style>
         <ToastOverlay />
-        <div style={S.inner}>
+        <div style={{...S.inner, paddingBottom: 70}}>
           <BackButton />
 
           {/* Era header */}
@@ -13851,6 +14680,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           </div>
         </div>
       </div>
+      <TabBar />
     );
   }
 
@@ -13869,10 +14699,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
       <div style={S.page}>
         <style>{globalCSS}</style>
         <ToastOverlay />
-        <div style={S.inner}>
-          <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "8px 16px", fontSize: 14, marginBottom: 20 }}>
-            ← Back
-          </button>
+        <div style={{...S.inner, paddingBottom: 70}}>
+          <BackButton />
 
           {/* Collection header */}
           <div style={{
@@ -13964,6 +14792,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           </div>
         </div>
       </div>
+      <TabBar />
     );
   }
 
@@ -13977,9 +14806,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
         <style>{globalCSS}</style>
         <ToastOverlay />
         <div style={{ ...S.inner, maxWidth: 600 }}>
-          <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "8px 16px", fontSize: 14, marginBottom: 20 }}>
-            ← Back
-          </button>
+          <BackButton label="Home" icon="🏠" action={goHome} />
 
           <div style={{
             ...S.card, animation: "fadeUp 0.35s ease both", textAlign: "center",
@@ -14450,92 +15277,307 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </div>
             )}
 
-            {/* Slider */}
-            <div style={{ marginBottom: 28 }}>
-              <h4 style={{ fontSize: 15, color: "#1a1a1a", marginBottom: 18, fontWeight: 600 }}>
-                How much did {subject.name} shape history?
-              </h4>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, paddingTop: 28 }}>
-                <span style={{ fontSize: 12, color: "#15803d", fontWeight: 600 }}>Low Weight — Bound to Happen</span>
-                <span style={{ fontSize: 12, color: "#b91c1c", fontWeight: 600 }}>History-Defining — Irreplaceable</span>
-              </div>
-              <div style={{ position: "relative", marginBottom: 4 }}>
-                {/* Floating label above thumb */}
-                <div style={{
-                  position: "absolute", top: -32,
-                  left: `calc(${Math.round(prediction * 100)}% - ${Math.round(prediction * 100) * 0.2}px)`,
-                  transform: "translateX(-50%)",
-                  padding: "3px 8px", borderRadius: 6,
-                  background: predLabel.color, color: "#fff",
-                  fontSize: 12, fontWeight: 700, whiteSpace: "nowrap",
-                  pointerEvents: "none",
-                  transition: "left 0.05s ease-out, background 0.2s ease",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-                }}>
-                  {Math.round(prediction * 100)}%
-                  <div style={{
-                    position: "absolute", bottom: -4, left: "50%", transform: "translateX(-50%)",
-                    width: 0, height: 0,
-                    borderLeft: "5px solid transparent", borderRight: "5px solid transparent",
-                    borderTop: `5px solid ${predLabel.color}`,
-                    transition: "border-top-color 0.2s ease",
-                  }} />
-                </div>
-                <input
-                  type="range" min="0" max="100" step="5"
-                  value={Math.round(prediction * 100)}
-                  onChange={e => { const v = parseInt(e.target.value); setPrediction(v / 100); SFX.tick(v); }}
-                  style={{
-                    width: "100%", height: 8, borderRadius: 4,
-                    appearance: "none", WebkitAppearance: "none",
-                    background: "linear-gradient(90deg, #15803d, #a16207 40%, #c2410c 65%, #b91c1c)",
-                    cursor: "pointer", outline: "none",
-                  }}
-                />
-              </div>
-              <div style={{ textAlign: "center", marginTop: 22 }}>
-                <div style={{
-                  fontSize: 56, fontWeight: 400, color: predLabel.color,
-                  fontFamily: fontStack, letterSpacing: "-0.03em", lineHeight: 1,
-                }}>
-                  {Math.round(prediction * 100)}%
-                </div>
-                <div style={{ fontSize: 16, color: predLabel.color, fontWeight: 600, marginTop: 6 }}>
-                  {predLabel.label}
-                </div>
-                <div style={{ ...S.muted, marginTop: 6, fontSize: 13 }}>
-                  {predLabel.desc}
-                </div>
-                {/* Conviction indicator */}
-                {(() => {
-                  const cm = CONVICTION_MULT(prediction);
-                  if (cm.tier === "penalty") return (
-                    <div style={{
-                      marginTop: 10, fontSize: 11, fontWeight: 700,
-                      color: "#dc2626", letterSpacing: "0.02em",
-                    }}>
-                      ⚠️ {cm.label} — move away from 50%
-                    </div>
-                  );
-                  if (cm.tier === "bonus") return (
-                    <div style={{
-                      marginTop: 10, fontSize: 11, fontWeight: 700,
-                      color: "#059669", letterSpacing: "0.02em",
-                    }}>
-                      ✦ +{cm.label}
-                    </div>
-                  );
-                  return null;
-                })()}
-              </div>
-            </div>
+            {/* ═══ PREDICTION GAUGE ═══ */}
+            {(() => {
+              const pct = Math.round(prediction * 100);
+              const cm = CONVICTION_MULT(prediction);
 
-            <button
-              onClick={submitPrediction}
-              style={{ ...S.btn, ...S.btnPrimary, width: "100%", padding: "16px", fontSize: 17 }}
-            >
-              Lock in Prediction
-            </button>
+              // Gauge geometry
+              const CX = 150, CY = 150, R = 115, R2 = 95;
+              const toRad = (deg) => (deg * Math.PI) / 180;
+              // 0% = 180° (left), 100% = 0° (right)
+              const valToAngle = (v) => 180 - v * 180;
+              const angleToXY = (deg, r) => ({
+                x: CX + r * Math.cos(toRad(deg)),
+                y: CY - r * Math.sin(toRad(deg)),
+              });
+
+              const needleAngle = valToAngle(prediction);
+              const needleTip = angleToXY(needleAngle, R - 8);
+              const needleBase1 = angleToXY(needleAngle + 90, 4);
+              const needleBase2 = angleToXY(needleAngle - 90, 4);
+
+              // Arc segments with colors
+              const zones = [
+                { from: 0, to: 0.20, color: "#15803d", label: "Inevitable" },
+                { from: 0.20, to: 0.50, color: "#a16207", label: "Moderate" },
+                { from: 0.50, to: 0.80, color: "#c2410c", label: "High" },
+                { from: 0.80, to: 1.0, color: "#b91c1c", label: "Singular" },
+              ];
+
+              const arcPath = (startVal, endVal, r) => {
+                const a1 = valToAngle(startVal);
+                const a2 = valToAngle(endVal);
+                const p1 = angleToXY(a1, r);
+                const p2 = angleToXY(a2, r);
+                const sweep = a1 > a2 ? 0 : 1;
+                return `M ${p1.x} ${p1.y} A ${r} ${r} 0 0 ${sweep} ${p2.x} ${p2.y}`;
+              };
+
+              // Filled arc up to current value
+              const fillPath = (endVal) => {
+                if (endVal <= 0.001) return "";
+                const a1 = 180;
+                const a2 = valToAngle(Math.min(endVal, 1));
+                const p1 = angleToXY(a1, R);
+                const p2 = angleToXY(a2, R);
+                const large = (a1 - a2) > 180 ? 1 : 0;
+                return `M ${p1.x} ${p1.y} A ${R} ${R} 0 ${large} 0 ${p2.x} ${p2.y}`;
+              };
+
+              // Handle pointer interaction
+              const pointerToValue = (clientX, clientY) => {
+                const svg = gaugeRef.current;
+                if (!svg) return null;
+                const rect = svg.getBoundingClientRect();
+                const scaleX = 300 / rect.width;
+                const scaleY = 180 / rect.height;
+                const px = (clientX - rect.left) * scaleX;
+                const py = (clientY - rect.top) * scaleY;
+                const dx = px - CX;
+                const dy = CY - py;
+                let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                if (angle < -5) angle = 0;
+                if (angle > 185) angle = 180;
+                angle = Math.max(0, Math.min(180, angle));
+                let val = (180 - angle) / 180;
+                // Snap to 5% increments
+                val = Math.round(val * 20) / 20;
+                return Math.max(0, Math.min(1, val));
+              };
+
+              const handlePointerDown = (e) => {
+                e.preventDefault();
+                const val = pointerToValue(e.clientX, e.clientY);
+                if (val !== null) {
+                  setPrediction(val);
+                  SFX.tick(val * 100);
+                  // Check zone crossing
+                  const zone = zones.find(z => val >= z.from && val < z.to) || zones[zones.length - 1];
+                  if (lastZoneRef.current && lastZoneRef.current !== zone.label) {
+                    SFX.click();
+                  }
+                  lastZoneRef.current = zone.label;
+                }
+                const onMove = (ev) => {
+                  const t = ev.touches ? ev.touches[0] : ev;
+                  const v = pointerToValue(t.clientX, t.clientY);
+                  if (v !== null) {
+                    setPrediction(v);
+                    SFX.tick(v * 100);
+                    const z = zones.find(zn => v >= zn.from && v < zn.to) || zones[zones.length - 1];
+                    if (lastZoneRef.current && lastZoneRef.current !== z.label) {
+                      SFX.click();
+                    }
+                    lastZoneRef.current = z.label;
+                  }
+                };
+                const onUp = () => {
+                  window.removeEventListener("pointermove", onMove);
+                  window.removeEventListener("pointerup", onUp);
+                  window.removeEventListener("pointercancel", onUp);
+                };
+                window.addEventListener("pointermove", onMove);
+                window.addEventListener("pointerup", onUp);
+                window.addEventListener("pointercancel", onUp);
+              };
+
+              const handleLockIn = () => {
+                setLockingIn(true);
+                SFX.lock();
+                setTimeout(() => {
+                  setLockingIn(false);
+                  submitPrediction();
+                }, 500);
+              };
+
+              // Current zone
+              const currentZone = zones.find(z => prediction >= z.from && prediction < z.to) || zones[zones.length - 1];
+
+              return (
+                <div style={{ marginBottom: 20 }}>
+                  <h4 style={{ fontSize: 15, color: "#1a1a1a", marginBottom: 12, fontWeight: 600, textAlign: "center" }}>
+                    How much did {subject.name} shape history?
+                  </h4>
+
+                  {/* Gauge */}
+                  <div style={{
+                    position: "relative", width: "100%", maxWidth: 320, margin: "0 auto",
+                    animation: lockingIn ? "lockShake 0.4s ease" : "none",
+                  }}>
+                    <svg
+                      ref={gaugeRef}
+                      viewBox="0 0 300 170"
+                      style={{ width: "100%", height: "auto", touchAction: "none", cursor: "pointer", overflow: "visible" }}
+                      onPointerDown={handlePointerDown}
+                    >
+                      {/* Background arc segments */}
+                      {zones.map((zone, i) => (
+                        <path key={i}
+                          d={arcPath(zone.from, zone.to, R)}
+                          fill="none" stroke={`${zone.color}20`} strokeWidth={18}
+                          strokeLinecap="butt"
+                        />
+                      ))}
+
+                      {/* Filled arc — the player's selection */}
+                      {prediction > 0.01 && (
+                        <path
+                          d={fillPath(prediction)}
+                          fill="none" stroke={predLabel.color} strokeWidth={18}
+                          strokeLinecap="round"
+                          style={{ transition: "stroke 0.15s ease", filter: `drop-shadow(0 0 ${lockingIn ? 12 : 4}px ${predLabel.color}60)` }}
+                        />
+                      )}
+
+                      {/* Tick marks */}
+                      {Array.from({ length: 21 }, (_, i) => {
+                        const val = i / 20;
+                        const angle = valToAngle(val);
+                        const isMajor = i % 5 === 0;
+                        const outer = angleToXY(angle, R + 10);
+                        const inner = angleToXY(angle, R + (isMajor ? 2 : 5));
+                        return (
+                          <line key={i}
+                            x1={outer.x} y1={outer.y} x2={inner.x} y2={inner.y}
+                            stroke={isMajor ? "#78716c" : "#c4c0b8"} strokeWidth={isMajor ? 1.5 : 0.8}
+                          />
+                        );
+                      })}
+
+                      {/* Tick labels: 0, 25, 50, 75, 100 */}
+                      {[0, 25, 50, 75, 100].map(v => {
+                        const angle = valToAngle(v / 100);
+                        const pos = angleToXY(angle, R + 22);
+                        return (
+                          <text key={v} x={pos.x} y={pos.y + 1}
+                            textAnchor="middle" dominantBaseline="middle"
+                            style={{ fontSize: 10, fill: "#9a9890", fontWeight: 600, fontFamily: sansStack, userSelect: "none" }}
+                          >
+                            {v}
+                          </text>
+                        );
+                      })}
+
+                      {/* Zone labels on inner arc */}
+                      {zones.map((zone, i) => {
+                        const midVal = (zone.from + zone.to) / 2;
+                        const angle = valToAngle(midVal);
+                        const pos = angleToXY(angle, R2 - 16);
+                        const isActive = currentZone.label === zone.label;
+                        return (
+                          <text key={i} x={pos.x} y={pos.y}
+                            textAnchor="middle" dominantBaseline="middle"
+                            style={{
+                              fontSize: isActive ? 9.5 : 8.5, fontWeight: isActive ? 700 : 500,
+                              fill: isActive ? zone.color : `${zone.color}60`,
+                              fontFamily: sansStack, userSelect: "none",
+                              transition: "fill 0.2s, font-size 0.2s",
+                            }}
+                          >
+                            {zone.label}
+                          </text>
+                        );
+                      })}
+
+                      {/* Needle */}
+                      <polygon
+                        points={`${needleTip.x},${needleTip.y} ${needleBase1.x},${needleBase1.y} ${needleBase2.x},${needleBase2.y}`}
+                        fill={predLabel.color}
+                        style={{ transition: "fill 0.15s ease", filter: `drop-shadow(0 1px 3px ${predLabel.color}50)` }}
+                      />
+                      {/* Needle hub */}
+                      <circle cx={CX} cy={CY} r={8} fill={predLabel.color}
+                        style={{ transition: "fill 0.15s ease" }}
+                      />
+                      <circle cx={CX} cy={CY} r={4} fill="#fff" />
+
+                      {/* Lock flash overlay */}
+                      {lockingIn && (
+                        <circle cx={CX} cy={CY} r={R + 20}
+                          fill="none" stroke={predLabel.color} strokeWidth={3}
+                          opacity={0.6}
+                          style={{ animation: "lockFlash 0.5s ease-out forwards" }}
+                        />
+                      )}
+                    </svg>
+
+                    {/* Center readout — positioned over the gauge */}
+                    <div style={{
+                      position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)",
+                      textAlign: "center", pointerEvents: "none",
+                    }}>
+                      <div style={{
+                        fontSize: 52, fontWeight: 400, color: predLabel.color,
+                        fontFamily: fontStack, letterSpacing: "-0.03em", lineHeight: 1,
+                        transition: "color 0.15s ease",
+                        animation: lockingIn ? "gaugePulse 0.3s ease" : "none",
+                      }}>
+                        {pct}<span style={{ fontSize: 28, fontWeight: 300 }}>%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Label + description below gauge */}
+                  <div style={{ textAlign: "center", marginTop: 8 }}>
+                    <div style={{
+                      fontSize: 17, color: predLabel.color, fontWeight: 700, marginBottom: 4,
+                      transition: "color 0.15s ease",
+                    }}>
+                      {predLabel.label}
+                    </div>
+                    <div style={{ ...S.muted, fontSize: 13, maxWidth: 340, margin: "0 auto" }}>
+                      {predLabel.desc}
+                    </div>
+                    {/* Conviction indicator */}
+                    {cm.tier === "penalty" && (
+                      <div style={{
+                        marginTop: 10, fontSize: 11, fontWeight: 700,
+                        color: "#dc2626", letterSpacing: "0.02em",
+                      }}>
+                        ⚠️ {cm.label} — move away from 50%
+                      </div>
+                    )}
+                    {cm.tier === "bonus" && (
+                      <div style={{
+                        marginTop: 10, fontSize: 11, fontWeight: 700,
+                        color: "#059669", letterSpacing: "0.02em",
+                      }}>
+                        ✦ +{cm.label}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Lock In Button */}
+                  <button
+                    onClick={lockingIn ? undefined : handleLockIn}
+                    disabled={lockingIn}
+                    style={{
+                      ...S.btn, width: "100%", padding: "18px", fontSize: 17, fontWeight: 700,
+                      marginTop: 24, borderRadius: 14, border: "none", cursor: lockingIn ? "default" : "pointer",
+                      color: "#fff", position: "relative", overflow: "hidden",
+                      background: lockingIn
+                        ? predLabel.color
+                        : `linear-gradient(135deg, ${predLabel.color}, ${predLabel.color}dd)`,
+                      boxShadow: lockingIn
+                        ? `0 0 30px ${predLabel.color}40`
+                        : `0 4px 14px ${predLabel.color}25`,
+                      transform: lockingIn ? "scale(0.98)" : "scale(1)",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {lockingIn ? (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ display: "inline-block", width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.5s linear infinite" }} />
+                        Locking in {pct}%...
+                      </span>
+                    ) : (
+                      <>🎯 Lock in at {pct}%</>
+                    )}
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -14646,150 +15688,220 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const feedback = getAccuracyFeedback(diff, pts, subject, prediction);
     const difficulty = getDifficultyLabel(r);
     const isReplay = pts === 0 && diff >= 0.03;
-    // Reveal helper: returns style that fades in at the given phase
-    const rp = (phase) => ({
-      opacity: revealPhase >= phase ? 1 : 0,
-      transform: revealPhase >= phase ? "translateY(0)" : "translateY(12px)",
-      transition: "opacity 0.5s ease, transform 0.5s ease",
+
+    // Build dynamic card list
+    const resultCards = ["score", "reasoning"];
+    if (subject.cascade && subject.cascade.length > 0) resultCards.push("cascade");
+    if (subject.modernDay) resultCards.push("world");
+    if (subject.timeline && subject.timeline.length > 0) resultCards.push("timeline");
+    resultCards.push("actions");
+    const totalResultCards = resultCards.length;
+
+    const rcFade = (cardIdx, delay = 0) => ({
+      opacity: visitedResultCards[cardIdx] ? 1 : 0,
+      transform: visitedResultCards[cardIdx] ? "translateY(0)" : "translateY(16px)",
+      transition: `opacity 0.5s ease ${delay}s, transform 0.5s ease ${delay}s`,
     });
 
-    return (
-      <div style={S.page}>
-        <style>{globalCSS}</style>
-        <ToastOverlay />
-        <ShareModal />
-        <div style={{ ...S.inner, maxWidth: 680 }}>
-          <div style={{ ...S.card, padding: 32 }}>
+    const goToResultCard = (idx) => {
+      const el = resultScrollRef.current;
+      if (!el || idx < 0 || idx >= totalResultCards) return;
+      el.scrollTo({ left: idx * el.clientWidth, behavior: "smooth" });
+    };
 
-            {/* Phase 0: Emoji + feedback + name */}
-            <div style={{ textAlign: "center", marginBottom: 28, ...rp(0) }}>
+    const swipeHint = (text) => (
+      <div style={{
+        marginTop: "auto", paddingTop: 24, textAlign: "center",
+        fontSize: 13, color: "#9a9890", fontFamily: sansStack,
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+        animation: "pulse 3s ease-in-out infinite",
+      }}>
+        {text} <span style={{ fontSize: 15 }}>→</span>
+      </div>
+    );
+
+    const cardShell = (extra = {}) => ({
+      minWidth: "100vw", width: "100vw", height: "100%",
+      scrollSnapAlign: "start",
+      overflowY: "auto", overflowX: "hidden",
+      WebkitOverflowScrolling: "touch",
+      position: "relative", background: "#f7f6f3",
+      ...extra,
+    });
+
+    const cardInner = (extra = {}) => ({
+      maxWidth: 600, margin: "0 auto",
+      padding: "48px 24px 88px",
+      minHeight: "100%",
+      display: "flex", flexDirection: "column",
+      ...extra,
+    });
+
+    // ═══ CARD: SCORE REVEAL ═══
+    const ScoreCard = () => {
+      const ci = resultCards.indexOf("score");
+      const countdownDone = animatedActual !== null && animatedActual === Math.round(w * 100);
+      return (
+        <div style={cardShell()}>
+          <div style={{
+            ...cardInner(),
+            animation: shakeActive ? "celebShake 0.5s ease" : "none",
+          }}>
+            <div style={{ ...S.card, padding: "28px 24px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+
+              {/* Glow ring behind emoji on great scores */}
+              {countdownDone && pts >= 64 && (
+                <div style={{
+                  position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)",
+                  width: 80, height: 80, borderRadius: "50%",
+                  background: pts >= 81 ? "radial-gradient(circle, rgba(109,40,217,0.15), transparent 70%)" : "radial-gradient(circle, rgba(245,158,11,0.12), transparent 70%)",
+                  animation: "glowRing 1.2s ease-out forwards",
+                  pointerEvents: "none",
+                }} />
+              )}
+
               {isDaily && (
                 <div style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "5px 14px", borderRadius: 8, marginBottom: 12,
                   background: "#fef3c7", border: "1px solid #fde68a",
-                  fontSize: 12, fontWeight: 700, color: "#d97706",
+                  fontSize: 12, fontWeight: 700, color: "#d97706", fontFamily: sansStack,
                 }}>
                   🗓️ Daily Challenge #{getDayNumber()}
                 </div>
               )}
-              <div style={{ fontSize: 56, marginBottom: 10 }}>{feedback.emoji}</div>
-              <h2 style={{ ...S.h2, fontSize: 30, marginBottom: 8 }}>{subject.name}</h2>
-              <p style={{ fontSize: 16, color: "#3a3a3a", fontWeight: 500, margin: "0 0 8px", maxWidth: 420, marginLeft: "auto", marginRight: "auto", lineHeight: 1.55 }}>
-                {feedback.msg}
-              </p>
-              <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
-              <span style={{ ...S.tag(difficulty.color), marginLeft: 6 }}>{difficulty.label}</span>
+
+              <div style={{
+                fontSize: 52, marginBottom: 8,
+                ...rcFade(ci, 0),
+                animation: revealPhase >= 1 ? "emojiDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both" : "none",
+                opacity: revealPhase >= 1 ? undefined : 0,
+              }}>{feedback.emoji}</div>
+
+              <h2 style={{ ...S.h2, fontSize: 28, marginBottom: 6, ...rcFade(ci, 0.06) }}>{subject.name}</h2>
+
+              <p style={{
+                fontSize: 15, color: "#3a3a3a", fontWeight: 500, margin: "0 0 8px",
+                maxWidth: 400, marginLeft: "auto", marginRight: "auto", lineHeight: 1.55,
+                fontFamily: sansStack, ...rcFade(ci, 0.1),
+              }}>{feedback.msg}</p>
+
+              {/* Tags */}
+              <div style={{ ...rcFade(ci, 0.14), marginBottom: 6 }}>
+                <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
+                <span style={{ ...S.tag(difficulty.color), marginLeft: 6 }}>{difficulty.label}</span>
+              </div>
+
+              {/* Contribution tags */}
               {subject.contributions && subject.contributions.length > 0 && (
-                <div style={{ marginTop: 14 }}>
+                <div style={{ marginTop: 12, marginBottom: 4, ...rcFade(ci, 0.18) }}>
                   <ContributionTags items={subject.contributions} />
                 </div>
               )}
             </div>
 
-            {/* Phase 1: Score comparison — dramatic reveal */}
+            {/* Score grid */}
             <div style={{
+              ...S.card, padding: "22px 24px", textAlign: "center",
               display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
-              marginBottom: 28, textAlign: "center", padding: "22px 0",
-              borderTop: "1px solid #e8e6e1", borderBottom: "1px solid #e8e6e1",
-              ...rp(1),
+              ...rcFade(ci, 0.26),
             }}>
               <div>
-                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>You Said</div>
-                <div style={{ fontSize: 34, fontWeight: 400, color: "#1a1a1a", fontFamily: fontStack }}>{Math.round(prediction * 100)}%</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>You Said</div>
+                <div style={{ fontSize: 32, fontWeight: 400, color: "#1a1a1a", fontFamily: fontStack }}>{Math.round(prediction * 100)}%</div>
               </div>
               <div>
-                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Actual</div>
-                <div style={{ fontSize: 34, fontWeight: 400, color: actualLabel.color, fontFamily: fontStack }}>{Math.round(w * 100)}%</div>
-              </div>
-              <div>
-                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Points</div>
-                <div style={{ fontSize: 34, fontWeight: 400, color: pts > 0 ? "#6d28d9" : "#b0ada6", fontFamily: fontStack }}>
-                  {pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Actual</div>
+                <div style={{
+                  fontSize: 32, fontWeight: 400, fontFamily: fontStack,
+                  color: animatedActual !== null ? actualLabel.color : "#d4d0c8",
+                  transition: "color 0.3s ease",
+                  overflow: "hidden",
+                }}>
+                  {animatedActual !== null ? (
+                    <span style={{
+                      display: "inline-block",
+                      animation: countdownDone ? "none" : "none",
+                    }}>{animatedActual}%</span>
+                  ) : "—"}
                 </div>
-                {/* Difficulty multiplier badge */}
-                {pts > 0 && !isReplay && (() => {
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Points</div>
+                <div style={{
+                  fontSize: 32, fontWeight: 400, fontFamily: fontStack,
+                  color: countdownDone ? (pts > 0 ? "#6d28d9" : "#b0ada6") : "#d4d0c8",
+                }}>
+                  {countdownDone ? (
+                    <span style={{
+                      display: "inline-block",
+                      animation: "scorePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
+                    }}>{pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}</span>
+                  ) : "—"}
+                </div>
+                {countdownDone && pts > 0 && !isReplay && (() => {
                   const mult = DIFFICULTY_MULTIPLIER(r);
                   if (mult.mult > 1) return (
-                    <div style={{ fontSize: 11, color: mult.tier === "hard" ? "#dc2626" : "#d97706", fontWeight: 700, marginTop: 2 }}>
+                    <div style={{ fontSize: 11, color: mult.tier === "hard" ? "#dc2626" : "#d97706", fontWeight: 700, marginTop: 2, fontFamily: sansStack, animation: "fadeUp 0.3s ease 0.2s both" }}>
                       {mult.label} {mult.tier} bonus
                     </div>
                   );
                   return null;
                 })()}
-                {/* Conviction multiplier badge */}
-                {!isReplay && (() => {
+                {countdownDone && !isReplay && (() => {
                   const cm = CONVICTION_MULT(prediction);
-                  if (cm.tier === "bonus") return (
-                    <div style={{ fontSize: 11, color: "#059669", fontWeight: 700, marginTop: 2 }}>
-                      +{cm.label}
-                    </div>
-                  );
-                  if (cm.tier === "penalty") return (
-                    <div style={{ fontSize: 11, color: "#dc2626", fontWeight: 700, marginTop: 2 }}>
-                      −{cm.label}
-                    </div>
-                  );
+                  if (cm.tier === "bonus") return <div style={{ fontSize: 11, color: "#059669", fontWeight: 700, marginTop: 2, fontFamily: sansStack, animation: "fadeUp 0.3s ease 0.3s both" }}>+{cm.label}</div>;
+                  if (cm.tier === "penalty") return <div style={{ fontSize: 11, color: "#dc2626", fontWeight: 700, marginTop: 2, fontFamily: sansStack, animation: "fadeUp 0.3s ease 0.3s both" }}>−{cm.label}</div>;
                   return null;
                 })()}
-                {challengeMode && pts > 0 && !isReplay && (
-                  <div style={{ fontSize: 11, color: "#7c2d12", fontWeight: 700, marginTop: 2 }}>
-                    2× challenge mode
-                  </div>
+                {countdownDone && challengeMode && pts > 0 && !isReplay && (
+                  <div style={{ fontSize: 11, color: "#7c2d12", fontWeight: 700, marginTop: 2, fontFamily: sansStack, animation: "fadeUp 0.3s ease 0.35s both" }}>2× challenge mode</div>
                 )}
-                {streakMilestone && !isReplay && streakMilestone.bonus > 0 && (
-                  <div style={{ fontSize: 12, color: "#92400e", fontWeight: 700, marginTop: 2 }}>
-                    +{streakMilestone.bonus} streak
-                  </div>
+                {countdownDone && streakMilestone && !isReplay && streakMilestone.bonus > 0 && (
+                  <div style={{ fontSize: 12, color: "#92400e", fontWeight: 700, marginTop: 2, fontFamily: sansStack, animation: "fadeUp 0.3s ease 0.4s both" }}>+{streakMilestone.bonus} streak</div>
                 )}
-                {isReplay && <div style={{ fontSize: 11, color: "#b0ada6", marginTop: 4 }}>Already played</div>}
+                {countdownDone && isReplay && <div style={{ fontSize: 11, color: "#b0ada6", marginTop: 4, fontFamily: sansStack }}>Already played</div>}
               </div>
             </div>
 
-            {/* Visual gap bar — makes distance between prediction and actual visceral */}
-            <div style={{
-              marginBottom: diff > 0.24 ? 8 : 20, padding: "0 4px",
-              ...rp(1),
-            }}>
+            {/* Weight bar */}
+            <div style={{ ...S.card, padding: "18px 22px", ...rcFade(ci, 0.34) }}>
               <div style={{
                 position: "relative", height: 12, borderRadius: 6,
                 background: "linear-gradient(90deg, #15803d, #a16207 40%, #c2410c 65%, #b91c1c)",
                 overflow: "visible",
               }}>
-                {/* Gap highlight zone */}
-                {diff > 0.08 && (() => {
-                  const lo = Math.min(prediction, w);
-                  const hi = Math.max(prediction, w);
-                  return (
-                    <div style={{
-                      position: "absolute", top: -2, bottom: -2,
-                      left: `${lo * 100}%`, width: `${(hi - lo) * 100}%`,
-                      background: "rgba(255,255,255,0.35)",
-                      borderRadius: 4,
-                      border: "1px solid rgba(255,255,255,0.5)",
-                    }} />
-                  );
+                {/* Gap highlight — animates during countdown */}
+                {diff > 0.08 && animatedActual !== null && (() => {
+                  const animW = (animatedActual ?? Math.round(prediction * 100)) / 100;
+                  const lo = Math.min(prediction, animW), hi = Math.max(prediction, animW);
+                  if (hi - lo < 0.02) return null;
+                  return <div style={{
+                    position: "absolute", top: -2, bottom: -2,
+                    left: `${lo * 100}%`, width: `${(hi - lo) * 100}%`,
+                    background: "rgba(255,255,255,0.35)", borderRadius: 4, border: "1px solid rgba(255,255,255,0.5)",
+                    transition: "left 0.05s linear, width 0.05s linear",
+                  }} />;
                 })()}
-                {/* Prediction marker */}
+                {/* You dot — always visible */}
                 <div style={{
-                  position: "absolute", top: "50%", transform: "translate(-50%, -50%)",
+                  position: "absolute", top: "50%", transform: "translate(-50%,-50%)",
                   left: `${Math.round(prediction * 100)}%`,
                   width: 16, height: 16, borderRadius: "50%",
                   background: "#fff", border: "3px solid #1a1a1a",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
-                  zIndex: 2,
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.2)", zIndex: 2,
                 }} />
-                {/* Actual marker */}
-                <div style={{
-                  position: "absolute", top: "50%", transform: "translate(-50%, -50%)",
-                  left: `${Math.round(w * 100)}%`,
-                  width: 16, height: 16, borderRadius: "50%",
+                {/* Actual dot — slides during countdown */}
+                {animatedActual !== null && <div style={{
+                  position: "absolute", top: "50%", transform: "translate(-50%,-50%)",
+                  left: `${animatedActual}%`,
+                  width: countdownDone ? 16 : 14, height: countdownDone ? 16 : 14, borderRadius: "50%",
                   background: actualLabel.color, border: "3px solid #fff",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.25)",
-                  zIndex: 3,
-                }} />
+                  boxShadow: countdownDone ? "0 1px 6px rgba(0,0,0,0.3)" : "0 1px 4px rgba(0,0,0,0.2)", zIndex: 3,
+                  transition: "width 0.2s, height 0.2s, box-shadow 0.2s",
+                }} />}
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontFamily: sansStack }}>
                 <span style={{ fontSize: 10, color: "#9a9890" }}>0%</span>
                 <div style={{ display: "flex", gap: 12 }}>
                   <span style={{ fontSize: 10, color: "#9a9890", display: "flex", alignItems: "center", gap: 4 }}>
@@ -14803,16 +15915,16 @@ Be historically precise. The cascade should show a chain reaction where each dom
               </div>
             </div>
 
-            {/* Big miss commentary — vivid one-liner when gap is 25%+ */}
-            {diff > 0.24 && (
+            {/* Big miss commentary — appears after countdown with shake */}
+            {diff > 0.24 && countdownDone && (
               <div style={{
-                textAlign: "center", padding: "12px 20px", marginBottom: 20,
-                borderRadius: 10, fontSize: 14, lineHeight: 1.55,
+                textAlign: "center", padding: "12px 20px",
+                borderRadius: 10, fontSize: 14, lineHeight: 1.55, fontStyle: "italic",
                 color: prediction > w ? "#991b1b" : "#166534",
                 background: prediction > w ? "#fef2f2" : "#f0fdf4",
                 border: prediction > w ? "1px solid #fecaca" : "1px solid #bbf7d0",
-                fontStyle: "italic",
-                ...rp(1),
+                fontFamily: sansStack,
+                animation: "fadeUp 0.4s ease both",
               }}>
                 {(() => {
                   const gap = Math.round(diff * 100);
@@ -14831,82 +15943,362 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     `Off by ${gap}. What feels like it was "bound to happen" really wasn't.`,
                   ];
                   const pool = prediction > w ? overMisses : underMisses;
-                  const idx = Math.abs(hashString(subject.name + "miss")) % pool.length;
-                  return pool[idx];
+                  return pool[Math.abs(hashString(subject.name + "miss")) % pool.length];
                 })()}
               </div>
             )}
 
-            {/* Streak indicator + milestone celebration */}
-            {((streak >= 2 && !isReplay) || (streakMilestone && streakMilestone.reward === "shield_used")) && (
+            {/* Streak */}
+            {revealPhase >= 2 && ((streak >= 2 && !isReplay) || (streakMilestone && streakMilestone.reward === "shield_used")) && (
               <div style={{
-                textAlign: "center", marginBottom: 20, padding: streakMilestone ? "16px 20px" : "10px 16px",
+                textAlign: "center", padding: streakMilestone ? "16px 20px" : "10px 16px",
                 background: streakMilestone
-                  ? streakMilestone.reward === "shield_used"
-                    ? "linear-gradient(135deg, #f0fdfa, #ccfbf1)"
-                    : "linear-gradient(135deg, #fffbeb, #fef3c7)"
+                  ? streakMilestone.reward === "shield_used" ? "linear-gradient(135deg, #f0fdfa, #ccfbf1)" : "linear-gradient(135deg, #fffbeb, #fef3c7)"
                   : "linear-gradient(135deg, #faf5ff, #f3e8ff)",
                 borderRadius: 10,
                 border: streakMilestone
-                  ? streakMilestone.reward === "shield_used"
-                    ? "1px solid #99f6e4"
-                    : "1px solid #fde68a"
+                  ? streakMilestone.reward === "shield_used" ? "1px solid #99f6e4" : "1px solid #fde68a"
                   : "1px solid #e9d5ff",
-                ...rp(1),
+                ...rcFade(ci, 0.46),
               }}>
                 {streakMilestone ? (
                   <>
                     <div style={{ fontSize: 28, marginBottom: 6 }}>{streakMilestone.emoji}</div>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: streakMilestone.reward === "shield_used" ? "#0d9488" : "#92400e", marginBottom: 4 }}>
-                      {streakMilestone.reward === "shield_used"
-                        ? `Streak Shield Activated!`
-                        : `${streak}-Round Streak — ${streakMilestone.label}!`}
+                    <div style={{ fontSize: 16, fontWeight: 700, fontFamily: sansStack, color: streakMilestone.reward === "shield_used" ? "#0d9488" : "#92400e", marginBottom: 4 }}>
+                      {streakMilestone.reward === "shield_used" ? "Streak Shield Activated!" : `${streak}-Round Streak — ${streakMilestone.label}!`}
                     </div>
                     {streakMilestone.bonus > 0 && (
-                      <div style={{
-                        display: "inline-block", padding: "6px 16px", borderRadius: 8,
-                        background: "#92400e", color: "#fff", fontSize: 14, fontWeight: 700,
-                        marginTop: 4,
-                      }}>
+                      <div style={{ display: "inline-block", padding: "6px 16px", borderRadius: 8, background: "#92400e", color: "#fff", fontSize: 14, fontWeight: 700, marginTop: 4, fontFamily: sansStack }}>
                         +{streakMilestone.bonus} bonus points
                       </div>
                     )}
-                    {/* Reward unlock notification */}
                     {streakMilestone.rewardLabel && streakMilestone.reward !== "shield_used" && (
-                      <div style={{
-                        marginTop: 10, padding: "8px 14px", borderRadius: 8,
-                        background: "rgba(109,40,217,0.08)", border: "1px solid rgba(109,40,217,0.15)",
-                        fontSize: 13, color: "#6d28d9", fontWeight: 600,
-                      }}>
+                      <div style={{ marginTop: 10, padding: "8px 14px", borderRadius: 8, background: "rgba(109,40,217,0.08)", border: "1px solid rgba(109,40,217,0.15)", fontSize: 13, color: "#6d28d9", fontWeight: 600, fontFamily: sansStack }}>
                         🎁 {streakMilestone.rewardLabel}
                       </div>
                     )}
                     {streakMilestone.reward === "shield_used" && (
-                      <div style={{
-                        marginTop: 8, fontSize: 13, color: "#0d9488",
-                      }}>
-                        {streakMilestone.rewardLabel}
-                      </div>
+                      <div style={{ marginTop: 8, fontSize: 13, color: "#0d9488", fontFamily: sansStack }}>{streakMilestone.rewardLabel}</div>
                     )}
                   </>
                 ) : (
                   <>
                     <span style={{ fontSize: 15 }}>🔥 {streak}-round streak</span>
-                    <span style={{ fontSize: 12, color: "#7c3aed", marginLeft: 8 }}>
-                      {(() => {
-                        const nextMilestone = STREAK_MILESTONES.find(m => m.at > streak);
-                        if (nextMilestone) return `${nextMilestone.at - streak} more for +${nextMilestone.bonus} bonus!`;
-                        return "Maximum streak!";
-                      })()}
+                    <span style={{ fontSize: 12, color: "#7c3aed", marginLeft: 8, fontFamily: sansStack }}>
+                      {(() => { const n = STREAK_MILESTONES.find(m => m.at > streak); return n ? `${n.at - streak} more for +${n.bonus} bonus!` : "Maximum streak!"; })()}
                     </span>
                   </>
                 )}
               </div>
             )}
 
-            {/* Daily Challenge Community Stats */}
+            <div style={rcFade(ci, 0.55)}>{swipeHint("Discover why")}</div>
+          </div>
+        </div>
+      );
+    };
+
+    // ═══ CARD: REASONING ═══
+    const ReasoningCard = () => {
+      const ci = resultCards.indexOf("reasoning");
+      const hasCounterfactual = !!subject.counterfactual;
+      return (
+        <div style={cardShell()}>
+          <div style={cardInner()}>
+            {/* Verdict */}
+            <div style={{
+              ...S.card, padding: "20px 22px",
+              background: `${actualLabel.color}06`,
+              borderLeft: `4px solid ${actualLabel.color}`,
+              ...rcFade(ci, 0),
+            }}>
+              <h3 style={{ ...S.sectionHeader, color: actualLabel.color, marginBottom: 4 }}>
+                <span>⚖️</span> {actualLabel.label}
+              </h3>
+              <p style={{ color: actualLabel.color, fontSize: 12, margin: "0 0 12px", opacity: 0.8, fontWeight: 500, fontFamily: sansStack }}>{actualLabel.desc}</p>
+              <p style={{ color: "#4a4840", lineHeight: 1.75, fontSize: 14, margin: 0, fontFamily: sansStack }}>{subject.reasoning}</p>
+
+              {(() => {
+                const insight = getDirectionInsight(prediction, r, subject);
+                return insight ? (
+                  <div style={{
+                    color: prediction > w ? "#991b1b" : "#166534",
+                    fontSize: 13, lineHeight: 1.65, marginTop: 14,
+                    padding: "10px 14px", borderRadius: 8,
+                    background: prediction > w ? "#fef2f2" : "#f0fdf4",
+                    fontFamily: sansStack,
+                  }}>
+                    <span style={{ fontWeight: 700 }}>{prediction > w ? "↑ You overestimated" : "↓ You underestimated"} the weight.</span>{" "}
+                    {insight}
+                  </div>
+                ) : null;
+              })()}
+            </div>
+
+            {/* Counterfactual — same card */}
+            {hasCounterfactual && (
+              <div style={{
+                ...S.card, padding: "20px 22px",
+                background: "#fffbeb", borderColor: "#fde68a",
+                ...rcFade(ci, 0.2),
+              }}>
+                <h3 style={{ ...S.sectionHeader, color: "#92400e", marginBottom: 12 }}>
+                  <span>🔮</span> The Counterfactual
+                </h3>
+                <p style={{
+                  color: "#78350f", lineHeight: 1.75, fontSize: 14.5, margin: 0,
+                  fontFamily: fontStack, fontStyle: "italic",
+                }}>{subject.counterfactual}</p>
+              </div>
+            )}
+
+            <div style={rcFade(ci, hasCounterfactual ? 0.35 : 0.3)}>
+              {subject.cascade?.length ? swipeHint("Trace the butterfly effect") : subject.modernDay ? swipeHint("The world without " + subject.name.split(" ").pop()) : swipeHint("Your results")}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ═══ CARD: CASCADE ═══
+    const CascadeCard = () => {
+      if (!subject.cascade || subject.cascade.length === 0) return null;
+      const ci = resultCards.indexOf("cascade");
+
+      return (
+        <div style={cardShell()}>
+          <div style={cardInner()}>
+            <div style={{
+              ...S.card, padding: "20px 22px",
+              background: "#fafaf9", borderColor: `${cat.color}20`,
+              ...rcFade(ci, 0),
+            }}>
+              <h3 style={{ ...S.sectionHeader, color: cat.color, marginBottom: 16 }}>
+                <span>🦋</span> Butterfly Effect
+              </h3>
+
+              <div style={{ position: "relative", paddingLeft: 28 }}>
+                <div style={{
+                  position: "absolute", left: 13, top: 12, bottom: 12, width: 2,
+                  background: `linear-gradient(180deg, ${cat.color}40, ${cat.color}08)`,
+                }} />
+
+                {subject.cascade.map((step, i) => {
+                  const vis = i <= cascadeStep;
+                  const nxt = i === cascadeStep + 1 && cascadeStep < subject.cascade.length - 1;
+                  const cur = i === cascadeStep;
+                  const sc = step.severity === "high" ? "#dc2626" : step.severity === "medium" ? "#d97706" : "#6b7280";
+
+                  return (
+                    <div key={i} style={{
+                      position: "relative", marginBottom: i === subject.cascade.length - 1 ? 0 : 20,
+                      opacity: vis ? 1 : nxt ? 0.45 : 0.15,
+                      transform: vis ? "translateX(0)" : "translateX(8px)",
+                      transition: "all 0.5s cubic-bezier(0.23, 1, 0.32, 1)",
+                      cursor: nxt ? "pointer" : "default",
+                    }} onClick={() => { if (nxt) { setCascadeStep(i); SFX.interludeStep(i); } }}>
+                      <div style={{
+                        position: "absolute", left: -21, top: 10,
+                        width: 16, height: 16, borderRadius: "50%",
+                        background: vis ? cat.color : "#e5e2db",
+                        border: `2px solid ${vis ? cat.color : "#d4d0c8"}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 8, transition: "all 0.3s",
+                        boxShadow: cur ? `0 0 0 3px ${cat.color}20` : "none",
+                      }}>{vis && <span style={{ fontSize: 9 }}>{step.icon}</span>}</div>
+
+                      <div style={{
+                        padding: "12px 14px", borderRadius: 10,
+                        background: vis ? (cur ? "#fff" : "#fafaf9") : "#f5f4f0",
+                        border: cur ? `2px solid ${cat.color}25` : "1px solid #e5e2db",
+                        boxShadow: cur ? "0 2px 12px rgba(0,0,0,0.04)" : "none",
+                        transition: "all 0.35s",
+                      }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                          <span style={{
+                            fontSize: 9, fontWeight: 700, color: sc, textTransform: "uppercase",
+                            letterSpacing: "0.04em", padding: "2px 7px", borderRadius: 4,
+                            background: `${sc}08`, border: `1px solid ${sc}15`, fontFamily: sansStack,
+                          }}>{step.severity} impact</span>
+                          <span style={{ fontSize: 10, color: "#9a9890", fontStyle: "italic", fontFamily: sansStack }}>{step.delay}</span>
+                        </div>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: "#1a1a1a", marginBottom: vis ? 6 : 0, lineHeight: 1.4, fontFamily: sansStack }}>{step.event}</div>
+                        {vis && <div style={{ fontSize: 13, color: "#4a4840", lineHeight: 1.65, fontFamily: sansStack }}>{step.consequence}</div>}
+                      </div>
+
+                      {nxt && (
+                        <div style={{
+                          textAlign: "center", fontSize: 11, color: cat.color,
+                          marginTop: 5, fontWeight: 600, animation: "pulse 2s ease-in-out infinite", fontFamily: sansStack,
+                        }}>↓ Tap to see what happens next</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {cascadeStep < subject.cascade.length - 1 && (
+                <button onClick={() => { setCascadeStep(subject.cascade.length - 1); SFX.reveal(80); }} style={{
+                  display: "block", margin: "16px auto 0", padding: "9px 22px",
+                  fontSize: 12, fontWeight: 600, color: cat.color, fontFamily: sansStack,
+                  background: `${cat.color}08`, border: `1px solid ${cat.color}20`,
+                  borderRadius: 8, cursor: "pointer",
+                }}>Reveal all steps →</button>
+              )}
+            </div>
+
+            {cascadeStep >= subject.cascade.length - 1 && (
+              <div style={rcFade(ci, 0)}>
+                {subject.modernDay ? swipeHint("The world without " + subject.name.split(" ").pop()) : subject.timeline?.length ? swipeHint("Alternate timeline") : swipeHint("Your results")}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    // ═══ CARD: TIMELINE ═══
+    const TimelineCard = () => {
+      if (!subject.timeline || subject.timeline.length === 0) return null;
+      const ci = resultCards.indexOf("timeline");
+      return (
+        <div style={cardShell()}>
+          <div style={cardInner()}>
+            <div style={{
+              ...S.card, padding: "20px 22px",
+              background: "#fafaf9", borderColor: "#e5e2db",
+              ...rcFade(ci, 0),
+            }}>
+              <h3 style={{ ...S.sectionHeader, color: "#1a1a1a", marginBottom: 16 }}>
+                <span>🔀</span> What Happened vs. Alternate Timeline
+              </h3>
+
+              <div style={{ display: "grid", gap: 16 }}>
+                {subject.timeline.map((event, i) => (
+                  <div key={i} style={{ ...rcFade(ci, 0.08 + i * 0.08) }}>
+                    <div style={{
+                      fontWeight: 700, fontSize: 15, color: "#1a1a1a",
+                      fontFamily: fontStack, marginBottom: 10,
+                    }}>{formatYear(event.year)}</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                      <div style={{
+                        padding: 12, background: "#f0fdf4", borderRadius: 10,
+                        border: "1px solid #bbf7d0",
+                      }}>
+                        <div style={{
+                          fontSize: 10, fontWeight: 800, color: "#15803d", marginBottom: 5,
+                          textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack,
+                        }}>✓ What happened</div>
+                        <div style={{ fontSize: 12.5, color: "#166534", lineHeight: 1.55, fontFamily: sansStack }}>{event.happened}</div>
+                      </div>
+                      <div style={{
+                        padding: 12, background: "#fffbeb", borderRadius: 10,
+                        border: "1px solid #fde68a",
+                      }}>
+                        <div style={{
+                          fontSize: 10, fontWeight: 800, color: "#d97706", marginBottom: 5,
+                          textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack,
+                        }}>⚡ Alternate</div>
+                        <div style={{ fontSize: 12.5, color: "#92400e", lineHeight: 1.55, fontFamily: sansStack }}>{event.alternate}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={rcFade(ci, 0.3)}>
+              {swipeHint("Your results")}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ═══ CARD: WORLD TODAY ═══
+    const WorldCard = () => {
+      if (!subject.modernDay) return null;
+      const ci = resultCards.indexOf("world");
+      const domains = [
+        { key: "daily", label: "Your Daily Life", icon: "🏠", accent: "#0d9488", bg: "#f0fdfa", border: "#99f6e4" },
+        { key: "tech", label: "Technology", icon: "💻", accent: "#6d28d9", bg: "#faf5ff", border: "#e9d5ff" },
+        { key: "culture", label: "Culture", icon: "🎭", accent: "#92400e", bg: "#fffbeb", border: "#fde68a" },
+        { key: "politics", label: "Politics & Power", icon: "🏛️", accent: "#1e40af", bg: "#eff6ff", border: "#bfdbfe" },
+      ].filter(d => subject.modernDay[d.key]);
+
+      return (
+        <div style={cardShell()}>
+          <div style={cardInner()}>
+            <div style={{ ...rcFade(ci, 0), marginBottom: 16 }}>
+              <h3 style={{ ...S.sectionHeader, color: "#1a1a1a", marginBottom: 4 }}>
+                <span>🌍</span> The World Without {subject.name.split(" ").pop()}
+              </h3>
+              <p style={{ fontSize: 12, color: "#9a9890", margin: 0, fontFamily: sansStack }}>What changes in everyday life, technology, culture, and power</p>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {domains.map((d, i) => (
+                <div key={d.key} style={{
+                  ...S.card, padding: "16px 18px",
+                  background: d.bg, borderColor: d.border,
+                  ...rcFade(ci, 0.06 + i * 0.08),
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
+                    <span style={{ fontSize: 14 }}>{d.icon}</span>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, color: d.accent,
+                      textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack,
+                    }}>{d.label}</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: "#3a3a3a", lineHeight: 1.65, margin: 0, fontFamily: sansStack }}>{subject.modernDay[d.key]}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={rcFade(ci, 0.4)}>{subject.timeline?.length ? swipeHint("Alternate timeline") : swipeHint("Your results")}</div>
+          </div>
+        </div>
+      );
+    };
+
+    // ═══ CARD: ACTIONS ═══
+    const ActionsCard = () => {
+      const ci = resultCards.indexOf("actions");
+      return (
+        <div style={cardShell()}>
+          <div style={cardInner()}>
+
+            {/* Summary card */}
+            <div style={{ ...S.card, padding: "24px 22px", textAlign: "center", ...rcFade(ci, 0) }}>
+              <div style={{ fontSize: 42, marginBottom: 8 }}>{feedback.emoji}</div>
+              <h2 style={{ ...S.h2, fontSize: 22, marginBottom: 3 }}>{subject.name}</h2>
+              <p style={{ fontSize: 12, color: "#9a9890", margin: 0, fontFamily: sansStack }}>{actualLabel.label}</p>
+              <div style={{
+                fontSize: 44, fontWeight: 400, fontFamily: fontStack,
+                color: pts > 0 ? "#6d28d9" : "#b0ada6",
+                margin: "12px 0 2px",
+              }}>{pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}</div>
+              <p style={{ fontSize: 13, color: "#9a9890", margin: 0, fontFamily: sansStack }}>
+                {isReplay ? "already played" : "points earned"}
+              </p>
+
+              {/* Quick stats */}
+              <div style={{ display: "flex", justifyContent: "center", gap: 32, marginTop: 18, paddingTop: 16, borderTop: "1px solid #e8e6e1" }}>
+                {[
+                  { lab: "You", val: `${Math.round(prediction * 100)}%` },
+                  { lab: "Actual", val: `${Math.round(w * 100)}%` },
+                  { lab: "Off by", val: `${Math.round(diff * 100)}%` },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <div style={{ fontSize: 10, color: "#9a9890", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4, fontFamily: sansStack }}>{s.lab}</div>
+                    <div style={{ fontSize: 16, color: "#1a1a1a", fontFamily: sansStack }}>{s.val}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Daily stats */}
             {isDaily && (() => {
-              const dayNum = getDayNumber();
               const figR = subject.r ?? subject._r;
               const figW = toWeight(figR);
               const playerDiff = Math.abs(prediction - figW);
@@ -14918,102 +16310,64 @@ Be historically precise. The cascade should show a chain reaction where each dom
               return (
                 <div style={{
                   background: "#fffbeb", borderRadius: 14, padding: "20px 22px",
-                  marginBottom: 22, border: "2px solid #f59e0b",
-                  ...rp(2),
+                  marginBottom: 0, border: "2px solid #f59e0b",
+                  ...rcFade(ci, 0.08),
                 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                    <h3 style={{ ...S.sectionHeader, color: "#d97706", margin: 0 }}>
-                      <span>🗓️</span> Daily Challenge
-                    </h3>
-                    <span style={{ fontSize: 12, color: "#92400e", fontWeight: 600 }}>
-                      {community.totalPlayers.toLocaleString()} players today
-                    </span>
+                    <h3 style={{ ...S.sectionHeader, color: "#d97706", margin: 0 }}><span>🗓️</span> Daily Challenge</h3>
+                    <span style={{ fontSize: 12, color: "#92400e", fontWeight: 600, fontFamily: sansStack }}>{community.totalPlayers.toLocaleString()} players</span>
                   </div>
-
-                  {/* Percentile banner */}
                   <div style={{
                     textAlign: "center", padding: "14px 16px", marginBottom: 18,
                     background: percentile >= 70 ? "#dcfce7" : percentile >= 40 ? "#fef9ee" : "#fff1f2",
                     borderRadius: 10,
                     border: `1px solid ${percentile >= 70 ? "#bbf7d0" : percentile >= 40 ? "#fde68a" : "#fecdd3"}`,
                   }}>
-                    <div style={{
-                      fontSize: 32, fontWeight: 400, fontFamily: fontStack,
-                      color: percentile >= 70 ? "#15803d" : percentile >= 40 ? "#d97706" : "#b91c1c",
-                      letterSpacing: "-0.02em",
-                    }}>
+                    <div style={{ fontSize: 32, fontWeight: 400, fontFamily: fontStack, color: percentile >= 70 ? "#15803d" : percentile >= 40 ? "#d97706" : "#b91c1c" }}>
                       Top {100 - percentile}%
                     </div>
-                    <div style={{ fontSize: 13, color: "#4a4840", marginTop: 4 }}>
-                      You beat <strong>{percentile}%</strong> of players
-                    </div>
+                    <div style={{ fontSize: 13, color: "#4a4840", marginTop: 4, fontFamily: sansStack }}>You beat <strong>{percentile}%</strong> of players</div>
                   </div>
-
-                  {/* Distribution chart */}
                   <div style={{ marginBottom: 14 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                      How Players Guessed
-                    </div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>How Players Guessed</div>
                     <div style={{ display: "flex", gap: 4, alignItems: "flex-end", height: 60 }}>
                       {community.buckets.map((count, i) => {
                         const height = Math.max(8, (count / community.maxBucket) * 56);
-                        const isPlayerBucket = i === playerBucket;
+                        const isPlayer = i === playerBucket;
                         return (
-                          <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                          <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                             <div style={{
-                              width: "100%", height, borderRadius: 4,
-                              background: isPlayerBucket
-                                ? "linear-gradient(180deg, #d97706, #b45309)"
-                                : "#fde68a",
-                              border: isPlayerBucket ? "2px solid #92400e" : "1px solid #fcd34d",
+                              width: "100%", height, borderRadius: 3,
+                              background: isPlayer ? "linear-gradient(180deg, #f59e0b, #d97706)" : "#fde68a",
+                              border: isPlayer ? "1px solid #b45309" : "1px solid #fbbf24",
                               position: "relative",
-                              transition: "height 0.5s ease",
                             }}>
-                              {isPlayerBucket && (
-                                <div style={{
-                                  position: "absolute", top: -18, left: "50%", transform: "translateX(-50%)",
-                                  fontSize: 10, fontWeight: 800, color: "#92400e", whiteSpace: "nowrap",
-                                }}>YOU</div>
-                              )}
+                              {isPlayer && <div style={{ position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)", fontSize: 9, fontWeight: 800, color: "#92400e", fontFamily: sansStack }}>YOU</div>}
                             </div>
                           </div>
                         );
                       })}
                     </div>
                     <div style={{ display: "flex", gap: 4, marginTop: 4 }}>
-                      {bucketLabels.map((label, i) => (
-                        <div key={i} style={{ flex: 1, textAlign: "center", fontSize: 9, color: "#a16207" }}>
-                          {label}
-                        </div>
-                      ))}
+                      {bucketLabels.map((label, i) => <div key={i} style={{ flex: 1, textAlign: "center", fontSize: 8, color: "#92400e", fontFamily: sansStack }}>{label}</div>)}
                     </div>
                   </div>
-
-                  {/* Community avg vs player */}
-                  <div style={{
-                    display: "flex", justifyContent: "space-around", padding: "10px 0",
-                    borderTop: "1px solid #fde68a", fontSize: 13, color: "#78350f",
-                  }}>
+                  <div style={{ display: "flex", justifyContent: "space-around", padding: "10px 0", borderTop: "1px solid #fde68a", fontSize: 13, color: "#78350f" }}>
                     <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2 }}>AVG GUESS</div>
+                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2, fontFamily: sansStack }}>AVG GUESS</div>
                       <div style={{ fontWeight: 700, fontSize: 16 }}>{Math.round(community.avgGuess * 100)}%</div>
                     </div>
                     <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2 }}>YOUR GUESS</div>
+                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2, fontFamily: sansStack }}>YOUR GUESS</div>
                       <div style={{ fontWeight: 700, fontSize: 16 }}>{Math.round(prediction * 100)}%</div>
                     </div>
                     <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2 }}>WITHIN 10%</div>
+                      <div style={{ fontSize: 11, color: "#a16207", fontWeight: 600, marginBottom: 2, fontFamily: sansStack }}>WITHIN 10%</div>
                       <div style={{ fontWeight: 700, fontSize: 16 }}>{community.pctClose}%</div>
                     </div>
                   </div>
-
-                  {/* Daily streak */}
                   {dailyState?.dailyStreak >= 2 && (
-                    <div style={{
-                      textAlign: "center", marginTop: 12, padding: "8px",
-                      background: "#fef9ee", borderRadius: 8, fontSize: 13, color: "#b45309",
-                    }}>
+                    <div style={{ textAlign: "center", marginTop: 12, padding: 8, background: "#fef9ee", borderRadius: 8, fontSize: 13, color: "#b45309", fontFamily: sansStack }}>
                       🔥 {dailyState.dailyStreak}-day daily streak
                     </div>
                   )}
@@ -15021,275 +16375,64 @@ Be historically precise. The cascade should show a chain reaction where each dom
               );
             })()}
 
-            {/* ═══ THE ANALYSIS — verdict + reasoning ═══ */}
-            <div style={{
-              background: `${actualLabel.color}06`, borderRadius: 14, padding: "20px 22px",
-              marginBottom: 22, borderLeft: `4px solid ${actualLabel.color}`,
-              ...rp(2),
-            }}>
-              <h3 style={{ ...S.sectionHeader, color: actualLabel.color, marginBottom: 4 }}>
-                <span>⚖️</span> {actualLabel.label}
-              </h3>
-              <p style={{ color: actualLabel.color, fontSize: 12, margin: "0 0 12px", opacity: 0.8, fontWeight: 500 }}>{actualLabel.desc}</p>
-              <p style={{ color: "#4a4840", lineHeight: 1.7, fontSize: 14, margin: 0 }}>{subject.reasoning}</p>
-              {(() => {
-                const insight = getDirectionInsight(prediction, r, subject);
-                return insight ? (
-                  <div style={{
-                    color: prediction > w ? "#991b1b" : "#166534",
-                    fontSize: 13, lineHeight: 1.65, marginTop: 14, marginBottom: 0,
-                    padding: "10px 14px", borderRadius: 8,
-                    background: prediction > w ? "#fef2f2" : "#f0fdf4",
-                  }}>
-                    <span style={{ fontWeight: 700 }}>{prediction > w ? "↑ You overestimated" : "↓ You underestimated"} the weight.</span>{" "}
-                    {insight}
-                  </div>
-                ) : null;
-              })()}
-            </div>
-
-            {/* ═══ THE COUNTERFACTUAL — the vivid "what if" moment ═══ */}
-            {subject.counterfactual && (
-              <div style={{
-                marginBottom: 22, borderRadius: 14, padding: "20px 22px",
-                background: "#fffbeb", border: "1px solid #fde68a",
-                ...rp(2),
-              }}>
-                <h3 style={{ ...S.sectionHeader, color: "#92400e", marginBottom: 12 }}>
-                  <span>🔮</span> The Counterfactual
-                </h3>
-                <p style={{
-                  color: "#78350f", lineHeight: 1.75, fontSize: 14.5, margin: 0,
-                  fontFamily: fontStack, fontStyle: "italic",
-                }}>
-                  {subject.counterfactual}
-                </p>
-              </div>
-            )}
-
-            {/* ═══ BUTTERFLY EFFECT CASCADE — promoted, always visible ═══ */}
-            {subject.cascade && subject.cascade.length > 0 && (
-              <div style={{
-                marginBottom: 22, borderRadius: 14, padding: "20px 22px",
-                background: "#fafaf9", border: `1px solid ${cat.color}20`,
-                ...rp(3),
-              }}>
-                <h3 style={{ ...S.sectionHeader, color: cat.color, marginBottom: 16 }}>
-                  <span>🦋</span> Butterfly Effect
-                </h3>
-                <div style={{ position: "relative", paddingLeft: 28 }}>
-                  {/* Vertical connector line */}
-                  <div style={{
-                    position: "absolute", left: 13, top: 12, bottom: 12, width: 2,
-                    background: `linear-gradient(180deg, ${cat.color}40, ${cat.color}08)`,
-                  }} />
-
-                  {subject.cascade.map((step, i) => {
-                    const isRevealed = i <= cascadeStep;
-                    const isNext = i === cascadeStep + 1 && cascadeStep < subject.cascade.length - 1;
-                    const isCurrent = i === cascadeStep;
-                    const sevColor = step.severity === "high" ? "#dc2626" : step.severity === "medium" ? "#d97706" : "#6b7280";
-
-                    return (
-                      <div key={i} style={{
-                        position: "relative", marginBottom: i === subject.cascade.length - 1 ? 0 : 20,
-                        opacity: isRevealed ? 1 : isNext ? 0.45 : 0.15,
-                        transform: isRevealed ? "translateX(0)" : "translateX(8px)",
-                        transition: "all 0.5s cubic-bezier(0.23, 1, 0.32, 1)",
-                        cursor: isNext ? "pointer" : "default",
-                      }}
-                        onClick={() => { if (isNext) { setCascadeStep(i); SFX.interludeStep(i); } }}
-                      >
-                        {/* Node dot */}
-                        <div style={{
-                          position: "absolute", left: -22, top: 6, width: 18, height: 18,
-                          borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
-                          background: isRevealed ? cat.color : "#e5e2db",
-                          border: `2px solid ${isRevealed ? cat.color : "#d4d0c8"}`,
-                          fontSize: 10, transition: "all 0.3s ease",
-                          boxShadow: isCurrent ? `0 0 0 4px ${cat.color}20` : "none",
-                        }}>
-                          {isRevealed && <span style={{ fontSize: 10 }}>{step.icon}</span>}
-                        </div>
-
-                        {/* Content */}
-                        <div style={{
-                          padding: "14px 16px", borderRadius: 12,
-                          background: isRevealed
-                            ? isCurrent ? "#fff" : "#fafaf9"
-                            : "#f5f4f0",
-                          border: isCurrent ? `2px solid ${cat.color}30` : "1px solid #e8e6e1",
-                          boxShadow: isCurrent ? "0 4px 16px rgba(0,0,0,0.06)" : "none",
-                          transition: "all 0.4s ease",
-                        }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                            <span style={{
-                              fontSize: 10, fontWeight: 700, color: sevColor, textTransform: "uppercase",
-                              letterSpacing: "0.06em", padding: "2px 8px", borderRadius: 4,
-                              background: `${sevColor}0a`, border: `1px solid ${sevColor}18`,
-                            }}>
-                              {step.severity} impact
-                            </span>
-                            <span style={{ fontSize: 11, color: "#9a9890", fontStyle: "italic" }}>
-                              {step.delay}
-                            </span>
-                          </div>
-
-                          <div style={{
-                            fontSize: 14, fontWeight: 700, color: "#1a1a1a",
-                            marginBottom: 6, lineHeight: 1.4,
-                          }}>
-                            {step.event}
-                          </div>
-
-                          {isRevealed && (
-                            <div style={{
-                              fontSize: 13, color: "#4a4840", lineHeight: 1.65,
-                              opacity: isRevealed ? 1 : 0,
-                              transition: "opacity 0.4s ease 0.2s",
-                            }}>
-                              {step.consequence}
-                            </div>
-                          )}
-                        </div>
-
-                        {isNext && (
-                          <div style={{
-                            textAlign: "center", fontSize: 11, color: cat.color,
-                            marginTop: 6, fontWeight: 600, opacity: 0.8,
-                            animation: "pulse 2s ease-in-out infinite",
-                          }}>
-                            ↓ Tap to see what happens next
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {cascadeStep < subject.cascade.length - 1 && (
-                  <button
-                    onClick={() => { setCascadeStep(subject.cascade.length - 1); SFX.reveal(80); }}
-                    style={{
-                      display: "block", margin: "16px auto 0", padding: "8px 20px",
-                      fontSize: 12, fontWeight: 600, color: cat.color, background: `${cat.color}08`,
-                      border: `1px solid ${cat.color}20`, borderRadius: 8, cursor: "pointer",
-                    }}
-                  >
-                    Reveal all steps →
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* ═══ THE WORLD IN 2026 WITHOUT... — promoted, always visible ═══ */}
-            {subject.modernDay && (
-              <div style={{
-                marginBottom: 22, borderRadius: 14, padding: "20px 22px",
-                background: "#f0fdfa", border: "1px solid #99f6e4",
-                ...rp(3),
-              }}>
-                <h3 style={{ ...S.sectionHeader, color: "#0f766e", marginBottom: 16 }}>
-                  <span>🌍</span> The World in 2026 Without {subject.name.split(" ").pop()}
-                </h3>
-                <div style={{ display: "grid", gap: 12 }}>
-                  {[
-                    { key: "daily", label: "Your Daily Life", icon: "🏠", color: "#0f766e", bg: "#fff", border: "#99f6e4" },
-                    { key: "tech", label: "Technology", icon: "💻", color: "#7c3aed", bg: "#fff", border: "#ddd6fe" },
-                    { key: "culture", label: "Culture", icon: "🎭", color: "#b45309", bg: "#fff", border: "#fde68a" },
-                    { key: "politics", label: "Politics & Power", icon: "🏛️", color: "#1e40af", bg: "#fff", border: "#bfdbfe" },
-                  ].filter(c => subject.modernDay[c.key]).map(c => (
-                    <div key={c.key} style={{
-                      padding: "14px 16px", borderRadius: 10,
-                      background: c.bg, border: `1px solid ${c.border}`,
-                    }}>
-                      <div style={{
-                        display: "flex", alignItems: "center", gap: 8, marginBottom: 6,
-                      }}>
-                        <span style={{ fontSize: 14 }}>{c.icon}</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: c.color, textTransform: "uppercase", letterSpacing: "0.04em" }}>{c.label}</span>
-                      </div>
-                      <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: 1.65 }}>
-                        {subject.modernDay[c.key]}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ═══ ALTERNATE TIMELINE — collapsible ═══ */}
-            {subject.timeline && subject.timeline.length > 0 && (
-              <details style={{ marginBottom: 22, ...rp(4) }}>
-                <summary style={S.collapsibleSummary}>
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span>🔀</span> What Happened vs. Alternate Timeline
-                  </span>
-                  <Chevron />
-                </summary>
-                <div style={S.collapsibleBody}>
-                  <div style={{ display: "grid", gap: 14 }}>
-                    {subject.timeline.map((event, i) => (
-                      <div key={i}>
-                        <div style={{
-                          fontWeight: 700, fontSize: 15, color: "#1a1a1a",
-                          fontFamily: fontStack, marginBottom: 8,
-                        }}>
-                          {formatYear(event.year)}
-                        </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                          <div style={{ padding: 12, background: "#dcfce7", borderRadius: 10, border: "1px solid #bbf7d0" }}>
-                            <div style={{ fontSize: 10, fontWeight: 800, color: "#166534", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                              ✓ What happened
-                            </div>
-                            <div style={{ fontSize: 13, color: "#166534", lineHeight: 1.55 }}>{event.happened}</div>
-                          </div>
-                          <div style={{ padding: 12, background: "#fef3c7", borderRadius: 10, border: "1px solid #fde68a" }}>
-                            <div style={{ fontSize: 10, fontWeight: 800, color: "#92400e", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                              ⚡ Alternate
-                            </div>
-                            <div style={{ fontSize: 13, color: "#92400e", lineHeight: 1.55 }}>{event.alternate}</div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </details>
-            )}
-
-            {/* Rank progression */}
+            {/* Rank */}
             {(() => {
               const avgPts = played.length > 0 ? Math.round(score / played.length) : 0;
               const currentRank = getRank(avgPts, played.length);
               return played.length >= 3 ? (
                 <div style={{
+                  ...S.card, padding: "14px 18px",
                   display: "flex", alignItems: "center", gap: 12,
-                  padding: "12px 16px", borderRadius: 10, marginBottom: 22,
-                  background: `${currentRank.color}06`, border: `1px solid ${currentRank.color}18`,
+                  ...rcFade(ci, 0.15),
                 }}>
                   <span style={{ fontSize: 22 }}>{currentRank.icon}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: currentRank.color }}>{currentRank.title}</div>
-                    {currentRank.next && <div style={{ fontSize: 11, color: "#9a9890", marginTop: 2 }}>{currentRank.next}</div>}
+                    <div style={{ fontSize: 14, fontWeight: 700, color: currentRank.color, fontFamily: sansStack }}>{currentRank.title}</div>
+                    {currentRank.next && <div style={{ fontSize: 11, color: "#7a7770", marginTop: 2, fontFamily: sansStack }}>{currentRank.next}</div>}
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <div style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", fontFamily: fontStack }}>{score}</div>
-                    <div style={{ fontSize: 10, color: "#9a9890" }}>total pts</div>
+                    <div style={{ fontSize: 10, color: "#9a9890", fontFamily: sansStack }}>total pts</div>
                   </div>
                 </div>
               ) : null;
             })()}
 
-            {/* Smart next suggestions — stays in content flow */}
+            {/* Buttons */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 4, ...rcFade(ci, 0.22) }}>
+              {isDaily ? (
+                <button onClick={shareResult} style={{ ...S.btn, ...S.btnPrimary, width: "100%", textAlign: "center" }}>📤 Share Daily</button>
+              ) : (
+                <button onClick={shareResult} style={{ ...S.btn, ...S.btnPrimary, width: "100%", textAlign: "center" }}>📤 Share Result</button>
+              )}
+              <div style={{ display: "flex", gap: 10 }}>
+                {h2hMode ? (
+                  <>
+                    <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, textAlign: "center" }}>Quit</button>
+                    <button onClick={h2hAdvance} style={{ ...S.btn, flex: 2, textAlign: "center", background: "#dc2626", color: "#fff" }}>
+                      {h2hMode.myPoints.length >= h2hMode.figures.length ? "See Results ⚔️" : "Next Round →"}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, flex: 1, textAlign: "center" }}>🏠 Home</button>
+                    <button onClick={startRandom} style={{ ...S.btn, ...S.btnSecondary, flex: 1, textAlign: "center" }}>🎲 Random</button>
+                    {!subject._isCustom && (
+                      <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, flex: 1, textAlign: "center" }}>🎯 Challenge</button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Smart next suggestions */}
             {!h2hMode && !isDaily && !subject._isCustom && (() => {
               const suggestions = [];
               const connected = getConnectedFigures(subject, played);
               const unplayedConnected = connected.filter(f => !played.includes(f.id));
               if (unplayedConnected.length > 0) {
                 const pick = unplayedConnected[0];
-                const label = getConnectionLabel(subject, pick);
-                suggestions.push({ figure: pick, reason: label, icon: "🔗" });
+                suggestions.push({ figure: pick, reason: getConnectionLabel(subject, pick), icon: "🔗" });
               }
               if (gameHistory.length >= 3) {
                 const recs = getRecommendations(played, gameHistory, ALL_SUBJECTS);
@@ -15301,34 +16444,24 @@ Be historically precise. The cascade should show a chain reaction where each dom
               }
               if (suggestions.length === 0) return null;
               return (
-                <div style={{ marginBottom: 14, ...rp(4) }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#9a9890", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                    Play Next
-                  </div>
+                <div style={{ marginTop: 16, ...rcFade(ci, 0.3) }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#9a9890", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Play Next</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {suggestions.map((s, i) => {
-                      const cat = CATS[s.figure.cat] || { color: "#64748b" };
+                    {suggestions.map((s) => {
+                      const sCat = CATS[s.figure.cat] || { color: "#64748b" };
                       return (
-                        <button
-                          key={s.figure.id}
-                          onClick={() => selectSubject(s.figure)}
-                          style={{
-                            display: "flex", alignItems: "center", gap: 12,
-                            padding: "14px 16px", borderRadius: 12,
-                            background: i === 0 ? "linear-gradient(135deg, #fafaf9, #f5f4f0)" : "#fafaf9",
-                            border: i === 0 ? `2px solid ${cat.color}30` : "1px solid #e5e2db",
-                            cursor: "pointer", width: "100%", textAlign: "left",
-                            transition: "all 0.15s ease",
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)"; }}
-                          onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
-                        >
-                          <span style={{ fontSize: 20 }}>{s.icon}</span>
+                        <button key={s.figure.id} onClick={() => selectSubject(s.figure)} style={{
+                          ...S.card, padding: "12px 16px", marginBottom: 0,
+                          display: "flex", alignItems: "center", gap: 12,
+                          cursor: "pointer", textAlign: "left",
+                          borderColor: `${sCat.color}25`,
+                        }}>
+                          <span style={{ fontSize: 18 }}>{s.icon}</span>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", fontFamily: fontStack }}>{s.figure.name}</div>
-                            <div style={{ fontSize: 12, color: "#9a9890", marginTop: 2 }}>{s.reason}</div>
+                            <div style={{ fontSize: 12, color: "#7a7770", marginTop: 2, fontFamily: sansStack }}>{s.reason}</div>
                           </div>
-                          <span style={{ fontSize: 14, color: "#b0ada5" }}>→</span>
+                          <span style={{ fontSize: 14, color: "#9a9890" }}>→</span>
                         </button>
                       );
                     })}
@@ -15339,79 +16472,62 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
           </div>
         </div>
+      );
+    };
 
-        {/* ═══ STICKY BOTTOM NAV BAR ═══ */}
+    return (
+      <div style={{ ...S.page, overflow: "hidden" }}>
+        <style>{globalCSS}</style>
+        <ToastOverlay />
+        <ShareModal />
+
+        {/* Celebration canvas overlay */}
+        <canvas ref={celebCanvasRef} style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          pointerEvents: "none", zIndex: 200,
+        }} />
+
+        {/* Bottom navigation dots */}
         <div style={{
-          position: "sticky", bottom: 0, left: 0, right: 0,
-          background: "rgba(247,246,243,0.92)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-          borderTop: "1px solid #e5e2db",
-          padding: "12px 20px max(12px, env(safe-area-inset-bottom))",
-          zIndex: 50,
+          position: "fixed", bottom: 14, left: "50%", transform: "translateX(-50%)",
+          zIndex: 100, display: "flex", gap: 7, padding: "7px 14px",
+          background: "rgba(247,246,243,0.85)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+          borderRadius: 20, border: "1px solid #e5e2db",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}>
-          <div style={{ maxWidth: 680, margin: "0 auto" }}>
-            {h2hMode ? (
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#dc2626", whiteSpace: "nowrap" }}>
-                  ⚔️ {h2hMode.myPoints.length}/{h2hMode.figures.length} · {h2hMode.myPoints.reduce((a, b) => a + b, 0)} pts
-                </div>
-                <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 14px", fontSize: 13 }}>
-                  Quit
-                </button>
-                <button onClick={h2hAdvance} style={{
-                  ...S.btn, flex: 1, padding: "12px", fontSize: 15, fontWeight: 700,
-                  background: "linear-gradient(135deg, #dc2626, #ea580c)",
-                  color: "#fff", border: "none",
-                }}>
-                  {h2hMode.myPoints.length >= h2hMode.figures.length ? "See Results ⚔️" : `Next Round →`}
-                </button>
-              </div>
-            ) : (
-              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                {(() => {
-                  const backTarget = [...navHistory].reverse().find(s => s !== "predict" && s !== "interlude" && s !== "result");
-                  const backLabels = { category: "📂", collection: "📚", era: "🕰️", scenario: "🦋", stats: "📊" };
-                  const backNames = { category: "Category", collection: "Collection", era: "Era", scenario: "Scenario", stats: "Stats" };
-                  if (backTarget && backLabels[backTarget]) {
-                    return (
-                      <>
-                        <button onClick={goBack} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 14px", fontSize: 13 }}>
-                          ← {backLabels[backTarget]} {backNames[backTarget]}
-                        </button>
-                        <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 12px", fontSize: 13 }}>🏠</button>
-                      </>
-                    );
-                  }
-                  return (
-                    <button onClick={goHome} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 14px", fontSize: 13 }}>
-                      🏠 Home
-                    </button>
-                  );
-                })()}
-                {isDaily ? (
-                  <button onClick={shareResult} style={{
-                    ...S.btn, flex: 1, padding: "10px 14px", fontSize: 14, fontWeight: 700,
-                    background: "#d97706", color: "#fff", border: "none",
-                  }}>
-                    📤 Share Daily
-                  </button>
-                ) : (
-                  <>
-                    <button onClick={startRandom} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 14px", fontSize: 13 }}>
-                      🎲 Random
-                    </button>
-                    <button onClick={shareResult} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 14px", fontSize: 13 }}>
-                      📤 Share
-                    </button>
-                    {!subject._isCustom && (
-                      <button onClick={createChallenge} style={{ ...S.btn, ...S.btnSecondary, padding: "10px 14px", fontSize: 13 }}>
-                        🎯 Challenge
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+          {resultCards.map((c, i) => (
+            <button key={c} onClick={() => goToResultCard(i)} style={{
+              width: i === activeResultCard ? 22 : 8, height: 8, borderRadius: 4,
+              border: "none", padding: 0, cursor: "pointer",
+              background: i === activeResultCard ? (isDaily ? "#d97706" : "#1a1a1a") : "#d4d0c8",
+              transition: "all 0.3s ease",
+            }} aria-label={`${c} card`} />
+          ))}
+        </div>
+
+        {/* Card counter */}
+        <div style={{
+          position: "fixed", top: 12, right: 14, zIndex: 100,
+          fontSize: 11, fontWeight: 600, letterSpacing: "0.04em", fontFamily: sansStack,
+          color: "#9a9890", background: "rgba(247,246,243,0.85)",
+          padding: "5px 11px", borderRadius: 7,
+          backdropFilter: "blur(8px)", border: "1px solid #e5e2db",
+        }}>{activeResultCard + 1} / {totalResultCards}</div>
+
+        {/* Horizontal scroll container */}
+        <div ref={resultScrollRef} className="result-scroll" style={{
+          height: "100%", display: "flex",
+          overflowX: "scroll", overflowY: "hidden",
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+          msOverflowStyle: "none", scrollbarWidth: "none",
+        }}>
+          <ScoreCard />
+          <ReasoningCard />
+          {subject.cascade && subject.cascade.length > 0 && <CascadeCard />}
+          {subject.modernDay && <WorldCard />}
+          {subject.timeline && subject.timeline.length > 0 && <TimelineCard />}
+          <ActionsCard />
         </div>
       </div>
     );
