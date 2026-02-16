@@ -148,19 +148,19 @@ const figInCat = (fig, catKey) => fig.cat === catKey || fig.cat2 === catKey;
 // HISTORICAL WEIGHT SCALE (internal r values: 0=singular, 1=inevitable)
 // Display as weight = 1 - r: higher weight = more impactful
 // Descriptions are category-aware: people, events, inventions, institutions
-// 80-100%: History-Defining
-// 50-79%: High Weight
-// 20-49%: Moderate Weight
-// 0-19%: Low Weight
+// 80-100%: Turning Point
+// 50-79%: Major Force
+// 20-49%: Supporting Role
+// 0-19%: Footnote
 // ─────────────────────────────────────────────────────────────────────────────
 const toWeight = (r) => 1 - r;
 
 const getLabel = (r) => {
   const w = toWeight(r);
-  if (w >= 0.80) return { label: "History-Defining", color: "#dc2626" };
-  if (w >= 0.50) return { label: "High Weight", color: "#ea580c" };
-  if (w >= 0.20) return { label: "Moderate Weight", color: "#ca8a04" };
-  return { label: "Low Weight", color: "#16a34a" };
+  if (w >= 0.80) return { label: "Turning Point", color: "#dc2626" };
+  if (w >= 0.50) return { label: "Major Force", color: "#ea580c" };
+  if (w >= 0.20) return { label: "Supporting Role", color: "#ca8a04" };
+  return { label: "Footnote", color: "#16a34a" };
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -10046,22 +10046,22 @@ const getScoreLabel = (score, subject) => {
   const isInstitution = cat === "institutions";
   const isPerson = !isEvent && !isInvention && !isInstitution;
 
-  if (score >= 0.80) return { label: "History-Defining", color: "#b91c1c", desc:
+  if (score >= 0.80) return { label: "Turning Point", color: "#b91c1c", desc:
     isEvent ? "This didn't have to happen — and without it, the world becomes unrecognizable"
     : isInvention ? "This specific invention reshaped everything — nothing else was converging on the same solution"
     : isInstitution ? "Without this institution, the systems it built don't emerge on their own"
     : "Without them, the world looks fundamentally different — no one else was close" };
-  if (score >= 0.50) return { label: "High Weight", color: "#c2410c", desc:
+  if (score >= 0.50) return { label: "Major Force", color: "#c2410c", desc:
     isEvent ? "The specific way this unfolded mattered — a different version of events changes the outcome"
     : isInvention ? "The specific form of this invention mattered — a different version changes what followed"
     : isInstitution ? "This institution shaped its domain in ways that weren't guaranteed by the underlying need"
     : "Shaped history in ways no one else was positioned to" };
-  if (score >= 0.20) return { label: "Moderate Weight", color: "#a16207", desc:
+  if (score >= 0.20) return { label: "Supporting Role", color: "#a16207", desc:
     isEvent ? "The underlying forces were real, but the timing and shape weren't guaranteed"
     : isInvention ? "The need was real, but the specific timing and form weren't guaranteed"
     : isInstitution ? "Something like this was needed, but the specific institution shaped the outcome"
     : "Others were working toward similar ends — the timeline shifts, but the outcome likely arrives" };
-  return { label: "Low Weight", color: "#15803d", desc:
+  return { label: "Footnote", color: "#15803d", desc:
     isEvent ? "History was converging here from multiple directions — this was coming regardless"
     : isInvention ? "Multiple inventors were closing in — this was arriving within a generation"
     : isInstitution ? "The function this served was being filled from multiple directions"
@@ -10839,6 +10839,10 @@ const fontStack = "'Instrument Serif', 'Georgia', serif";
 const sansStack = "'DM Sans', 'Helvetica Neue', sans-serif";
 
 const globalCSS = `
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  ::selection { background: rgba(26,26,26,0.09); }
+  body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }
@@ -10914,29 +10918,6 @@ const globalCSS = `
   .collection-scroll::-webkit-scrollbar { display: none; }
   .result-scroll { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .result-scroll::-webkit-scrollbar { display: none; }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-    margin-top: -2px;
-  }
-  input[type=range]::-moz-range-thumb {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  }
-  input[type=range]:focus { outline: none; }
-  input[type=range]:focus::-webkit-slider-thumb {
-    box-shadow: 0 0 0 3px rgba(26,26,26,0.15), 0 2px 6px rgba(0,0,0,0.25);
-  }
   @keyframes gaugePulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.06); }
@@ -10947,11 +10928,6 @@ const globalCSS = `
     40% { opacity: 1; transform: scale(1.05); }
     100% { opacity: 0; transform: scale(1.3); }
   }
-  @keyframes needleBounce {
-    0% { transform-origin: 150px 150px; }
-    30% { filter: brightness(1.3); }
-    100% { filter: brightness(1); }
-  }
   @keyframes lockShake {
     0%, 100% { transform: translateX(0); }
     15% { transform: translateX(-3px) rotate(-0.5deg); }
@@ -10960,10 +10936,8 @@ const globalCSS = `
     60% { transform: translateX(2px); }
     75% { transform: translateX(-1px); }
   }
-  @keyframes lockBtnFill {
-    0% { background-size: 0% 100%; }
-    100% { background-size: 100% 100%; }
-  }
+  button { -webkit-tap-highlight-color: transparent; }
+  button:active { transform: scale(0.97); }
 `;
 
 const S = {
@@ -10985,7 +10959,7 @@ const S = {
     border: "1px solid #e5e2db",
     padding: 28,
     marginBottom: 20,
-    boxShadow: "0 1px 4px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.02)",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.03)",
     transition: "box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease",
   },
   tag: (color, bg) => ({
@@ -10995,13 +10969,13 @@ const S = {
     borderRadius: 6,
     background: bg || `${color}12`,
     color: color,
-    letterSpacing: "0.04em",
+    letterSpacing: "0.05em",
     textTransform: "uppercase",
     display: "inline-block",
   }),
   btn: {
     padding: "13px 28px",
-    borderRadius: 10,
+    borderRadius: 12,
     border: "none",
     fontWeight: 600,
     fontSize: 15,
@@ -11036,7 +11010,7 @@ const S = {
     fontFamily: fontStack,
     fontSize: 28,
     fontWeight: 400,
-    letterSpacing: "-0.01em",
+    letterSpacing: "-0.015em",
     lineHeight: 1.2,
     color: "#1a1a1a",
     margin: 0,
@@ -11065,9 +11039,9 @@ const S = {
   },
   input: {
     padding: "12px 16px",
-    borderRadius: 10,
+    borderRadius: 12,
     border: "1px solid #ddd9d0",
-    background: "#fafaf8",
+    background: "#faf9f6",
     color: "#1a1a1a",
     fontSize: 15,
     fontFamily: sansStack,
@@ -11759,6 +11733,31 @@ export default function App() {
     return () => el.removeEventListener("scroll", handler);
   }, [screen]);
 
+  // Keyboard arrow navigation for result cards
+  useEffect(() => {
+    if (screen !== "result") return;
+    const handler = (e) => {
+      const el = resultScrollRef.current;
+      if (!el) return;
+      const cardW = el.clientWidth;
+      if (cardW <= 0) return;
+      const currentIdx = Math.round(el.scrollLeft / cardW);
+      const maxIdx = Math.round(el.scrollWidth / cardW) - 1;
+      let targetIdx = null;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        targetIdx = Math.min(currentIdx + 1, maxIdx);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        targetIdx = Math.max(currentIdx - 1, 0);
+      }
+      if (targetIdx !== null && targetIdx !== currentIdx) {
+        e.preventDefault();
+        el.scrollTo({ left: targetIdx * cardW, behavior: "smooth" });
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [screen]);
+
   const handleCustomSubmit = async () => {
     if (!customName.trim()) return;
     const cacheKey = customName.toLowerCase().trim().replace(/\s+/g, ' ');
@@ -12078,8 +12077,15 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const diff = Math.abs(prediction - w);
     const pts = calculatePoints(diff);
     const userPct = Math.round(prediction * 100);
+    const actualPct = Math.round(w * 100);
+    const userLabel = getScoreLabel(prediction, subject);
+    const actualLabel = getScoreLabel(w, subject);
     const dayNum = isDaily ? getDayNumber() : null;
     const percentile = isDaily ? getDailyPercentile(diff, r) : null;
+
+    // Extract counterfactual hook (first sentence, trimmed)
+    const cfRaw = subject.counterfactual || "";
+    const cfFirst = cfRaw.match(/^[^.!?]+[.!?]+/)?.[0]?.trim() || "";
 
     const W = 1080, H = 1080;
     const canvas = document.createElement("canvas");
@@ -12096,7 +12102,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
     ctx.fillRect(0, 0, W, H);
 
     // Subtle grid lines for texture
-    ctx.strokeStyle = "rgba(255,255,255,0.025)";
+    ctx.strokeStyle = "rgba(255,255,255,0.02)";
     ctx.lineWidth = 1;
     for (let i = 0; i < W; i += 60) {
       ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
@@ -12126,84 +12132,192 @@ Be historically precise. The cascade should show a chain reaction where each dom
       }
     };
 
-    // "Counterfactual" title
-    centerText("Counterfactual", 90, "italic 42px Georgia, serif", "rgba(255,255,255,0.5)");
+    // Helper: wrap text across lines, returns array of lines
+    const wrapText = (text, font, maxWidth) => {
+      ctx.font = font;
+      const words = text.split(" ");
+      const lines = [];
+      let current = "";
+      for (const word of words) {
+        const test = current ? current + " " + word : word;
+        if (ctx.measureText(test).width > maxWidth) {
+          if (current) lines.push(current);
+          current = word;
+        } else {
+          current = test;
+        }
+      }
+      if (current) lines.push(current);
+      return lines;
+    };
 
-    // Daily badge
+    // ── LAYOUT ──
+
+    // "Counterfactual" branding — top left, subtle
+    ctx.font = "italic 32px Georgia, serif";
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.textAlign = "left";
+    ctx.fillText("Counterfactual", 60, 70);
+
+    // Daily badge — top right
     if (isDaily) {
       ctx.fillStyle = "#d97706";
-      const badgeW = 220, badgeH = 40, badgeX = (W - badgeW) / 2, badgeY = 112;
-      ctx.beginPath();
-      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
-      ctx.fill();
-      centerText(`🗓️  Daily Challenge`, 140, "bold 20px 'Helvetica Neue', sans-serif", "#fff");
+      const badgeText = `Daily #${dayNum}`;
+      ctx.font = "bold 20px 'Helvetica Neue', sans-serif";
+      const badgeW = ctx.measureText(badgeText).width + 40;
+      const badgeX = W - 60 - badgeW;
+      ctx.beginPath(); ctx.roundRect(badgeX, 46, badgeW, 38, 10); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.textAlign = "center";
+      ctx.fillText(badgeText, badgeX + badgeW / 2, 72);
     }
 
-    const nameY = isDaily ? 230 : 190;
-
     // Figure name — hero element
-    centerText(subject.name, nameY, `56px Georgia, serif`, "#ffffff", W - 120);
+    const nameY = 145;
+    centerText(subject.name, nameY, "52px Georgia, serif", "#ffffff", W - 120);
 
-    // Field + lifespan
+    // Field + lifespan — subtle context
     const fieldText = `${subject.field}  ·  ${formatLifespan(subject.born, subject.died)}`;
-    centerText(fieldText, nameY + 55, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.45)", W - 120);
+    centerText(fieldText, nameY + 48, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)", W - 120);
 
-    // The question — main hook
-    centerText(`How much did ${subject.name.split(' ').pop()} shape history?`, nameY + 120, "italic 32px Georgia, serif", "rgba(255,255,255,0.7)", W - 160);
+    // ── COUNTERFACTUAL HOOK — the centerpiece ──
+    const hookY = nameY + 120;
+    if (cfFirst) {
+      // Italic counterfactual text, wrapped
+      const hookFont = "italic 30px Georgia, serif";
+      const hookLines = wrapText(cfFirst, hookFont, W - 200);
+      const lineH = 42;
+      // Background panel
+      const panelH = hookLines.length * lineH + 36;
+      ctx.fillStyle = "rgba(255,255,255,0.04)";
+      ctx.beginPath(); ctx.roundRect(60, hookY - 24, W - 120, panelH, 16); ctx.fill();
+      // Left accent bar
+      ctx.fillStyle = "rgba(255,255,255,0.12)";
+      ctx.fillRect(60, hookY - 24, 4, panelH);
+      // Text
+      ctx.font = hookFont;
+      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.textAlign = "center";
+      hookLines.forEach((line, i) => {
+        ctx.fillText(line, W / 2, hookY + 14 + i * lineH);
+      });
+    }
 
-    // ── Gradient bar — shows prediction position only, no answer ──
-    const barY = nameY + 180;
-    const barX = 120, barW = W - 240, barH = 24;
+    // ── VERDICT CARDS — "My Call" vs "Actual" side by side ──
+    const cfLines = cfFirst ? wrapText(cfFirst, "italic 30px Georgia, serif", W - 200).length : 0;
+    const verdictY = hookY + (cfFirst ? cfLines * 42 + 60 : 20);
+
+    const cardW = 420, cardH = 150, gap = 40;
+    const leftX = (W - cardW * 2 - gap) / 2;
+    const rightX = leftX + cardW + gap;
+
+    // My Call card
+    ctx.fillStyle = "rgba(255,255,255,0.06)";
+    ctx.beginPath(); ctx.roundRect(leftX, verdictY, cardW, cardH, 16); ctx.fill();
+    ctx.font = "bold 14px 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.4)";
+    ctx.textAlign = "center";
+    ctx.fillText("MY CALL", leftX + cardW / 2, verdictY + 35);
+    ctx.font = "bold 48px Georgia, serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(`${userPct}%`, leftX + cardW / 2, verdictY + 88);
+    ctx.font = "bold 18px 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = userLabel.color;
+    ctx.fillText(userLabel.label, leftX + cardW / 2, verdictY + 120);
+
+    // Actual card
+    ctx.fillStyle = `${actualLabel.color}18`;
+    ctx.beginPath(); ctx.roundRect(rightX, verdictY, cardW, cardH, 16); ctx.fill();
+    ctx.strokeStyle = `${actualLabel.color}40`;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(rightX, verdictY, cardW, cardH, 16); ctx.stroke();
+    ctx.font = "bold 14px 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.4)";
+    ctx.textAlign = "center";
+    ctx.fillText("ACTUAL", rightX + cardW / 2, verdictY + 35);
+    ctx.font = "bold 48px Georgia, serif";
+    ctx.fillStyle = actualLabel.color;
+    ctx.fillText(`${actualPct}%`, rightX + cardW / 2, verdictY + 88);
+    ctx.font = "bold 18px 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = actualLabel.color;
+    ctx.fillText(actualLabel.label, rightX + cardW / 2, verdictY + 120);
+
+    // ── GRADIENT BAR with both markers ──
+    const barY = verdictY + cardH + 50;
+    const barX = 100, barW = W - 200, barH = 20;
     const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
     barGrad.addColorStop(0, "#15803d");
     barGrad.addColorStop(0.4, "#d97706");
     barGrad.addColorStop(0.65, "#c2410c");
     barGrad.addColorStop(1, "#b91c1c");
     ctx.fillStyle = barGrad;
-    ctx.beginPath();
-    ctx.roundRect(barX, barY, barW, barH, 12);
-    ctx.fill();
+    ctx.beginPath(); ctx.roundRect(barX, barY, barW, barH, 10); ctx.fill();
 
-    // Player's prediction marker only — no actual score marker
-    const markerX = barX + (userPct / 100) * barW;
+    // Gap highlight between prediction and actual
+    if (diff > 0.08) {
+      const lo = Math.min(prediction, w), hi = Math.max(prediction, w);
+      ctx.fillStyle = "rgba(255,255,255,0.2)";
+      ctx.beginPath();
+      ctx.roundRect(barX + lo * barW, barY - 3, (hi - lo) * barW, barH + 6, 6);
+      ctx.fill();
+    }
+
+    // Player marker (white dot)
+    const playerX = barX + (userPct / 100) * barW;
     ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.arc(markerX, barY + barH / 2, 16, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(playerX, barY + barH / 2, 14, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "#1a1a1a";
-    ctx.beginPath();
-    ctx.arc(markerX, barY + barH / 2, 9, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(playerX, barY + barH / 2, 8, 0, Math.PI * 2); ctx.fill();
 
-    // Labels under bar
+    // Actual marker (colored dot)
+    const actualX = barX + (actualPct / 100) * barW;
+    ctx.fillStyle = actualLabel.color;
+    ctx.beginPath(); ctx.arc(actualX, barY + barH / 2, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath(); ctx.arc(actualX, barY + barH / 2, 6, 0, Math.PI * 2); ctx.fill();
+
+    // Bar labels
     ctx.font = "14px 'Helvetica Neue', sans-serif";
     ctx.textAlign = "left";
-    ctx.fillStyle = "rgba(255,255,255,0.35)";
-    ctx.fillText("Low Weight", barX, barY + barH + 28);
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.fillText("Footnote", barX, barY + barH + 26);
     ctx.textAlign = "right";
-    ctx.fillText("History-Defining", barX + barW, barY + barH + 28);
+    ctx.fillText("Turning Point", barX + barW, barY + barH + 26);
 
-    // "I predicted X% historical weight"
-    centerText(`I predicted ${userPct}% historical weight`, barY + barH + 80, "24px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.55)");
+    // Legend dots
+    ctx.textAlign = "center";
+    const legendY = barY + barH + 55;
+    // You
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath(); ctx.arc(W / 2 - 80, legendY, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#1a1a1a";
+    ctx.beginPath(); ctx.arc(W / 2 - 80, legendY, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.font = "14px 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.4)";
+    ctx.fillText("You", W / 2 - 55, legendY + 5);
+    // Actual
+    ctx.fillStyle = actualLabel.color;
+    ctx.beginPath(); ctx.arc(W / 2 + 40, legendY, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.font = "14px 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.4)";
+    ctx.fillText("Actual", W / 2 + 72, legendY + 5);
 
-    // ── Points — competitive element ──
-    const ptsY = barY + barH + 160;
+    // ── POINTS — competitive centerpiece ──
+    const ptsY = legendY + 75;
     const ptsColor = pts >= 80 ? "#22c55e" : pts >= 50 ? "#d97706" : "#ef4444";
-    centerText(`${pts}`, ptsY, "bold 96px Georgia, serif", ptsColor);
-    centerText("points", ptsY + 40, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)");
+    centerText(`${pts}`, ptsY, "bold 84px Georgia, serif", ptsColor);
+    centerText("points", ptsY + 36, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.35)");
 
-    // Daily percentile or accuracy hint
+    // Daily extras
     if (isDaily && percentile !== null) {
-      centerText(`Beat ${percentile}% of players`, ptsY + 85, "bold 22px 'Helvetica Neue', sans-serif", "#d97706");
+      centerText(`Beat ${percentile}% of players`, ptsY + 74, "bold 20px 'Helvetica Neue', sans-serif", "#d97706");
     }
-
-    // Daily streak
     if (isDaily && dailyState?.dailyStreak >= 2) {
-      centerText(`🔥 ${dailyState.dailyStreak}-day streak`, ptsY + (percentile !== null ? 120 : 85), "20px 'Helvetica Neue', sans-serif", "#d97706");
+      const streakY = ptsY + (percentile !== null ? 104 : 74);
+      centerText(`🔥 ${dailyState.dailyStreak}-day streak`, streakY, "18px 'Helvetica Neue', sans-serif", "#d97706");
     }
 
-    // CTA
-    centerText("Can you beat my score?", H - 110, "bold 24px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.6)");
+    // ── CTA ──
+    centerText("What would you predict?", H - 100, "bold 22px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.55)");
 
     // Bottom accent line
     const botLine = ctx.createLinearGradient(0, 0, W, 0);
@@ -12216,9 +12330,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
     // URL with deep link
     const figLink = subject.id && !subject._isCustom ? `counterfactual.app/#${subject.id}` : "counterfactual.app";
-    centerText(figLink, H - 36, "18px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.3)");
+    centerText(figLink, H - 36, "16px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.25)");
 
-    // Convert to blob
     return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
   };
 
@@ -12354,11 +12467,11 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
     let text;
     if (achievement) {
-      text = `Achievement Unlocked: ${achievement.title} — ${achievement.desc}. ${rank.title} with ${played.length} entries played.`;
+      text = `🏅 ${achievement.title}\n\n${achievement.desc}\n\n${rank.icon} ${rank.title} · ${played.length} entries · ${avgPts} avg pts\n\nCounterfactual — predict who shaped history.`;
     } else if (isRankUp) {
-      text = `Ranked up to ${rank.title}! ${played.length} entries played, ${avgPts} avg pts, ${earnedCount} badges.`;
+      text = `${rank.icon} Ranked up to ${rank.title}!\n\n${played.length} entries played · ${avgPts} avg pts · ${earnedCount} badges earned\n\nCounterfactual — predict who shaped history.`;
     } else {
-      text = `${rank.title} on Counterfactual — ${played.length} entries, ${avgPts} avg pts, best streak: ${bestStreak}.`;
+      text = `${rank.icon} ${rank.title}\n\n${played.length} entries · ${avgPts} avg pts · best streak: ${bestStreak}\n\nCounterfactual — predict who shaped history.`;
     }
 
     let imageBlob = null;
@@ -12378,16 +12491,57 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const diff = Math.abs(prediction - w);
     const pts = calculatePoints(diff);
     const figLink = subject.id && !subject._isCustom ? `https://counterfactual.app/#${subject.id}` : "https://counterfactual.app";
+    const userPct = Math.round(prediction * 100);
+    const actualPct = Math.round(w * 100);
+    const userLabel = getScoreLabel(prediction, subject);
+    const actualLabel = getScoreLabel(w, subject);
+
+    // Extract a short hook from the counterfactual (first sentence)
+    const cfRaw = subject.counterfactual || "";
+    const cfFirst = cfRaw.match(/^[^.!?]+[.!?]+/)?.[0]?.trim() || "";
+
+    // Build the hook — counterfactual-driven when available
+    const isEvent = subject.cat === "events";
+    const isInstitution = subject.cat === "institutions";
+    const isInvention = subject.cat === "inventions";
+
+    let hook;
+    if (cfFirst) {
+      // Use the counterfactual first sentence as the hook
+      hook = cfFirst;
+    } else if (isEvent) {
+      hook = `Was ${subject.name} a turning point or was history already headed there?`;
+    } else if (isInstitution) {
+      hook = `Would someone else have built what ${subject.name} built?`;
+    } else if (isInvention) {
+      hook = `Was ${subject.name} inevitable, or did it reshape everything?`;
+    } else {
+      hook = `Without ${subject.name}, how different would the world be?`;
+    }
+
+    // Score commentary — varied and specific
+    let verdict;
+    if (userLabel.label === actualLabel.label) {
+      // Same bucket
+      verdict = pts >= 80
+        ? `I called it: ${actualLabel.label}. ${pts} pts.`
+        : `We both said ${actualLabel.label} — but the exact number matters. ${pts} pts.`;
+    } else if (diff <= 0.1) {
+      verdict = `I said ${userLabel.label} (${userPct}%). Actual: ${actualLabel.label} (${actualPct}%). Close — ${pts} pts.`;
+    } else if (prediction > w) {
+      verdict = `I said ${userLabel.label} (${userPct}%). Actual: ${actualLabel.label} (${actualPct}%). Overrated. ${pts} pts.`;
+    } else {
+      verdict = `I said ${userLabel.label} (${userPct}%). Actual: ${actualLabel.label} (${actualPct}%). Underrated. ${pts} pts.`;
+    }
 
     let text;
     if (isDaily) {
       const dayNum = getDayNumber();
       const percentile = getDailyPercentile(diff, r);
-      const streakText = dailyState?.dailyStreak >= 2 ? ` 🔥 ${dailyState.dailyStreak}-day streak` : "";
-      text = `How much did ${subject.name} shape history? I scored ${pts} points and beat ${percentile}% of players.${streakText}`;
+      const streakText = dailyState?.dailyStreak >= 2 ? `\n🔥 ${dailyState.dailyStreak}-day streak` : "";
+      text = `Counterfactual Daily #${dayNum}\n\n${hook}\n\n${verdict} Beat ${percentile}% of players.${streakText}`;
     } else {
-      const scoreHint = pts >= 80 ? "Nailed it." : pts >= 50 ? "Got close." : "Totally wrong.";
-      text = `How much did ${subject.name} shape history? ${scoreHint} (${pts} pts)`;
+      text = `${hook}\n\n${verdict}\n\nCounterfactual — predict who shaped history.`;
     }
 
     // Generate image in background
@@ -12459,7 +12613,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
     return (
       <button onClick={btnAction} style={{
         display: "inline-flex", alignItems: "center", gap: 6,
-        padding: "8px 14px", borderRadius: 10, fontSize: 13, fontWeight: 600,
+        padding: "8px 14px", borderRadius: 12, fontSize: 13, fontWeight: 600,
         background: "#f7f6f3", color: "#7a7770", border: "1px solid #e5e2db",
         cursor: "pointer", fontFamily: sansStack, marginBottom: 20,
         transition: "all 0.15s ease",
@@ -12485,8 +12639,9 @@ Be historically precise. The cascade should show a chain reaction where each dom
     return (
       <div style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-        background: "rgba(255,255,255,0.92)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        background: "rgba(255,255,255,0.95)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         borderTop: "1px solid #e5e2db",
+        boxShadow: "0 -1px 8px rgba(0,0,0,0.03)",
         display: "flex", justifyContent: "center", padding: "0 0 env(safe-area-inset-bottom, 0px)",
       }}>
         <div style={{ display: "flex", maxWidth: 420, width: "100%", justifyContent: "space-around" }}>
@@ -12517,8 +12672,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 position: "relative",
               }}>
                 {isActive && <div style={{
-                  position: "absolute", top: -1, left: "25%", right: "25%", height: 2,
-                  background: "#1a1a1a", borderRadius: "0 0 2px 2px",
+                  position: "absolute", top: -1, left: "20%", right: "20%", height: 2.5,
+                  background: "#1a1a1a", borderRadius: "0 0 3px 3px",
                 }} />}
                 <span style={{ fontSize: 18, filter: isActive ? "none" : "grayscale(0.6)", opacity: isActive ? 1 : 0.5 }}>
                   {tab.icon}
@@ -12617,7 +12772,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
     const fullText = `${text}\n\n${url}`;
 
     const shareTo = (platform) => {
-      const encoded = encodeURIComponent(text + "\n\nMake your prediction:");
+      const encoded = encodeURIComponent(text);
       const encodedUrl = encodeURIComponent(url);
       let shareUrl;
       switch (platform) {
@@ -12634,7 +12789,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           shareUrl = `https://wa.me/?text=${encodeURIComponent(text + "\n\n" + url)}`;
           break;
         case "reddit":
-          shareUrl = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent(`Counterfactual: ${figureName}`)}`;
+          shareUrl = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent(`How much did ${figureName} shape history? — Counterfactual`)}`;
           break;
         default: return;
       }
@@ -12671,7 +12826,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
     const platformBtnStyle = (bg, hover) => ({
       display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-      padding: "12px 16px", borderRadius: 10, border: "none",
+      padding: "12px 16px", borderRadius: 12, border: "none",
       fontSize: 14, fontWeight: 600, color: "#fff", cursor: "pointer",
       background: bg, transition: "all 0.15s ease", flex: 1, minWidth: 0,
     });
@@ -12696,7 +12851,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             padding: "18px 22px 0",
           }}>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", margin: 0, fontFamily: fontStack }}>
-              Share
+              Share{figureName && figureName !== "Profile" ? ` — ${figureName}` : ""}
             </h3>
             <button
               onClick={() => setShareModal(null)}
@@ -12733,7 +12888,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
             {/* Text preview */}
             <div style={{
-              background: "#fafaf9", border: "1px solid #e5e2db", borderRadius: 10,
+              background: "#faf9f6", border: "1px solid #e5e2db", borderRadius: 12,
               padding: "12px 14px", marginBottom: 16, fontSize: 13, lineHeight: 1.6,
               color: "#4a4840", whiteSpace: "pre-wrap", fontFamily: sansStack,
             }}>
@@ -12815,7 +12970,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
   const SectionBox = ({ bg, border, titleColor, textColor, icon, title, children }) => (
     <div style={{
-      marginBottom: 20, background: bg, borderRadius: 14,
+      marginBottom: 20, background: bg, borderRadius: 12,
       padding: "20px 22px", border: `1px solid ${border}`,
       opacity: revealPhase >= 3 ? 1 : 0,
       transform: revealPhase >= 3 ? "translateY(0)" : "translateY(12px)",
@@ -12891,7 +13046,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           {step === 1 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
               <div style={{
-                fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.08em",
+                fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.05em",
                 textTransform: "uppercase", marginBottom: 16, textAlign: "center",
               }}>
                 Your first prediction
@@ -12942,7 +13097,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           {step === 2 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
               <div style={{
-                fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.08em",
+                fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.05em",
                 textTransform: "uppercase", marginBottom: 16, textAlign: "center",
               }}>
                 Your prediction
@@ -13029,15 +13184,15 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   borderTop: "1px solid #e8e6e1", borderBottom: "1px solid #e8e6e1",
                 }}>
                   <div>
-                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>You Said</div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>You Said</div>
                     <div style={{ fontSize: 32, fontWeight: 400, color: "#1a1a1a", fontFamily: fontStack }}>{onboardPred}%</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Actual</div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>Actual</div>
                     <div style={{ fontSize: 32, fontWeight: 400, color: tutLabel.color, fontFamily: fontStack }}>{Math.round(tutW * 100)}%</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Points</div>
+                    <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>Points</div>
                     <div style={{ fontSize: 32, fontWeight: 400, color: tutPts >= 64 ? "#6d28d9" : "#b0ada6", fontFamily: fontStack }}>+{tutPts}</div>
                   </div>
                 </div>
@@ -13215,7 +13370,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     <div style={{ fontSize: 9, color: "#9a9890", fontWeight: 500, letterSpacing: "0.03em" }}>{s.label}</div>
                   </div>
                 ))}
-                <span style={{ fontSize: 16, color: "#ccc8c0", marginLeft: 4 }}>›</span>
+                <span style={{ fontSize: 16, color: "#d1cdc4", marginLeft: 4 }}>›</span>
               </div>
             </div>
           )}
@@ -13234,7 +13389,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <button
                     onClick={dailyDone ? undefined : startDaily}
                     style={{
-                      flex: 1, padding: "18px 14px", borderRadius: 14,
+                      flex: 1, padding: "18px 14px", borderRadius: 12,
                       background: dailyDone
                         ? "#fefce8"
                         : "linear-gradient(135deg, #fffbeb, #fef3c7)",
@@ -13248,7 +13403,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                       <span style={{ fontSize: 18 }}>🗓️</span>
-                      <span style={{ fontSize: 15, fontWeight: 800, color: "#92400e" }}>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: "#92400e" }}>
                         Daily Challenge
                       </span>
                       {dailyStrk >= 2 && <span style={{ fontSize: 12, color: "#b45309" }}>🔥 {dailyStrk}</span>}
@@ -13269,7 +13424,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 <button
                   onClick={startRandom}
                   style={{
-                    flex: 1, padding: "18px 14px", borderRadius: 14,
+                    flex: 1, padding: "18px 14px", borderRadius: 12,
                     background: challengeMode
                       ? "linear-gradient(135deg, #7c2d12, #991b1b)"
                       : "linear-gradient(135deg, #1a1a1a, #292524)",
@@ -13281,7 +13436,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                     <span style={{ fontSize: 18 }}>{challengeMode ? "⚔️" : "🎲"}</span>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>
                       {challengeMode ? "Challenge" : "Play Random"}
                     </span>
                   </div>
@@ -13361,12 +13516,12 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     return (
                       <button key={i} onClick={() => selectSubject(fig)} style={{
                         display: "flex", alignItems: "center", gap: 12,
-                        padding: "12px 16px", borderRadius: 10,
+                        padding: "12px 16px", borderRadius: 12,
                         background: "#fff", border: "1px solid #e5e2db",
                         cursor: "pointer", textAlign: "left", width: "100%",
                         transition: "all 0.15s ease", minHeight: 48,
                       }}
-                        onMouseOver={e => { e.currentTarget.style.borderColor = "#d1cdc4"; e.currentTarget.style.background = "#fafaf9"; }}
+                        onMouseOver={e => { e.currentTarget.style.borderColor = "#d1cdc4"; e.currentTarget.style.background = "#faf9f6"; }}
                         onMouseOut={e => { e.currentTarget.style.borderColor = "#e5e2db"; e.currentTarget.style.background = "#fff"; }}
                       >
                         <span style={{ fontSize: 18, flexShrink: 0 }}>{typeIcons[rec.type] || "✨"}</span>
@@ -13387,7 +13542,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                             );
                           })()}
                         </div>
-                        <span style={{ fontSize: 14, color: "#ccc8c0", flexShrink: 0 }}>›</span>
+                        <span style={{ fontSize: 14, color: "#d1cdc4", flexShrink: 0 }}>›</span>
                       </button>
                     );
                   })}
@@ -13428,6 +13583,35 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 Researching {customName}...
               </div>
             )}
+          </div>
+
+          {/* Quick category picks on Play tab */}
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#9a9890", marginBottom: 10 }}>
+              Or pick a category
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {Object.entries(CATS).slice(0, 8).map(([key, cat]) => {
+                const total = ALL_SUBJECTS.filter(s => figInCat(s, key)).length;
+                if (total === 0) return null;
+                return (
+                  <button key={key} onClick={() => { SFX.click(); setActiveTab("browse"); setActiveCategory(key); setSearchQuery(""); setScreen("category"); scrollTop(); }}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      padding: "8px 14px", borderRadius: 20,
+                      background: cat.bg, border: `1px solid ${cat.color}20`,
+                      cursor: "pointer", fontSize: 13, fontWeight: 600, color: cat.color,
+                      transition: "all 0.12s ease",
+                    }}
+                    onMouseOver={e => { e.currentTarget.style.borderColor = `${cat.color}50`; }}
+                    onMouseOut={e => { e.currentTarget.style.borderColor = `${cat.color}20`; }}
+                  >
+                    <span style={{ fontSize: 14 }}>{CAT_ICONS[key] || "📁"}</span>
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           </>)}
 
@@ -13476,7 +13660,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     return (
                       <button key={s.id} onClick={() => selectSubject(s)} style={{
                         display: "flex", alignItems: "center", gap: 10,
-                        padding: "10px 14px", borderRadius: 10,
+                        padding: "10px 14px", borderRadius: 12,
                         background: isPlayed ? "#f5f4f0" : "#fff",
                         border: "1px solid #e5e2db",
                         cursor: "pointer", width: "100%", textAlign: "left",
@@ -13491,7 +13675,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                           <div style={{ fontSize: 11, color: "#9a9890" }}>{s.field}</div>
                         </div>
                         {isPlayed && <span style={{ fontSize: 10, color: "#16a34a", fontWeight: 600 }}>✓</span>}
-                        <span style={{ fontSize: 12, color: "#ccc8c0" }}>›</span>
+                        <span style={{ fontSize: 12, color: "#d1cdc4" }}>›</span>
                       </button>
                     );
                   })}
@@ -13500,13 +13684,13 @@ Be historically precise. The cascade should show a chain reaction where each dom
             );
           })()}
 
-          {/* Browse by Category — horizontal scroll (replaces grid) */}
+          {/* Browse by Category — people categories only */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               📂 Browse by Category
             </h3>
             <ScrollRow>
-              {Object.entries(CATS).map(([key, cat]) => {
+              {Object.entries(CATS).filter(([key]) => !["events","institutions","inventions"].includes(key)).map(([key, cat]) => {
                 const catFigures = ALL_SUBJECTS.filter(s => figInCat(s, key));
                 const catPlayed = catFigures.filter(f => played.includes(f.id)).length;
                 const total = catFigures.length;
@@ -13540,6 +13724,56 @@ Be historically precise. The cascade should show a chain reaction where each dom
               })}
             </ScrollRow>
           </div>
+
+          {/* Events / Institutions / Inventions — dedicated rows */}
+          {[
+            { key: "events", icon: "📅", title: "Events", desc: "Turning points that shaped the world" },
+            { key: "institutions", icon: "🏢", title: "Institutions", desc: "Organizations that changed the game" },
+            { key: "inventions", icon: "⚙️", title: "Inventions", desc: "Technologies that rewired civilization" },
+          ].map(group => {
+            const cat = CATS[group.key];
+            const entries = ALL_SUBJECTS.filter(s => s.cat === group.key);
+            if (entries.length === 0) return null;
+            const groupPlayed = entries.filter(e => played.includes(e.id)).length;
+            return (
+              <div key={group.key} style={{ marginBottom: 24 }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
+                  <h3 style={{ ...S.h3, fontSize: 14, margin: 0, color: "#7a7770" }}>
+                    {group.icon} {group.title}
+                  </h3>
+                  <span style={{ fontSize: 11, color: "#b0ada6" }}>{groupPlayed}/{entries.length} played</span>
+                </div>
+                <ScrollRow>
+                  {entries.map(s => {
+                    const isPlayed = played.includes(s.id);
+                    return (
+                      <div
+                        key={s.id}
+                        onClick={() => selectSubject(s)}
+                        style={{
+                          flex: "0 0 160px", scrollSnapAlign: "start",
+                          padding: "12px 14px", borderRadius: 12,
+                          background: isPlayed ? "#f5f4f0" : cat.bg,
+                          border: `1px solid ${isPlayed ? "#d4d0c8" : cat.color + "18"}`,
+                          cursor: "pointer", transition: "all 0.15s ease",
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 4px 12px ${cat.color}12`; }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
+                      >
+                        <div style={{ fontSize: 13, fontWeight: 700, color: isPlayed ? "#7a7770" : "#1a1a1a", marginBottom: 4, lineHeight: 1.3 }}>
+                          {s.name}
+                        </div>
+                        <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6 }}>{s.field}</div>
+                        <div style={{ fontSize: 11, color: "#b0ada6" }}>
+                          {s.born}{isPlayed && <span style={{ color: "#16a34a", fontWeight: 600, marginLeft: 6 }}>✓</span>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </ScrollRow>
+              </div>
+            );
+          })}
 
           {/* Themed Collections — compact */}
           <div style={{ marginBottom: 24 }}>
@@ -13644,7 +13878,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     }}
                     style={{
                       flex: "0 0 220px", scrollSnapAlign: "start",
-                      padding: "16px 18px", borderRadius: 14,
+                      padding: "16px 18px", borderRadius: 12,
                       background: unlocked
                         ? `linear-gradient(145deg, ${sc.color}08, ${sc.color}15)`
                         : "linear-gradient(145deg, #f8f7f5, #f0efec)",
@@ -13782,7 +14016,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
             {/* Compound effect narrative */}
             <div style={{
-              padding: "20px 22px", borderRadius: 14,
+              padding: "20px 22px", borderRadius: 12,
               background: `linear-gradient(145deg, ${sc.color}06, ${sc.color}10)`,
               border: `2px solid ${sc.color}20`,
               marginBottom: 24,
@@ -13809,7 +14043,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   }}>
                     <div style={{
                       fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-                      letterSpacing: "0.06em", marginBottom: 8,
+                      letterSpacing: "0.05em", marginBottom: 8,
                       color: i === 0 ? "#dc2626" : i === 1 ? "#ca8a04" : "#0369a1",
                     }}>
                       {mw.area}
@@ -13929,7 +14163,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           {/* Profile card — rank hero + stats banner + horizontal ladder */}
           <div style={{
             ...S.card, textAlign: "center", marginBottom: 24,
-            background: "linear-gradient(180deg, #fafaf9, #f5f4f0)",
+            background: "linear-gradient(180deg, #faf9f6, #f5f4f0)",
             animation: "fadeUp 0.35s ease both",
           }}>
             {/* Rank hero */}
@@ -13937,7 +14171,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             <h2 style={{ ...S.h2, fontSize: 28, color: rank.color, marginBottom: 4 }}>
               {rank.title}
               {streakRewards.includes("oracle_badge") && (
-                <span style={{ fontSize: 14, marginLeft: 8, padding: "2px 8px", borderRadius: 10, background: "#fce7f3", color: "#be185d", fontWeight: 600, verticalAlign: "middle" }}>
+                <span style={{ fontSize: 14, marginLeft: 8, padding: "2px 8px", borderRadius: 12, background: "#fce7f3", color: "#be185d", fontWeight: 600, verticalAlign: "middle" }}>
                   🏛️ Oracle
                 </span>
               )}
@@ -13969,7 +14203,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   textAlign: "center",
                 }}>
                   <div style={{ fontSize: 16, marginBottom: 3 }}>{stat.icon}</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: "#1a1a1a" }}>{stat.value}</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a" }}>{stat.value}</div>
                   <div style={{ fontSize: 9, color: "#9a9890", fontWeight: 600 }}>{stat.label}</div>
                 </div>
               ))}
@@ -13980,7 +14214,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
               {/* Track */}
               <div style={{
                 display: "flex", alignItems: "stretch",
-                borderRadius: 10, overflow: "hidden", border: "1px solid #e5e2db",
+                borderRadius: 12, overflow: "hidden", border: "1px solid #e5e2db",
                 background: "#f5f4f0",
               }}>
                 {[...RANK_LADDER].reverse().map((r, i) => {
@@ -14010,7 +14244,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                       <div style={{
                         fontSize: isCurrent ? 11 : 9,
                         fontWeight: isCurrent ? 800 : 600,
-                        color: isCurrent ? r.color : isBelow ? "#ccc8c0" : "#9a9890",
+                        color: isCurrent ? r.color : isBelow ? "#d1cdc4" : "#9a9890",
                         lineHeight: 1.2,
                       }}>{r.title}</div>
                     </div>
@@ -14082,8 +14316,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   {insights.map((ins, i) => (
                     <div key={i} style={{
                       display: "flex", gap: 12, alignItems: "flex-start",
-                      padding: "12px 14px", borderRadius: 10,
-                      background: "#fafaf9", border: "1px solid #f0efeb",
+                      padding: "12px 14px", borderRadius: 12,
+                      background: "#faf9f6", border: "1px solid #f0efeb",
                     }}>
                       <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1.4 }}>{ins.icon}</span>
                       <p style={{ fontSize: 14, color: "#4a4840", lineHeight: 1.55, margin: 0 }}>{ins.text}</p>
@@ -14112,7 +14346,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     return (
                       <div key={i} style={{
                         padding: "16px 18px", borderRadius: 12,
-                        background: p.cross ? "linear-gradient(135deg, #faf5ff, #f0f9ff)" : "#fafaf9",
+                        background: p.cross ? "linear-gradient(135deg, #faf5ff, #f0f9ff)" : "#faf9f6",
                         border: p.cross ? "1px solid #e9d5ff" : "1px solid #f0efeb",
                       }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
@@ -14159,11 +14393,11 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
             {/* Progress bar */}
             <div style={{
-              height: 6, borderRadius: 3, background: "#f0efeb", marginBottom: 18, overflow: "hidden",
+              height: 6, borderRadius: 4, background: "#f0efeb", marginBottom: 18, overflow: "hidden",
             }}>
               <div style={{
                 width: `${(earned.length / ACHIEVEMENTS.length) * 100}%`,
-                height: "100%", borderRadius: 3,
+                height: "100%", borderRadius: 4,
                 background: "linear-gradient(90deg, #f59e0b, #16a34a)",
                 transition: "width 0.5s ease",
               }} />
@@ -14172,7 +14406,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
               {earned.map(a => (
                 <div key={a.id} style={{
-                  padding: "12px", borderRadius: 10,
+                  padding: "12px", borderRadius: 12,
                   background: "#fefce8", border: "1px solid #fde68a",
                   position: "relative",
                 }}>
@@ -14195,8 +14429,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
               ))}
               {locked.map(a => (
                 <div key={a.id} style={{
-                  padding: "12px", borderRadius: 10,
-                  background: "#fafaf9", border: "1px solid #e5e2db",
+                  padding: "12px", borderRadius: 12,
+                  background: "#faf9f6", border: "1px solid #e5e2db",
                   opacity: 0.5,
                 }}>
                   <div style={{ fontSize: 24, marginBottom: 4, filter: "grayscale(1)" }}>{a.icon}</div>
@@ -14223,14 +14457,14 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 return (
                   <div key={m.at} style={{
                     display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
-                    borderRadius: 10,
-                    background: unlocked ? "linear-gradient(135deg, #fefce8, #fffbeb)" : isNext ? "#faf9f6" : "#fafaf9",
+                    borderRadius: 12,
+                    background: unlocked ? "linear-gradient(135deg, #fefce8, #fffbeb)" : isNext ? "#faf9f6" : "#faf9f6",
                     border: `1px solid ${unlocked ? "#fde68a" : isNext ? "#e8e6e1" : "#f0efeb"}`,
                     opacity: unlocked || isNext ? 1 : 0.55,
                   }}>
                     <div style={{ fontSize: 24, flexShrink: 0 }}>{unlocked ? m.emoji : "🔒"}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: unlocked ? "#92400e" : "#6a6860" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: unlocked ? "#92400e" : "#7a7770" }}>
                         {m.at}-Round Streak — {m.label}
                       </div>
                       <div style={{ fontSize: 12, color: unlocked ? "#b45309" : "#9a9890", marginTop: 2 }}>
@@ -14251,10 +14485,10 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* Active perks summary */}
             {(streakShields > 0 || pointBoostRounds > 0 || streakRewards.includes("oracle_badge") || streakRewards.includes("golden_share") || streakRewards.includes("difficulty_peek")) && (
               <div style={{
-                marginTop: 14, padding: "12px 14px", borderRadius: 10,
+                marginTop: 14, padding: "12px 14px", borderRadius: 12,
                 background: "#f0fdf4", border: "1px solid #bbf7d0",
               }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#166534", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#166534", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Active Perks
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -14322,7 +14556,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     return (
                       <div key={key} style={{
                         display: "flex", alignItems: "center", gap: 10,
-                        padding: "10px 14px", borderRadius: 10,
+                        padding: "10px 14px", borderRadius: 12,
                         background: cat.bg, border: `1px solid ${cat.color}15`,
                       }}>
                         <span style={{
@@ -14369,7 +14603,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     background: i === 0 ? "#fef3c7" : "#f5f4f0",
                     color: i === 0 ? "#d97706" : "#9a9890",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 11, fontWeight: 800, flexShrink: 0,
+                    fontSize: 11, fontWeight: 700, flexShrink: 0,
                   }}>{i + 1}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 13, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -14380,7 +14614,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     </div>
                   </div>
                   <span style={{
-                    fontSize: 14, fontWeight: 800,
+                    fontSize: 14, fontWeight: 700,
                     color: g.pts >= 90 ? "#16a34a" : g.pts >= 64 ? "#65a30d" : "#ca8a04",
                   }}>{g.pts}</span>
                 </div>
@@ -14397,8 +14631,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
               {colProgress.map(col => (
                 <div key={col.id} onClick={() => { setActiveTab("browse"); setActiveCollection(col); setScreen("collection"); scrollTop(); }} style={{
                   display: "flex", alignItems: "center", gap: 12,
-                  padding: "10px 14px", borderRadius: 10, cursor: "pointer",
-                  background: col.complete ? col.bg : "#fafaf9",
+                  padding: "10px 14px", borderRadius: 12, cursor: "pointer",
+                  background: col.complete ? col.bg : "#faf9f6",
                   border: `1px solid ${col.complete ? col.color + "40" : "#e5e2db"}`,
                 }}>
                   <span style={{ fontSize: 22, flexShrink: 0 }}>{col.complete ? "✅" : col.emoji}</span>
@@ -14452,7 +14686,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
           {/* Category header */}
           <div style={{
-            background: cat.bg, borderRadius: 18, padding: "24px 24px 20px",
+            background: cat.bg, borderRadius: 16, padding: "24px 24px 20px",
             border: `2px solid ${cat.color}25`, marginBottom: 24,
             animation: "fadeUp 0.35s ease both",
           }}>
@@ -14479,7 +14713,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {allDone ? (
               <div style={{
                 padding: "10px 16px", background: `${cat.color}12`,
-                borderRadius: 10, textAlign: "center",
+                borderRadius: 12, textAlign: "center",
                 fontSize: 14, fontWeight: 600, color: cat.color,
               }}>
                 🏆 Category complete!
@@ -14521,7 +14755,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   onClick={() => selectSubject(s)}
                   style={{
                     ...S.card, marginBottom: 0, padding: 18, cursor: "pointer",
-                    background: wasPlayed ? "#fafaf8" : "#fff",
+                    background: wasPlayed ? "#faf9f6" : "#fff",
                     borderLeft: wasPlayed ? `3px solid ${cat.color}` : `3px solid ${cat.color}20`,
                   }}
                   onMouseEnter={e => { e.currentTarget.style.borderLeftColor = cat.color; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)"; }}
@@ -14537,7 +14771,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     })()}</span>
                     {wasPlayed && histEntry && (
                       <span style={{
-                        fontSize: 12, fontWeight: 800,
+                        fontSize: 12, fontWeight: 700,
                         color: histEntry.pts >= 64 ? "#16a34a" : histEntry.pts >= 36 ? "#ca8a04" : "#dc2626",
                       }}>{histEntry.pts} pts</span>
                     )}
@@ -14584,7 +14818,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
           {/* Era header */}
           <div style={{
-            background: era.bg, borderRadius: 18, padding: "28px 28px 24px",
+            background: era.bg, borderRadius: 16, padding: "28px 28px 24px",
             border: `2px solid ${era.color}25`, marginBottom: 28,
             animation: "fadeUp 0.35s ease both",
           }}>
@@ -14611,7 +14845,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {allDone ? (
               <div style={{
                 padding: "12px 16px", background: `${era.color}12`,
-                borderRadius: 10, textAlign: "center",
+                borderRadius: 12, textAlign: "center",
                 fontSize: 14, fontWeight: 600, color: era.color,
               }}>
                 🏆 Era complete!
@@ -14644,7 +14878,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   onClick={() => selectSubject(s)}
                   style={{
                     ...S.card, marginBottom: 0, padding: 20, cursor: "pointer",
-                    background: wasPlayed ? "#fafaf8" : "#fff",
+                    background: wasPlayed ? "#faf9f6" : "#fff",
                     borderLeft: wasPlayed ? `3px solid ${era.color}` : `3px solid ${era.color}20`,
                   }}
                   onMouseEnter={e => { e.currentTarget.style.borderLeftColor = era.color; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)"; }}
@@ -14653,7 +14887,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                     <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                       <span style={{
-                        fontSize: 10, fontWeight: 800, color: "#9a9890",
+                        fontSize: 10, fontWeight: 700, color: "#9a9890",
                         background: "#f5f4f0", padding: "2px 8px", borderRadius: 6,
                         fontFamily: fontStack,
                       }}>{s.born < 0 ? `${Math.abs(s.born)} BC` : s.born}</span>
@@ -14665,7 +14899,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     </div>
                     {wasPlayed && histEntry && (
                       <span style={{
-                        fontSize: 12, fontWeight: 800,
+                        fontSize: 12, fontWeight: 700,
                         color: histEntry.pts >= 64 ? "#16a34a" : histEntry.pts >= 36 ? "#ca8a04" : "#dc2626",
                       }}>{histEntry.pts} pts</span>
                     )}
@@ -14704,7 +14938,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
           {/* Collection header */}
           <div style={{
-            background: col.bg, borderRadius: 18, padding: "28px 28px 24px",
+            background: col.bg, borderRadius: 16, padding: "28px 28px 24px",
             border: `2px solid ${col.border}`, marginBottom: 28,
             animation: "fadeUp 0.35s ease both",
           }}>
@@ -14731,7 +14965,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {allDone ? (
               <div style={{
                 padding: "12px 16px", background: `${col.color}12`,
-                borderRadius: 10, textAlign: "center",
+                borderRadius: 12, textAlign: "center",
                 fontSize: 14, fontWeight: 600, color: col.color,
               }}>
                 🏆 Collection complete!
@@ -14763,7 +14997,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   onClick={() => selectSubject(s)}
                   style={{
                     ...S.card, marginBottom: 0, padding: 20, cursor: "pointer",
-                    background: wasPlayed ? "#fafaf8" : "#fff",
+                    background: wasPlayed ? "#faf9f6" : "#fff",
                     borderLeft: wasPlayed ? `3px solid ${col.color}` : `3px solid ${col.border}`,
                   }}
                   onMouseEnter={e => { e.currentTarget.style.borderLeftColor = col.color; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)"; }}
@@ -14772,7 +15006,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                     <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                       <span style={{
-                        fontSize: 10, fontWeight: 800, color: col.color,
+                        fontSize: 10, fontWeight: 700, color: col.color,
                         background: `${col.color}10`, padding: "2px 8px", borderRadius: 6,
                       }}>#{idx + 1}</span>
                       <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
@@ -14827,14 +15061,14 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 return (
                   <div key={fig.id} style={{
                     display: "flex", alignItems: "center", gap: 12,
-                    padding: "10px 14px", background: "#fff", borderRadius: 10,
+                    padding: "10px 14px", background: "#fff", borderRadius: 12,
                     border: "1px solid #e5e2db",
                   }}>
                     <span style={{
                       width: 28, height: 28, borderRadius: "50%",
                       background: "#fef2f2", color: "#dc2626",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 13, fontWeight: 800, flexShrink: 0,
+                      fontSize: 13, fontWeight: 700, flexShrink: 0,
                     }}>{i + 1}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a1a" }}>{fig.name}</div>
@@ -14953,8 +15187,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 return (
                   <div key={fig.id} style={{
                     display: "flex", alignItems: "center", gap: 10,
-                    padding: "12px 14px", borderRadius: 10, marginBottom: 6,
-                    background: roundWon ? "#f0fdf4" : roundTied ? "#fafaf9" : (oppPts !== null ? "#fef2f2" : "#fafaf9"),
+                    padding: "12px 14px", borderRadius: 12, marginBottom: 6,
+                    background: roundWon ? "#f0fdf4" : roundTied ? "#faf9f6" : (oppPts !== null ? "#fef2f2" : "#faf9f6"),
                     border: `1px solid ${roundWon ? "#bbf7d0" : roundTied ? "#e5e2db" : (oppPts !== null ? "#fecaca" : "#e5e2db")}`,
                   }}>
                     <span style={{
@@ -14962,7 +15196,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                       background: roundWon ? "#dcfce7" : "#f5f5f4",
                       color: roundWon ? "#16a34a" : "#9a9890",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 12, fontWeight: 800, flexShrink: 0,
+                      fontSize: 12, fontWeight: 700, flexShrink: 0,
                     }}>{i + 1}</span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: 13, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -15054,9 +15288,9 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
             {customResult.quote && (
               <div style={{
-                fontStyle: "italic", color: "#6a6860", padding: "14px 18px",
-                background: "#faf9f6", borderRadius: 10, borderLeft: "3px solid #ddd9d0",
-                marginBottom: 20, fontSize: 14, lineHeight: 1.6, fontFamily: fontStack,
+                fontStyle: "italic", color: "#4a4840", padding: "16px 20px",
+                background: "#faf9f6", borderRadius: 12, borderLeft: "3px solid #d1cdc4",
+                marginBottom: 20, fontSize: 15, lineHeight: 1.65, fontFamily: fontStack,
               }}>
                 "{customResult.quote}"
               </div>
@@ -15064,7 +15298,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
             {customResult.contributions && (
               <div style={{ marginBottom: 24 }}>
-                <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>Known for</h4>
+                <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.05em" }}>Known for</h4>
                 <ContributionTags items={customResult.contributions} />
               </div>
             )}
@@ -15100,7 +15334,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* First-visit explainer for deep link arrivals */}
             {played.length === 0 && !hasSeenIntro && (
               <div style={{
-                padding: "12px 16px", borderRadius: 10, marginBottom: 16,
+                padding: "12px 16px", borderRadius: 12, marginBottom: 16,
                 background: "linear-gradient(135deg, #f0f9ff, #eff6ff)",
                 border: "1px solid #bfdbfe", fontSize: 13, lineHeight: 1.6, color: "#1e40af",
               }}>
@@ -15146,7 +15380,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 );
               })()}
               {challengeMode && (
-                <span style={{ ...S.tag("#7c2d12", "rgba(124,45,18,0.08)"), fontWeight: 800 }}>
+                <span style={{ ...S.tag("#7c2d12", "rgba(124,45,18,0.08)"), fontWeight: 700 }}>
                   ⚔️ Challenge
                 </span>
               )}
@@ -15181,16 +15415,16 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* Quote — gives flavor without tipping off the answer */}
             {subject.quote && (
               <div style={{
-                fontStyle: "italic", color: "#6a6860", padding: "14px 18px",
-                background: "#faf9f6", borderRadius: 10, borderLeft: "3px solid #ddd9d0",
-                marginBottom: 22, fontSize: 14, lineHeight: 1.6, fontFamily: fontStack,
+                fontStyle: "italic", color: "#4a4840", padding: "16px 20px",
+                background: "#faf9f6", borderRadius: 12, borderLeft: "3px solid #d1cdc4",
+                marginBottom: 24, fontSize: 15, lineHeight: 1.65, fontFamily: fontStack,
               }}>
                 "{subject.quote}"
               </div>
             )}
 
             <div style={{ marginBottom: 24 }}>
-              <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Known For
               </h4>
               <ContributionTags items={subject.contributions} />
@@ -15199,7 +15433,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* Key Moments — chronological context so players can reason, not guess */}
             {subject.timeline && subject.timeline.length > 0 && (
               <div style={{ marginBottom: 24 }}>
-                <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Key Moments
                 </h4>
                 <div style={{ position: "relative", paddingLeft: 20 }}>
@@ -15245,12 +15479,12 @@ Be historically precise. The cascade should show a chain reaction where each dom
               if (!hook) return null;
               return (
                 <div style={{
-                  padding: "14px 18px", borderRadius: 10, marginBottom: 24,
+                  padding: "14px 18px", borderRadius: 12, marginBottom: 24,
                   background: "linear-gradient(135deg, #fefce8, #fef9ee)",
                   border: "1px solid #fde68a",
                   fontSize: 14, lineHeight: 1.6, color: "#78716c",
                 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#b45309", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#b45309", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     ⚖️ The Debate
                   </div>
                   {hook}
@@ -15259,7 +15493,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             })()}
 
             {challengeData && (
-              <div style={{ background: "#faf5ff", padding: "12px 16px", borderRadius: 10, marginBottom: 24, border: "1px solid #e9d5ff", fontSize: 14 }}>
+              <div style={{ background: "#faf5ff", padding: "12px 16px", borderRadius: 12, marginBottom: 24, border: "1px solid #e9d5ff", fontSize: 14 }}>
                 🎯 A friend said <strong>{challengeData.score}%</strong> historical weight. What's your call?
               </div>
             )}
@@ -15269,7 +15503,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* Warm-up coaching tip for first 3 games */}
             {played.length < 3 && (
               <div style={{
-                padding: "12px 16px", borderRadius: 10, marginBottom: 16,
+                padding: "12px 16px", borderRadius: 12, marginBottom: 16,
                 background: "linear-gradient(135deg, #f0fdf4, #ecfdf5)",
                 border: "1px solid #bbf7d0", fontSize: 13, lineHeight: 1.6, color: "#166534",
               }}>
@@ -15283,9 +15517,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
               const cm = CONVICTION_MULT(prediction);
 
               // Gauge geometry
-              const CX = 150, CY = 150, R = 115, R2 = 95;
+              const W = 280, CX = 140, CY = 140, R = 110;
               const toRad = (deg) => (deg * Math.PI) / 180;
-              // 0% = 180° (left), 100% = 0° (right)
               const valToAngle = (v) => 180 - v * 180;
               const angleToXY = (deg, r) => ({
                 x: CX + r * Math.cos(toRad(deg)),
@@ -15293,85 +15526,57 @@ Be historically precise. The cascade should show a chain reaction where each dom
               });
 
               const needleAngle = valToAngle(prediction);
-              const needleTip = angleToXY(needleAngle, R - 8);
-              const needleBase1 = angleToXY(needleAngle + 90, 4);
-              const needleBase2 = angleToXY(needleAngle - 90, 4);
+              const needleTip = angleToXY(needleAngle, R - 10);
+              const needleBase1 = angleToXY(needleAngle + 90, 5);
+              const needleBase2 = angleToXY(needleAngle - 90, 5);
 
-              // Arc segments with colors
+              // Full semicircle path
+              const semiPath = `M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`;
+
+              // Needle color interpolates green → amber → red across the range
+              const needleColor = prediction < 0.25 ? "#15803d"
+                : prediction < 0.50 ? "#a16207"
+                : prediction < 0.75 ? "#c2410c"
+                : "#b91c1c";
+
               const zones = [
-                { from: 0, to: 0.20, color: "#15803d", label: "Inevitable" },
-                { from: 0.20, to: 0.50, color: "#a16207", label: "Moderate" },
-                { from: 0.50, to: 0.80, color: "#c2410c", label: "High" },
-                { from: 0.80, to: 1.0, color: "#b91c1c", label: "Singular" },
+                { from: 0, to: 0.20, color: "#15803d" },
+                { from: 0.20, to: 0.50, color: "#a16207" },
+                { from: 0.50, to: 0.80, color: "#c2410c" },
+                { from: 0.80, to: 1.0, color: "#b91c1c" },
               ];
 
-              const arcPath = (startVal, endVal, r) => {
-                const a1 = valToAngle(startVal);
-                const a2 = valToAngle(endVal);
-                const p1 = angleToXY(a1, r);
-                const p2 = angleToXY(a2, r);
-                const sweep = a1 > a2 ? 0 : 1;
-                return `M ${p1.x} ${p1.y} A ${r} ${r} 0 0 ${sweep} ${p2.x} ${p2.y}`;
-              };
-
-              // Filled arc up to current value
-              const fillPath = (endVal) => {
-                if (endVal <= 0.001) return "";
-                const a1 = 180;
-                const a2 = valToAngle(Math.min(endVal, 1));
-                const p1 = angleToXY(a1, R);
-                const p2 = angleToXY(a2, R);
-                const large = (a1 - a2) > 180 ? 1 : 0;
-                return `M ${p1.x} ${p1.y} A ${R} ${R} 0 ${large} 0 ${p2.x} ${p2.y}`;
-              };
-
-              // Handle pointer interaction
+              // Pointer interaction
               const pointerToValue = (clientX, clientY) => {
                 const svg = gaugeRef.current;
                 if (!svg) return null;
                 const rect = svg.getBoundingClientRect();
-                const scaleX = 300 / rect.width;
-                const scaleY = 180 / rect.height;
-                const px = (clientX - rect.left) * scaleX;
-                const py = (clientY - rect.top) * scaleY;
-                const dx = px - CX;
-                const dy = CY - py;
-                let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-                if (angle < -5) angle = 0;
-                if (angle > 185) angle = 180;
+                const sx = W / rect.width;
+                const sy = 148 / rect.height;
+                const px = (clientX - rect.left) * sx;
+                const py = (clientY - rect.top) * sy;
+                let angle = Math.atan2(CY - py, px - CX) * (180 / Math.PI);
+                if (angle < -10) angle = 0;
+                if (angle > 190) angle = 180;
                 angle = Math.max(0, Math.min(180, angle));
                 let val = (180 - angle) / 180;
-                // Snap to 5% increments
                 val = Math.round(val * 20) / 20;
                 return Math.max(0, Math.min(1, val));
               };
 
               const handlePointerDown = (e) => {
                 e.preventDefault();
-                const val = pointerToValue(e.clientX, e.clientY);
-                if (val !== null) {
-                  setPrediction(val);
-                  SFX.tick(val * 100);
-                  // Check zone crossing
-                  const zone = zones.find(z => val >= z.from && val < z.to) || zones[zones.length - 1];
-                  if (lastZoneRef.current && lastZoneRef.current !== zone.label) {
-                    SFX.click();
-                  }
-                  lastZoneRef.current = zone.label;
-                }
-                const onMove = (ev) => {
-                  const t = ev.touches ? ev.touches[0] : ev;
-                  const v = pointerToValue(t.clientX, t.clientY);
-                  if (v !== null) {
-                    setPrediction(v);
-                    SFX.tick(v * 100);
-                    const z = zones.find(zn => v >= zn.from && v < zn.to) || zones[zones.length - 1];
-                    if (lastZoneRef.current && lastZoneRef.current !== z.label) {
-                      SFX.click();
-                    }
-                    lastZoneRef.current = z.label;
-                  }
+                const update = (cx, cy) => {
+                  const v = pointerToValue(cx, cy);
+                  if (v === null) return;
+                  setPrediction(v);
+                  SFX.tick(v * 100);
+                  const z = zones.find(zn => v >= zn.from && v < zn.to) || zones[zones.length - 1];
+                  if (lastZoneRef.current && lastZoneRef.current !== z.color) SFX.click();
+                  lastZoneRef.current = z.color;
                 };
+                update(e.clientX, e.clientY);
+                const onMove = (ev) => update(ev.clientX, ev.clientY);
                 const onUp = () => {
                   window.removeEventListener("pointermove", onMove);
                   window.removeEventListener("pointerup", onUp);
@@ -15385,164 +15590,95 @@ Be historically precise. The cascade should show a chain reaction where each dom
               const handleLockIn = () => {
                 setLockingIn(true);
                 SFX.lock();
-                setTimeout(() => {
-                  setLockingIn(false);
-                  submitPrediction();
-                }, 500);
+                setTimeout(() => { setLockingIn(false); submitPrediction(); }, 500);
               };
-
-              // Current zone
-              const currentZone = zones.find(z => prediction >= z.from && prediction < z.to) || zones[zones.length - 1];
 
               return (
                 <div style={{ marginBottom: 20 }}>
-                  <h4 style={{ fontSize: 15, color: "#1a1a1a", marginBottom: 12, fontWeight: 600, textAlign: "center" }}>
+                  <h4 style={{ fontSize: 15, color: "#1a1a1a", marginBottom: 6, fontWeight: 600, textAlign: "center" }}>
                     How much did {subject.name} shape history?
                   </h4>
 
-                  {/* Gauge */}
+                  {/* Gauge — just the arc outline and needle */}
                   <div style={{
-                    position: "relative", width: "100%", maxWidth: 320, margin: "0 auto",
+                    width: "100%", maxWidth: 280, margin: "0 auto",
                     animation: lockingIn ? "lockShake 0.4s ease" : "none",
                   }}>
                     <svg
                       ref={gaugeRef}
-                      viewBox="0 0 300 170"
-                      style={{ width: "100%", height: "auto", touchAction: "none", cursor: "pointer", overflow: "visible" }}
+                      viewBox={`0 6 ${W} 142`}
+                      style={{ width: "100%", height: "auto", touchAction: "none", cursor: "pointer", display: "block", overflow: "hidden" }}
                       onPointerDown={handlePointerDown}
                     >
-                      {/* Background arc segments */}
-                      {zones.map((zone, i) => (
-                        <path key={i}
-                          d={arcPath(zone.from, zone.to, R)}
-                          fill="none" stroke={`${zone.color}20`} strokeWidth={18}
-                          strokeLinecap="butt"
-                        />
-                      ))}
+                      {/* Semicircle — thin arc */}
+                      <path d={semiPath} fill="none" stroke="#e0ddd6" strokeWidth={2} />
 
-                      {/* Filled arc — the player's selection */}
-                      {prediction > 0.01 && (
-                        <path
-                          d={fillPath(prediction)}
-                          fill="none" stroke={predLabel.color} strokeWidth={18}
-                          strokeLinecap="round"
-                          style={{ transition: "stroke 0.15s ease", filter: `drop-shadow(0 0 ${lockingIn ? 12 : 4}px ${predLabel.color}60)` }}
-                        />
-                      )}
-
-                      {/* Tick marks */}
-                      {Array.from({ length: 21 }, (_, i) => {
-                        const val = i / 20;
-                        const angle = valToAngle(val);
-                        const isMajor = i % 5 === 0;
-                        const outer = angleToXY(angle, R + 10);
-                        const inner = angleToXY(angle, R + (isMajor ? 2 : 5));
-                        return (
-                          <line key={i}
-                            x1={outer.x} y1={outer.y} x2={inner.x} y2={inner.y}
-                            stroke={isMajor ? "#78716c" : "#c4c0b8"} strokeWidth={isMajor ? 1.5 : 0.8}
-                          />
-                        );
-                      })}
-
-                      {/* Tick labels: 0, 25, 50, 75, 100 */}
+                      {/* Tick marks at 0, 25, 50, 75, 100 */}
                       {[0, 25, 50, 75, 100].map(v => {
                         const angle = valToAngle(v / 100);
-                        const pos = angleToXY(angle, R + 22);
+                        const outer = angleToXY(angle, R + 6);
+                        const inner = angleToXY(angle, R - 6);
+                        const labelPos = angleToXY(angle, R + 18);
                         return (
-                          <text key={v} x={pos.x} y={pos.y + 1}
-                            textAnchor="middle" dominantBaseline="middle"
-                            style={{ fontSize: 10, fill: "#9a9890", fontWeight: 600, fontFamily: sansStack, userSelect: "none" }}
-                          >
-                            {v}
-                          </text>
+                          <g key={v}>
+                            <line
+                              x1={outer.x} y1={outer.y} x2={inner.x} y2={inner.y}
+                              stroke="#b0ada6" strokeWidth={1.5} strokeLinecap="round"
+                            />
+                            <text x={labelPos.x} y={labelPos.y}
+                              textAnchor="middle" dominantBaseline="middle"
+                              style={{ fontSize: 9, fill: "#9a9890", fontWeight: 600, fontFamily: sansStack, userSelect: "none" }}
+                            >{v}</text>
+                          </g>
                         );
                       })}
 
-                      {/* Zone labels on inner arc */}
-                      {zones.map((zone, i) => {
-                        const midVal = (zone.from + zone.to) / 2;
-                        const angle = valToAngle(midVal);
-                        const pos = angleToXY(angle, R2 - 16);
-                        const isActive = currentZone.label === zone.label;
-                        return (
-                          <text key={i} x={pos.x} y={pos.y}
-                            textAnchor="middle" dominantBaseline="middle"
-                            style={{
-                              fontSize: isActive ? 9.5 : 8.5, fontWeight: isActive ? 700 : 500,
-                              fill: isActive ? zone.color : `${zone.color}60`,
-                              fontFamily: sansStack, userSelect: "none",
-                              transition: "fill 0.2s, font-size 0.2s",
-                            }}
-                          >
-                            {zone.label}
-                          </text>
-                        );
-                      })}
-
-                      {/* Needle */}
+                      {/* Needle — color shifts with position */}
                       <polygon
                         points={`${needleTip.x},${needleTip.y} ${needleBase1.x},${needleBase1.y} ${needleBase2.x},${needleBase2.y}`}
-                        fill={predLabel.color}
-                        style={{ transition: "fill 0.15s ease", filter: `drop-shadow(0 1px 3px ${predLabel.color}50)` }}
-                      />
-                      {/* Needle hub */}
-                      <circle cx={CX} cy={CY} r={8} fill={predLabel.color}
+                        fill={needleColor}
                         style={{ transition: "fill 0.15s ease" }}
                       />
+                      <circle cx={CX} cy={CY} r={8} fill={needleColor} style={{ transition: "fill 0.15s ease" }} />
                       <circle cx={CX} cy={CY} r={4} fill="#fff" />
-
-                      {/* Lock flash overlay */}
-                      {lockingIn && (
-                        <circle cx={CX} cy={CY} r={R + 20}
-                          fill="none" stroke={predLabel.color} strokeWidth={3}
-                          opacity={0.6}
-                          style={{ animation: "lockFlash 0.5s ease-out forwards" }}
-                        />
-                      )}
                     </svg>
-
-                    {/* Center readout — positioned over the gauge */}
-                    <div style={{
-                      position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)",
-                      textAlign: "center", pointerEvents: "none",
-                    }}>
-                      <div style={{
-                        fontSize: 52, fontWeight: 400, color: predLabel.color,
-                        fontFamily: fontStack, letterSpacing: "-0.03em", lineHeight: 1,
-                        transition: "color 0.15s ease",
-                        animation: lockingIn ? "gaugePulse 0.3s ease" : "none",
-                      }}>
-                        {pct}<span style={{ fontSize: 28, fontWeight: 300 }}>%</span>
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Label + description below gauge */}
-                  <div style={{ textAlign: "center", marginTop: 8 }}>
+                  {/* Scale labels */}
+                  <div style={{
+                    display: "flex", justifyContent: "space-between", padding: "0 6px",
+                    maxWidth: 280, margin: "2px auto 0",
+                  }}>
+                    <span style={{ fontSize: 11, color: "#15803d", fontWeight: 600 }}>Footnote</span>
+                    <span style={{ fontSize: 11, color: "#b91c1c", fontWeight: 600 }}>Turning Point</span>
+                  </div>
+
+                  {/* Readout */}
+                  <div style={{ textAlign: "center", marginTop: 20 }}>
                     <div style={{
-                      fontSize: 17, color: predLabel.color, fontWeight: 700, marginBottom: 4,
+                      fontSize: 56, fontWeight: 400, color: needleColor,
+                      fontFamily: fontStack, letterSpacing: "-0.03em", lineHeight: 1,
+                      transition: "color 0.15s ease",
+                      animation: lockingIn ? "gaugePulse 0.3s ease" : "none",
+                    }}>
+                      {pct}<span style={{ fontSize: 28, fontWeight: 300 }}>%</span>
+                    </div>
+                    <div style={{
+                      fontSize: 16, color: needleColor, fontWeight: 700, marginTop: 6,
                       transition: "color 0.15s ease",
                     }}>
                       {predLabel.label}
                     </div>
-                    <div style={{ ...S.muted, fontSize: 13, maxWidth: 340, margin: "0 auto" }}>
+                    <div style={{ ...S.muted, fontSize: 13, marginTop: 6, maxWidth: 320, margin: "6px auto 0" }}>
                       {predLabel.desc}
                     </div>
-                    {/* Conviction indicator */}
                     {cm.tier === "penalty" && (
-                      <div style={{
-                        marginTop: 10, fontSize: 11, fontWeight: 700,
-                        color: "#dc2626", letterSpacing: "0.02em",
-                      }}>
+                      <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, color: "#dc2626" }}>
                         ⚠️ {cm.label} — move away from 50%
                       </div>
                     )}
                     {cm.tier === "bonus" && (
-                      <div style={{
-                        marginTop: 10, fontSize: 11, fontWeight: 700,
-                        color: "#059669", letterSpacing: "0.02em",
-                      }}>
+                      <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, color: "#059669" }}>
                         ✦ +{cm.label}
                       </div>
                     )}
@@ -15553,17 +15689,18 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     onClick={lockingIn ? undefined : handleLockIn}
                     disabled={lockingIn}
                     style={{
-                      ...S.btn, width: "100%", padding: "18px", fontSize: 17, fontWeight: 700,
-                      marginTop: 24, borderRadius: 14, border: "none", cursor: lockingIn ? "default" : "pointer",
-                      color: "#fff", position: "relative", overflow: "hidden",
+                      ...S.btn, width: "100%", padding: "20px", fontSize: 17, fontWeight: 700,
+                      marginTop: 28, borderRadius: 16, border: "none", cursor: lockingIn ? "default" : "pointer",
+                      color: "#fff", overflow: "hidden",
                       background: lockingIn
-                        ? predLabel.color
-                        : `linear-gradient(135deg, ${predLabel.color}, ${predLabel.color}dd)`,
+                        ? needleColor
+                        : `linear-gradient(135deg, ${needleColor}ee, ${needleColor})`,
                       boxShadow: lockingIn
-                        ? `0 0 30px ${predLabel.color}40`
-                        : `0 4px 14px ${predLabel.color}25`,
-                      transform: lockingIn ? "scale(0.98)" : "scale(1)",
-                      transition: "all 0.2s ease",
+                        ? `0 0 40px ${needleColor}50, 0 0 80px ${needleColor}20`
+                        : `0 4px 20px ${needleColor}30, 0 1px 3px ${needleColor}15`,
+                      transform: lockingIn ? "scale(0.97)" : "scale(1)",
+                      transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                      letterSpacing: "-0.01em",
                     }}
                   >
                     {lockingIn ? (
@@ -15645,7 +15782,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 </p>
               ) : (
                 <p style={{
-                  fontSize: 15, color: currentPhase.style === "prediction" ? cat.color : "#6a6860",
+                  fontSize: 15, color: currentPhase.style === "prediction" ? cat.color : "#7a7770",
                   fontWeight: currentPhase.style === "prediction" ? 600 : 500,
                   lineHeight: 1.5,
                 }}>
@@ -15807,11 +15944,11 @@ Be historically precise. The cascade should show a chain reaction where each dom
               ...rcFade(ci, 0.26),
             }}>
               <div>
-                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>You Said</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>You Said</div>
                 <div style={{ fontSize: 32, fontWeight: 400, color: "#1a1a1a", fontFamily: fontStack }}>{Math.round(prediction * 100)}%</div>
               </div>
               <div>
-                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Actual</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>Actual</div>
                 <div style={{
                   fontSize: 32, fontWeight: 400, fontFamily: fontStack,
                   color: animatedActual !== null ? actualLabel.color : "#d4d0c8",
@@ -15827,7 +15964,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Points</div>
+                <div style={{ fontSize: 11, color: "#9a9890", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>Points</div>
                 <div style={{
                   fontSize: 32, fontWeight: 400, fontFamily: fontStack,
                   color: countdownDone ? (pts > 0 ? "#6d28d9" : "#b0ada6") : "#d4d0c8",
@@ -15918,29 +16055,57 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* Big miss commentary — appears after countdown with shake */}
             {diff > 0.24 && countdownDone && (
               <div style={{
-                textAlign: "center", padding: "12px 20px",
-                borderRadius: 10, fontSize: 14, lineHeight: 1.55, fontStyle: "italic",
+                textAlign: "center", padding: "14px 22px",
+                borderRadius: 12, fontSize: 14, lineHeight: 1.6,
                 color: prediction > w ? "#991b1b" : "#166534",
                 background: prediction > w ? "#fef2f2" : "#f0fdf4",
                 border: prediction > w ? "1px solid #fecaca" : "1px solid #bbf7d0",
-                fontFamily: sansStack,
+                fontFamily: sansStack, fontWeight: 500,
                 animation: "fadeUp 0.4s ease both",
               }}>
                 {(() => {
                   const gap = Math.round(diff * 100);
-                  const overMisses = [
-                    `Off by ${gap} points. History had a backup plan you didn't see.`,
-                    `${gap} points high. The forces behind this were bigger than any one name.`,
-                    `Overshot by ${gap}. Others were closer to the same outcome than you thought.`,
-                    `${gap}-point miss. The conditions were ripe — someone else would have gotten there.`,
-                    `Off by ${gap}. Easy to overrate what feels singular in hindsight.`,
+                  const isEvent = subject.cat === "events";
+                  const isInstitution = subject.cat === "institutions";
+                  const isInvention = subject.cat === "inventions";
+                  const isPerson = !isEvent && !isInstitution && !isInvention;
+                  const overMisses = isPerson ? [
+                    `Off by ${gap} points. ${subject.name}'s contribution was real, but the conditions were ripe — someone else was close.`,
+                    `${gap} points high. Strip away the name, and the outcome likely still arrives.`,
+                    `Off by ${gap}. Individual genius mattered less here than the forces that made it possible.`,
+                    `${gap}-point miss. History remembers the name, but the work was more convergent than it looks.`,
+                  ] : isEvent ? [
+                    `Off by ${gap} points. The underlying pressures made something like this likely — the specific form was less decisive than it feels.`,
+                    `${gap} points high. Events like this feel singular in the moment, but the conditions were already in place.`,
+                    `Off by ${gap}. The shock was real, but the deeper trends were already moving this direction.`,
+                    `${gap}-point miss. Change the trigger, and a similar outcome probably still unfolds.`,
+                  ] : isInstitution ? [
+                    `Off by ${gap} points. The need this filled was real, but another structure would have emerged to meet it.`,
+                    `${gap} points high. Institutions feel permanent, but the function matters more than the specific form.`,
+                    `Off by ${gap}. Remove this one, and the vacuum gets filled — maybe differently, but filled.`,
+                  ] : [
+                    `Off by ${gap} points. The technology was converging — the specific implementation mattered less than it seems.`,
+                    `${gap} points high. Multiple paths led here. This one won, but wasn't the only possible route.`,
+                    `Off by ${gap}. The invention was coming. The question was when and in what form, not whether.`,
                   ];
-                  const underMisses = [
-                    `Off by ${gap} points. This mattered more than it looks from here.`,
-                    `${gap} points low. Remove this, and the ripple effects go deeper than expected.`,
-                    `Undershot by ${gap}. The specific form shaped everything that followed.`,
-                    `${gap}-point miss. Inevitability is an illusion — this was more contingent than it seems.`,
-                    `Off by ${gap}. What feels like it was "bound to happen" really wasn't.`,
+                  const underMisses = isPerson ? [
+                    `Off by ${gap} points. ${subject.name} bent the arc of history more than the surface story suggests.`,
+                    `${gap} points low. Remove this person and the ripple effects run deeper than expected.`,
+                    `Off by ${gap}. What looks inevitable in retrospect was actually hanging by a thread.`,
+                    `${gap}-point miss. The specific vision and timing made all the difference.`,
+                  ] : isEvent ? [
+                    `Off by ${gap} points. This event's specific timing and form shaped everything that followed.`,
+                    `${gap} points low. A different version of this event would have produced a very different world.`,
+                    `Off by ${gap}. The details of how this happened — not just that it happened — changed the trajectory.`,
+                    `${gap}-point miss. Delay or alter this, and decades of downstream history shift.`,
+                  ] : isInstitution ? [
+                    `Off by ${gap} points. This institution's specific structure and decisions shaped outcomes more than you'd think.`,
+                    `${gap} points low. The form matters, not just the function — and this form was hard to replicate.`,
+                    `Off by ${gap}. Without this specific institution, the alternatives would have looked very different.`,
+                  ] : [
+                    `Off by ${gap} points. The specific design choices locked in a path that shaped everything after.`,
+                    `${gap} points low. This wasn't just "the next step" — the particular form it took redirected whole fields.`,
+                    `Off by ${gap}. Implementation matters. A different version would have produced a different world.`,
                   ];
                   const pool = prediction > w ? overMisses : underMisses;
                   return pool[Math.abs(hashString(subject.name + "miss")) % pool.length];
@@ -15955,7 +16120,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 background: streakMilestone
                   ? streakMilestone.reward === "shield_used" ? "linear-gradient(135deg, #f0fdfa, #ccfbf1)" : "linear-gradient(135deg, #fffbeb, #fef3c7)"
                   : "linear-gradient(135deg, #faf5ff, #f3e8ff)",
-                borderRadius: 10,
+                borderRadius: 12,
                 border: streakMilestone
                   ? streakMilestone.reward === "shield_used" ? "1px solid #99f6e4" : "1px solid #fde68a"
                   : "1px solid #e9d5ff",
@@ -16016,7 +16181,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                 <span>⚖️</span> {actualLabel.label}
               </h3>
               <p style={{ color: actualLabel.color, fontSize: 12, margin: "0 0 12px", opacity: 0.8, fontWeight: 500, fontFamily: sansStack }}>{actualLabel.desc}</p>
-              <p style={{ color: "#4a4840", lineHeight: 1.75, fontSize: 14, margin: 0, fontFamily: sansStack }}>{subject.reasoning}</p>
+              <p style={{ color: "#4a4840", lineHeight: 1.75, fontSize: 15, margin: 0, fontFamily: sansStack }}>{subject.reasoning}</p>
 
               {(() => {
                 const insight = getDirectionInsight(prediction, r, subject);
@@ -16024,9 +16189,9 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <div style={{
                     color: prediction > w ? "#991b1b" : "#166534",
                     fontSize: 13, lineHeight: 1.65, marginTop: 14,
-                    padding: "10px 14px", borderRadius: 8,
+                    padding: "12px 16px", borderRadius: 12,
                     background: prediction > w ? "#fef2f2" : "#f0fdf4",
-                    fontFamily: sansStack,
+                    fontFamily: sansStack, fontWeight: 500,
                   }}>
                     <span style={{ fontWeight: 700 }}>{prediction > w ? "↑ You overestimated" : "↓ You underestimated"} the weight.</span>{" "}
                     {insight}
@@ -16038,7 +16203,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
             {/* Counterfactual — same card */}
             {hasCounterfactual && (
               <div style={{
-                ...S.card, padding: "20px 22px",
+                ...S.card, padding: "22px 24px",
                 background: "#fffbeb", borderColor: "#fde68a",
                 ...rcFade(ci, 0.2),
               }}>
@@ -16046,7 +16211,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <span>🔮</span> The Counterfactual
                 </h3>
                 <p style={{
-                  color: "#78350f", lineHeight: 1.75, fontSize: 14.5, margin: 0,
+                  color: "#78350f", lineHeight: 1.75, fontSize: 15, margin: 0,
                   fontFamily: fontStack, fontStyle: "italic",
                 }}>{subject.counterfactual}</p>
               </div>
@@ -16070,7 +16235,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           <div style={cardInner()}>
             <div style={{
               ...S.card, padding: "20px 22px",
-              background: "#fafaf9", borderColor: `${cat.color}20`,
+              background: "#faf9f6", borderColor: `${cat.color}20`,
               ...rcFade(ci, 0),
             }}>
               <h3 style={{ ...S.sectionHeader, color: cat.color, marginBottom: 16 }}>
@@ -16108,8 +16273,8 @@ Be historically precise. The cascade should show a chain reaction where each dom
                       }}>{vis && <span style={{ fontSize: 9 }}>{step.icon}</span>}</div>
 
                       <div style={{
-                        padding: "12px 14px", borderRadius: 10,
-                        background: vis ? (cur ? "#fff" : "#fafaf9") : "#f5f4f0",
+                        padding: "12px 14px", borderRadius: 12,
+                        background: vis ? (cur ? "#fff" : "#faf9f6") : "#f5f4f0",
                         border: cur ? `2px solid ${cat.color}25` : "1px solid #e5e2db",
                         boxShadow: cur ? "0 2px 12px rgba(0,0,0,0.04)" : "none",
                         transition: "all 0.35s",
@@ -16117,7 +16282,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                           <span style={{
                             fontSize: 9, fontWeight: 700, color: sc, textTransform: "uppercase",
-                            letterSpacing: "0.04em", padding: "2px 7px", borderRadius: 4,
+                            letterSpacing: "0.05em", padding: "2px 7px", borderRadius: 4,
                             background: `${sc}08`, border: `1px solid ${sc}15`, fontFamily: sansStack,
                           }}>{step.severity} impact</span>
                           <span style={{ fontSize: 10, color: "#9a9890", fontStyle: "italic", fontFamily: sansStack }}>{step.delay}</span>
@@ -16166,7 +16331,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
           <div style={cardInner()}>
             <div style={{
               ...S.card, padding: "20px 22px",
-              background: "#fafaf9", borderColor: "#e5e2db",
+              background: "#faf9f6", borderColor: "#e5e2db",
               ...rcFade(ci, 0),
             }}>
               <h3 style={{ ...S.sectionHeader, color: "#1a1a1a", marginBottom: 16 }}>
@@ -16182,22 +16347,22 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     }}>{formatYear(event.year)}</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                       <div style={{
-                        padding: 12, background: "#f0fdf4", borderRadius: 10,
+                        padding: 12, background: "#f0fdf4", borderRadius: 12,
                         border: "1px solid #bbf7d0",
                       }}>
                         <div style={{
-                          fontSize: 10, fontWeight: 800, color: "#15803d", marginBottom: 5,
-                          textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack,
+                          fontSize: 10, fontWeight: 700, color: "#15803d", marginBottom: 5,
+                          textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack,
                         }}>✓ What happened</div>
                         <div style={{ fontSize: 12.5, color: "#166534", lineHeight: 1.55, fontFamily: sansStack }}>{event.happened}</div>
                       </div>
                       <div style={{
-                        padding: 12, background: "#fffbeb", borderRadius: 10,
+                        padding: 12, background: "#fffbeb", borderRadius: 12,
                         border: "1px solid #fde68a",
                       }}>
                         <div style={{
-                          fontSize: 10, fontWeight: 800, color: "#d97706", marginBottom: 5,
-                          textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack,
+                          fontSize: 10, fontWeight: 700, color: "#d97706", marginBottom: 5,
+                          textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack,
                         }}>⚡ Alternate</div>
                         <div style={{ fontSize: 12.5, color: "#92400e", lineHeight: 1.55, fontFamily: sansStack }}>{event.alternate}</div>
                       </div>
@@ -16247,7 +16412,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     <span style={{ fontSize: 14 }}>{d.icon}</span>
                     <span style={{
                       fontSize: 10, fontWeight: 700, color: d.accent,
-                      textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack,
+                      textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack,
                     }}>{d.label}</span>
                   </div>
                   <p style={{ fontSize: 13, color: "#3a3a3a", lineHeight: 1.65, margin: 0, fontFamily: sansStack }}>{subject.modernDay[d.key]}</p>
@@ -16290,7 +16455,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   { lab: "Off by", val: `${Math.round(diff * 100)}%` },
                 ].map((s, i) => (
                   <div key={i}>
-                    <div style={{ fontSize: 10, color: "#9a9890", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4, fontFamily: sansStack }}>{s.lab}</div>
+                    <div style={{ fontSize: 10, color: "#9a9890", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4, fontFamily: sansStack }}>{s.lab}</div>
                     <div style={{ fontSize: 16, color: "#1a1a1a", fontFamily: sansStack }}>{s.val}</div>
                   </div>
                 ))}
@@ -16309,7 +16474,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
               return (
                 <div style={{
-                  background: "#fffbeb", borderRadius: 14, padding: "20px 22px",
+                  background: "#fffbeb", borderRadius: 12, padding: "20px 22px",
                   marginBottom: 0, border: "2px solid #f59e0b",
                   ...rcFade(ci, 0.08),
                 }}>
@@ -16320,7 +16485,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                   <div style={{
                     textAlign: "center", padding: "14px 16px", marginBottom: 18,
                     background: percentile >= 70 ? "#dcfce7" : percentile >= 40 ? "#fef9ee" : "#fff1f2",
-                    borderRadius: 10,
+                    borderRadius: 12,
                     border: `1px solid ${percentile >= 70 ? "#bbf7d0" : percentile >= 40 ? "#fde68a" : "#fecdd3"}`,
                   }}>
                     <div style={{ fontSize: 32, fontWeight: 400, fontFamily: fontStack, color: percentile >= 70 ? "#15803d" : percentile >= 40 ? "#d97706" : "#b91c1c" }}>
@@ -16329,7 +16494,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
                     <div style={{ fontSize: 13, color: "#4a4840", marginTop: 4, fontFamily: sansStack }}>You beat <strong>{percentile}%</strong> of players</div>
                   </div>
                   <div style={{ marginBottom: 14 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>How Players Guessed</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>How Players Guessed</div>
                     <div style={{ display: "flex", gap: 4, alignItems: "flex-end", height: 60 }}>
                       {community.buckets.map((count, i) => {
                         const height = Math.max(8, (count / community.maxBucket) * 56);
@@ -16337,12 +16502,12 @@ Be historically precise. The cascade should show a chain reaction where each dom
                         return (
                           <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                             <div style={{
-                              width: "100%", height, borderRadius: 3,
+                              width: "100%", height, borderRadius: 4,
                               background: isPlayer ? "linear-gradient(180deg, #f59e0b, #d97706)" : "#fde68a",
                               border: isPlayer ? "1px solid #b45309" : "1px solid #fbbf24",
                               position: "relative",
                             }}>
-                              {isPlayer && <div style={{ position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)", fontSize: 9, fontWeight: 800, color: "#92400e", fontFamily: sansStack }}>YOU</div>}
+                              {isPlayer && <div style={{ position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)", fontSize: 9, fontWeight: 700, color: "#92400e", fontFamily: sansStack }}>YOU</div>}
                             </div>
                           </div>
                         );
@@ -16445,7 +16610,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
               if (suggestions.length === 0) return null;
               return (
                 <div style={{ marginTop: 16, ...rcFade(ci, 0.3) }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#9a9890", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.04em", fontFamily: sansStack }}>Play Next</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#9a9890", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: sansStack }}>Play Next</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {suggestions.map((s) => {
                       const sCat = CATS[s.figure.cat] || { color: "#64748b" };
@@ -16508,9 +16673,9 @@ Be historically precise. The cascade should show a chain reaction where each dom
         {/* Card counter */}
         <div style={{
           position: "fixed", top: 12, right: 14, zIndex: 100,
-          fontSize: 11, fontWeight: 600, letterSpacing: "0.04em", fontFamily: sansStack,
+          fontSize: 11, fontWeight: 600, letterSpacing: "0.05em", fontFamily: sansStack,
           color: "#9a9890", background: "rgba(247,246,243,0.85)",
-          padding: "5px 11px", borderRadius: 7,
+          padding: "5px 11px", borderRadius: 8,
           backdropFilter: "blur(8px)", border: "1px solid #e5e2db",
         }}>{activeResultCard + 1} / {totalResultCards}</div>
 
