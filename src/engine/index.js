@@ -1,4 +1,4 @@
-// Engine barrel — re-exports all engine modules
+﻿// Engine barrel â€” re-exports all engine modules
 export {
   DIFFICULTY_MULTIPLIER, getScoreLabel, getDifficulty, calculatePoints,
   CONVICTION_MULT, getAccuracyFeedback, getDifficultyLabel, RANK_LADDER, getRank
@@ -13,3 +13,4 @@ export {
   generateCommunityStats, getDailyPercentile,
   submitDailyPrediction, fetchCommunityStats, generateModelEstimate
 } from './daily.js';
+
