@@ -31,7 +31,56 @@ import {
   CONVICTION_MULT, getAccuracyFeedback, getDifficultyLabel, RANK_LADDER, getRank
 } from "./engine/scoring.js";
 import { getInterludePhases, getDirectionInsight, getTensionHook } from "./engine/interlude.js";
-import { fieldKeywords, getConnectedFigures, getConnectionLabel } from "./engine/connections.js";
+// Inline connection logic to avoid module resolution issues
+const fieldKeywords = (field) => field.toLowerCase().replace(/[&,]/g, ' ').split(/\s+/).filter(w => w.length > 2);
+const getConnectedFigures = (current, playedIds = [], count = 4) => {
+  try {
+    if (!current || current._isCustom) return [];
+    const curKeys = fieldKeywords(current.field);
+    const curBorn = current.born || 0;
+    const curDied = current.died || (curBorn + 70);
+    return ALL_SUBJECTS
+      .filter(s => s.id !== current.id)
+      .map(s => {
+        let score = 0;
+        const sBorn = s.born || 0;
+        const sDied = s.died || (sBorn + 70);
+        if (s.cat === current.cat) score += 4;
+        const sKeys = fieldKeywords(s.field);
+        score += curKeys.filter(k => sKeys.includes(k)).length * 3;
+        if (sBorn <= curDied && sDied >= curBorn) score += 2;
+        if (Math.abs(sBorn - curBorn) < 50) score += 1;
+        if (Math.abs(s.r - current.r) < 0.12) score += 1;
+        if (!playedIds.includes(s.id)) score += 1;
+        const tiebreak = (hashString(current.id + s.id) % 100) / 1000;
+        return { figure: s, score: score + tiebreak };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, count)
+      .map(s => s.figure);
+  } catch (e) { return []; }
+};
+const getConnectionLabel = (current, other) => {
+  try {
+    const sameCat = current.cat === other.cat;
+    const curKeys = fieldKeywords(current.field);
+    const fieldOverlap = curKeys.some(k => fieldKeywords(other.field).includes(k));
+    const curBorn = current.born || 0;
+    const curDied = current.died || (curBorn + 70);
+    const oBorn = other.born || 0;
+    const oDied = other.died || (oBorn + 70);
+    const contemporary = oBorn <= curDied && oDied >= curBorn;
+    const similarR = Math.abs(other.r - current.r) < 0.12;
+    if (fieldOverlap && contemporary) return "Same field, same era";
+    if (fieldOverlap) return "Same field";
+    if (sameCat && contemporary) return "Contemporary";
+    if (sameCat && similarR) return "Similar weight";
+    if (sameCat) return CATS[current.cat]?.label || "Related";
+    if (contemporary) return "Same era";
+    if (similarR) return "Similar score";
+    return "Related";
+  } catch (e) { return "Related"; }
+};
 import { CATEGORY_HEURISTICS, CROSS_PATTERNS, getPatternInsights, getRecommendations } from "./engine/patterns.js";
 import { saveProgress, loadProgress, saveHistory, loadHistory, saveCustomCache, loadCustomCache, exportAllData, importAllData, isStorageAvailable, hydrateFromPersistentStorage } from "./engine/storage.js";
 import {
