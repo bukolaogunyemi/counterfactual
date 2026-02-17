@@ -56,7 +56,7 @@ export const getInterludePhases = (subject, prediction) => {
   return phases;
 };
 
-// DIRECTIONAL INSIGHT - explains why the player was off, using actual subject context
+// DIRECTIONAL INSIGHT — explains why the player was off, using actual subject context
 export const getDirectionInsight = (prediction, rValue, subject) => {
   const actual = toWeight(rValue); // convert to weight
   const diff = prediction - actual; // positive = player said MORE impactful than reality
@@ -78,7 +78,7 @@ export const getDirectionInsight = (prediction, rValue, subject) => {
   if (diff > 0) {
     // Player overestimated impact (thought more important than analysis says)
     if (actual < 0.30) {
-      return `${name} mattered less than intuition suggests. ${detail || `The conditions in ${field.toLowerCase()} were converging - the same outcome was arriving from multiple directions.`}`;
+      return `${name} mattered less than intuition suggests. ${detail || `The conditions in ${field.toLowerCase()} were converging — the same outcome was arriving from multiple directions.`}`;
     } else if (actual < 0.50) {
       return `${name}'s impact was real but not as singular as it seems. ${detail || `Similar forces in ${field.toLowerCase()} were pushing toward the same outcome.`}`;
     } else {
@@ -89,14 +89,14 @@ export const getDirectionInsight = (prediction, rValue, subject) => {
     if (actual > 0.70) {
       return `${name} carried more weight than you thought. ${detail || `Nothing else in ${field.toLowerCase()} was converging on this specific outcome.`}`;
     } else if (actual > 0.50) {
-      return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened - how it happened shaped what came after.`}`;
+      return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened — how it happened shaped what came after.`}`;
     } else {
       return `Even with similar forces at work, ${name}'s particular version of events carried more weight than expected. ${detail}`.trim();
     }
   }
 };
 
-// TENSION HOOK - extracts the debatable framing from reasoning for predict screen
+// TENSION HOOK — extracts the debatable framing from reasoning for predict screen
 export const getTensionHook = (subject) => {
   if (!subject.reasoning) return null;
   const sentences = subject.reasoning.match(/[^.!?]+[.!?]+/g) || [];

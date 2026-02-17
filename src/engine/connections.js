@@ -48,7 +48,7 @@ export const getConnectedFigures = (current, playedIds = [], count = 4) => {
   return scored;
 };
 
-// Connection label - why these figures are related
+// Connection label — why these figures are related
 export const getConnectionLabel = (current, other) => {
   const sameCat = current.cat === other.cat;
   const curKeys = fieldKeywords(current.field);

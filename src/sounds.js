@@ -1,4 +1,4 @@
-// Sound & Haptics Engine - Web Audio API, no external files
+// Sound & Haptics Engine — Web Audio API, no external files
 export const SFX_KEY = "counterfactual_sfx";
 export const SFX = (() => {
   let ctx = null;
@@ -27,7 +27,7 @@ export const SFX = (() => {
     osc.start(t); osc.stop(t + duration);
   };
 
-  // Haptic helper - safe on all platforms
+  // Haptic helper — safe on all platforms
   const vibrate = (pattern) => {
     if (!enabled) return;
     try { navigator?.vibrate?.(pattern); } catch(e) {}
@@ -38,7 +38,7 @@ export const SFX = (() => {
     toggle: () => { enabled = !enabled; try { localStorage.setItem(SFX_KEY, enabled ? "on" : "off"); } catch(e) {} return enabled; },
     setEnabled: (v) => { enabled = v; try { localStorage.setItem(SFX_KEY, v ? "on" : "off"); } catch(e) {} },
 
-    // Slider tick - very short, very quiet
+    // Slider tick — very short, very quiet
     tick: (() => {
       let last = 0;
       return (val) => {
@@ -57,7 +57,7 @@ export const SFX = (() => {
       vibrate(30);
     },
 
-    // Interlude building tension - step 0-4
+    // Interlude building tension — step 0-4
     interludeStep: (step) => {
       const freqs = [260, 330, 390, 440, 520];
       const f = freqs[Math.min(step, 4)];
@@ -65,7 +65,7 @@ export const SFX = (() => {
       vibrate(15);
     },
 
-    // Result reveal - score-dependent
+    // Result reveal — score-dependent
     reveal: (pts) => {
       if (pts >= 64) {
         // Bright ascending chord
@@ -102,7 +102,7 @@ export const SFX = (() => {
       vibrate([30, 50, 30]);
     },
 
-    // Button click - subtle
+    // Button click — subtle
     click: () => {
       tone(600, 0.04, 0.06, "sine");
       vibrate(8);

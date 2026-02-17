@@ -1,4 +1,4 @@
-// Engine barrel - re-exports all engine modules
+// Engine barrel — re-exports all engine modules
 export {
   DIFFICULTY_MULTIPLIER, getScoreLabel, getDifficulty, calculatePoints,
   CONVICTION_MULT, getAccuracyFeedback, getDifficultyLabel, RANK_LADDER, getRank

@@ -1,4 +1,4 @@
-// Data barrel - re-exports all data modules
+// Data barrel — re-exports all data modules
 export { FIGURES } from './figures.js';
 export { INSTITUTIONS } from './institutions.js';
 export { INVENTIONS } from './inventions.js';
