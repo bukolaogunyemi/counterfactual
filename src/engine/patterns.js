@@ -24,7 +24,7 @@ export const CATEGORY_HEURISTICS = {
   politics: {
     over: [
       { at: 4, title: "Structural Forces Matter", text: (n, total) => `You've overestimated ${n} of ${total} political entries. Political outcomes often reflect deep structural forces — economics, demographics, geography — that constrain what any leader can do. The office shapes the person as much as the reverse.` },
-      { at: 10, title: "The Substitute Leader", text: (n, total) => `Still overestimating politics (${n}/${total}). When a political need is urgent enough, someone fills the role. Revolutions find their leaders; crises produce their commanders. The question is whether *this specific person's* decisions diverged from what a typical leader would have chosen.` },
+      { at: 10, title: "The Substitute Leader", text: (n, total) => `Still overestimating politics (${n}/${total}). When a political need is urgent enough, the role gets filled. Revolutions find their leaders; crises produce their commanders. The question is whether *this specific person's* decisions changed the world in ways a different leader wouldn't have.` },
     ],
     under: [
       { at: 4, title: "Decisions at the Pivot", text: (n, total) => `You've underestimated ${n} of ${total} political entries. Leaders at critical junctures make choices that foreclose other paths. A different person in the same office, facing the same pressures, might have chosen differently — and history would have forked.` },
@@ -40,19 +40,19 @@ export const CATEGORY_HEURISTICS = {
   },
   social: {
     over: [
-      { at: 4, title: "Movements Have Roots", text: (n, total) => `You've overestimated ${n} of ${total} social movement entries. Social movements grow from structural conditions — inequality, oppression, demographic change. The pressure existed before the leader. Someone would have channeled it.` },
+      { at: 4, title: "Movements Have Roots", text: (n, total) => `You've overestimated ${n} of ${total} social movement entries. Social movements grow from structural conditions — inequality, oppression, demographic change. The pressure existed before the leader. Remove them and the movement still happens; the world still changes.` },
     ],
     under: [
-      { at: 4, title: "The Shape of the Movement", text: (n, total) => `You've underestimated ${n} of ${total} social entries. Movements feel inevitable in retrospect, but specific leaders shaped their character, timing, and strategy in ways that produced very different outcomes. Nonviolence wasn't inevitable. Neither was that specific vision of justice.` },
+      { at: 4, title: "The Shape of the Movement", text: (n, total) => `You've underestimated ${n} of ${total} social entries. Movements feel like they would have happened anyway, but specific leaders shaped their character, timing, and strategy in ways that produced very different worlds. Without this specific leader, the movement takes a different form — and the world looks different.` },
     ],
   },
   inventions: {
     over: [
-      { at: 4, title: "Multiple Inventors", text: (n, total) => `You've overestimated ${n} of ${total} invention entries. Most inventions had near-simultaneous inventors. The telephone, lightbulb, radio, calculus — when the prerequisite technologies exist, the next step becomes almost inevitable. Focus on timing, not credit.` },
+      { at: 4, title: "Multiple Inventors", text: (n, total) => `You've overestimated ${n} of ${total} invention entries. Most inventions had near-simultaneous inventors. The telephone, lightbulb, radio, calculus — when the prerequisite technologies exist, the world gets there with or without any one inventor. The world in 2026 looks about the same.` },
       { at: 15, title: "Implementation Matters", text: (n, total) => `You keep overestimating inventions (${n}/${total}). Here's the nuance: even when the invention was coming, the *specific implementation* often shaped everything after. VHS vs Betamax. QWERTY keyboards. The form factor gets locked in.` },
     ],
     under: [
-      { at: 4, title: "Convergent Technology", text: (n, total) => `You've underestimated ${n} of ${total} invention entries. Technology is highly convergent — when the components exist, someone assembles them. The question isn't "would it have been invented?" but "how much later, and in what form?"` },
+      { at: 4, title: "Convergent Technology", text: (n, total) => `You've underestimated ${n} of ${total} invention entries. Technology is highly convergent — when the components exist, the world gets the invention regardless. The question isn't "does the invention still happen?" but "how much later, and does the different form change what follows?"` },
     ],
   },
   events: {
@@ -90,7 +90,7 @@ export const CATEGORY_HEURISTICS = {
   },
   philosophy: {
     over: [
-      { at: 4, title: "Ideas Have Preconditions", text: (n, total) => `You've overestimated ${n} of ${total} philosophy entries. Philosophical ideas emerge from cultural and intellectual conditions. The questions were being asked; someone would have answered them. But the *articulation* — how the idea was expressed — shaped how it was received.` },
+      { at: 4, title: "Ideas Have Preconditions", text: (n, total) => `You've overestimated ${n} of ${total} philosophy entries. Philosophical ideas emerge from cultural and intellectual conditions. The questions were being asked; the answers were coming. But the *articulation* — how the idea was expressed — shaped how it was received and what followed.` },
     ],
     under: [
       { at: 4, title: "Articulation Is Everything", text: (n, total) => `You've underestimated ${n} of ${total} philosophy entries. In philosophy, how an idea is expressed can matter as much as the idea itself. A different thinker might reach similar conclusions but frame them in ways that fail to catch fire.` },
@@ -98,7 +98,7 @@ export const CATEGORY_HEURISTICS = {
   },
   finance: {
     over: [
-      { at: 4, title: "Financial Innovation Clusters", text: (n, total) => `You've overestimated ${n} of ${total} finance entries. Financial innovations tend to emerge when market conditions demand them. Multiple people were developing similar instruments. The specific form mattered, but the capability was arriving.` },
+      { at: 4, title: "Financial Innovation Clusters", text: (n, total) => `You've overestimated ${n} of ${total} finance entries. Financial innovations tend to emerge when market conditions demand them. The specific form mattered, but the world develops similar financial tools regardless.` },
     ],
     under: [
       { at: 4, title: "Path Dependence in Markets", text: (n, total) => `You've underestimated ${n} of ${total} finance entries. Financial systems are deeply path-dependent. The specific design choices — of a currency, a market, an institution — get locked in and shape behavior for generations.` },
@@ -124,7 +124,7 @@ export const CROSS_PATTERNS = [
       const cats = Object.values(catData);
       if (cats.reduce((a, c) => a + c.games.length, 0) < 12) return null;
       const overCats = cats.filter(c => c.games.length >= 3 && c.overPct > 0.55);
-      if (overCats.length >= 3) return "You consistently overrate individual impact across multiple categories. This is the 'Great Person' bias — history tends to be more driven by structural forces, competing actors, and convergent pressures than our narratives suggest.";
+      if (overCats.length >= 3) return "You consistently overrate individual impact across multiple categories. This is the 'Great Person' bias — remove most entries from history and the world changes less than our narratives suggest. Structural forces, competing actors, and deeper currents do more of the work.";
       return null;
     },
   },
@@ -150,10 +150,10 @@ export const CROSS_PATTERNS = [
       if (convergent.length < 1 || divergent.length < 1) return null;
       const convOver = convergent.filter(c => catData[c].overPct > 0.55).length;
       const divUnder = divergent.filter(c => catData[c].underPct > 0.55).length;
-      if (convOver >= 1 && divUnder >= 1) return "You overrate individuals in convergent fields (science, tech) while underrating them in divergent ones (arts, politics). That's backwards — science has substitute discoverers; art and political leadership don't. Try flipping your instincts.";
+      if (convOver >= 1 && divUnder >= 1) return "You overrate individuals in convergent fields (science, tech) while underrating them in divergent ones (arts, politics). That's backwards — remove a scientist and the world barely changes; remove a political leader or artist and the timeline shifts dramatically. Try flipping your instincts.";
       const convUnder = convergent.filter(c => catData[c].underPct > 0.55).length;
       const divOver = divergent.filter(c => catData[c].overPct > 0.55).length;
-      if (convUnder >= 1 && divOver >= 1) return "You've got good instincts about convergent fields — you correctly sense that science and tech breakthroughs have substitute discoverers. But you're also calibrated well on the personal nature of art and leadership. That's the right mental model.";
+      if (convUnder >= 1 && divOver >= 1) return "You've got good instincts about convergent fields — you correctly sense that the world looks similar with or without most science and tech breakthroughs. And you're also calibrated well on how much art and leadership change the world. That's the right mental model.";
       return null;
     },
   },

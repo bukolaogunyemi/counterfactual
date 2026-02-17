@@ -44,22 +44,22 @@ export const getConsistentScore = (name) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HISTORIAN VARIANCE — different perspectives on replayed figures
-// Historians genuinely disagree about how replaceable historical actors were.
+// Historians genuinely disagree about how much specific entries changed history.
 // On replay, we surface this ambiguity with a named perspective and adjusted score.
 
 const HISTORIAN_PERSPECTIVES = [
   { name: "Structuralist", school: "Structural determinism", direction: -1,
-    desc: "Broader forces matter more than individuals — the conditions were ripe regardless." },
+    desc: "Broader forces were doing most of the work — remove this and the world still arrives somewhere similar." },
   { name: "Great Person Theorist", school: "Great person theory", direction: 1,
-    desc: "Individual agency was decisive here — remove the person and the outcome changes." },
+    desc: "This specific entry was decisive — remove it and the world looks very different." },
   { name: "Contingency Historian", school: "Contingency theory", direction: 1,
-    desc: "Timing and accident shaped events — small changes could have produced very different results." },
+    desc: "Timing and accident shaped events — small changes here would have produced a very different world." },
   { name: "Marxist Analyst", school: "Marxist historiography", direction: -1,
-    desc: "Material conditions and class dynamics drove the outcome — the individual was secondary." },
+    desc: "Material conditions and class dynamics shaped the outcome — removing this entry changes less than you'd think." },
   { name: "Institutionalist", school: "Institutional analysis", direction: -1,
-    desc: "Organizations and systems shaped events more than any single person." },
+    desc: "The systems and structures around this were doing the heavy lifting." },
   { name: "Cultural Historian", school: "Cultural history", direction: 1,
-    desc: "Ideas and cultural currents created a unique moment — not easily replicated." },
+    desc: "This created something the world couldn't have arrived at otherwise." },
 ];
 
 export const getHistorianVariance = (subjectId, playCount) => {
@@ -74,7 +74,7 @@ export const getHistorianVariance = (subjectId, playCount) => {
   const shift = magnitude * perspective.direction;
   
   return {
-    shift,            // Add to r (positive = more replaceable, negative = less)
+    shift,            // Add to r (positive = world changes less, negative = world changes more)
     magnitude,
     perspective,
   };

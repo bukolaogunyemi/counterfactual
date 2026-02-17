@@ -15,25 +15,25 @@ export const getScoreLabel = (score, subject) => {
   const isInstitution = cat === "institutions";
 
   if (score >= 0.80) return { label: "Turning Point", color: "#b91c1c", desc:
-    isEvent ? "This didn't have to happen — and without it, the world becomes unrecognizable"
-    : isInvention ? "This specific invention reshaped everything — nothing else was converging on the same solution"
-    : isInstitution ? "Without this institution, the systems it built don't emerge on their own"
-    : "Without them, the world looks fundamentally different — no one else was close" };
+    isEvent ? "Remove this event and the world becomes unrecognizable"
+    : isInvention ? "Without this invention, the world in 2026 looks fundamentally different"
+    : isInstitution ? "Without this institution, the systems it shaped don't develop the same way"
+    : "Remove them from history and the world we know doesn't arrive" };
   if (score >= 0.50) return { label: "Major Force", color: "#c2410c", desc:
-    isEvent ? "The specific way this unfolded mattered — a different version of events changes the outcome"
-    : isInvention ? "The specific form of this invention mattered — a different version changes what followed"
-    : isInstitution ? "This institution shaped its domain in ways that weren't guaranteed by the underlying need"
-    : "Shaped history in ways no one else was positioned to" };
+    isEvent ? "The specific way this unfolded mattered — change the details and you change the outcome"
+    : isInvention ? "The specific form mattered — a different version changes what followed"
+    : isInstitution ? "This institution shaped its domain in ways the underlying need alone wouldn't guarantee"
+    : "Remove this and the world looks meaningfully different — the specifics mattered" };
   if (score >= 0.20) return { label: "Supporting Role", color: "#a16207", desc:
-    isEvent ? "The underlying forces were real, but the timing and shape weren't guaranteed"
-    : isInvention ? "The need was real, but the specific timing and form weren't guaranteed"
-    : isInstitution ? "Something like this was needed, but the specific institution shaped the outcome"
-    : "Others were working toward similar ends — the timeline shifts, but the outcome likely arrives" };
+    isEvent ? "The underlying forces were real, but the timing and shape still mattered"
+    : isInvention ? "The need was real, but how and when it was met still shaped what followed"
+    : isInstitution ? "Something like this was needed — the specific form shifted the outcome, but not dramatically"
+    : "The world without this still arrives somewhere similar — but the path there looks different" };
   return { label: "Footnote", color: "#15803d", desc:
-    isEvent ? "History was converging here from multiple directions — this was coming regardless"
-    : isInvention ? "Multiple inventors were closing in — this was arriving within a generation"
-    : isInstitution ? "The function this served was being filled from multiple directions"
-    : "Multiple paths were converging — someone else gets here within a generation" };
+    isEvent ? "Remove this and the world barely flinches — the same destination, slightly different route"
+    : isInvention ? "The world without this looks almost the same — you just get there a little later"
+    : isInstitution ? "The need it filled gets met regardless — the world without it is hard to distinguish"
+    : "The world without this looks surprisingly similar — the broad strokes don't change" };
 };
 
 export const getDifficulty = (r) => Math.abs(r - 0.5);
@@ -68,7 +68,7 @@ export const getAccuracyFeedback = (diff, pts, subject, prediction) => {
     ? `You thought ${name} was more impactful than the analysis shows.`
     : `${name} shaped history more than you'd expect.`, tier: "okay" };
   if (diff < 0.40) return { emoji: "📚", msg: over
-    ? `${name}'s impact was less singular than you assumed.`
+    ? `The world without ${name} doesn't look as different as you assumed.`
     : `${name} left a deeper mark on history than most people realize.`, tier: "miss" };
   return { emoji: "😮", msg: over
     ? `Way off — ${name} carried far less weight than you guessed.`

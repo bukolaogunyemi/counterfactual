@@ -849,7 +849,7 @@ export default function App() {
       max_tokens: 3000,
       messages: [{
         role: "user",
-        content: `Analyze the historical inevitability of "${customName}". The question: if this never existed or never happened, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
+        content: `Analyze the counterfactual history of "${customName}". The question: if this never existed or never happened, how different would the world look today? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
 {
   "name": "Full proper name",
   "born": year as number (negative for BCE, null if unknown),
@@ -859,7 +859,7 @@ export default function App() {
   "cat2": "optional secondary category from the same list above, or null if it fits cleanly in one category",
   "quote": "A famous quote by or about them",
   "contributions": ["contribution 1", "contribution 2", "contribution 3", "contribution 4"],
-  "r": inevitability score 0.0 to 1.0 (0=singular, nothing else could have produced this outcome; 1=highly inevitable, multiple paths converging — consider contemporaries, timing, convergent forces). We display this as "historical weight" (inverted: weight = 1 - r),
+  "r": divergence score 0.0 to 1.0 (0=removing this changes everything, the world looks completely different; 1=removing this changes very little, the world arrives at roughly the same place). We display this as "historical weight" (inverted: weight = 1 - r),
   "reasoning": "2-3 sentences explaining the score. Name specific contemporaries or alternatives.",
   "counterfactual": "3-4 sentences: what does the world look like without this? Be concrete and specific.",
 
@@ -868,7 +868,7 @@ export default function App() {
     "econ": "Economic impact with dollar figure if applicable",
     "cultural": "Cultural or intellectual legacy",
     "reach": "Geographic or demographic reach",
-    "timeline": "How long until the same outcome arrives another way"
+    "timeline": "How long before the world converges back to a similar state, if ever"
   },
   "timeline": [
     {"year": number, "happened": "What actually happened", "alternate": "What would have happened without this"},
@@ -890,7 +890,7 @@ export default function App() {
   }
 }
 
-Be historically precise. The cascade should show a chain reaction where each domino triggers the next — cause and effect flowing through decades. The modernDay section should describe concrete, specific differences you'd notice in 2026. The inevitability score should reflect genuine counterfactual analysis.`
+Be historically precise. The cascade should show a chain reaction where each domino triggers the next — cause and effect flowing through decades. The modernDay section should describe concrete, specific differences you'd notice in 2026. The divergence score should reflect genuine counterfactual analysis.`
       }],
     });
 
@@ -957,7 +957,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
     SFX.lock();
 
     const actualPct = Math.round(toWeight(subject.r ?? subject._r) * 100);
-    const dirLabel = debateDirection === "higher" ? "higher (more irreplaceable)" : "lower (more replaceable)";
+    const dirLabel = debateDirection === "higher" ? "higher (world changes more without this)" : "lower (world looks similar without this)";
 
     const apiBody = JSON.stringify({
       model: "claude-sonnet-4-20250514",
@@ -968,7 +968,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
 
 CONTEXT:
 - Subject: ${subject.name} (${subject.field || subject.cat})
-- The game scored this figure's "historical weight" (how irreplaceable they were) at ${actualPct}%.
+- The game scored this entry's "historical weight" (how much the world changes without it) at ${actualPct}%.
 - The game's reasoning: "${subject.reasoning}"
 - The student argues the score should be ${dirLabel}.
 
@@ -1701,11 +1701,11 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
 
     let text;
     if (achievement) {
-      text = `🏅 ${achievement.title}\n\n${achievement.desc}\n\n${rank.icon} ${rank.title} · ${played.length} entries · ${avgPts} avg pts\n\nCounterfactual — predict who shaped history.`;
+      text = `🏅 ${achievement.title}\n\n${achievement.desc}\n\n${rank.icon} ${rank.title} · ${played.length} entries · ${avgPts} avg pts\n\nCounterfactual — predict what shaped history.`;
     } else if (isRankUp) {
-      text = `${rank.icon} Ranked up to ${rank.title}!\n\n${played.length} entries played · ${avgPts} avg pts · ${earnedCount} badges earned\n\nCounterfactual — predict who shaped history.`;
+      text = `${rank.icon} Ranked up to ${rank.title}!\n\n${played.length} entries played · ${avgPts} avg pts · ${earnedCount} badges earned\n\nCounterfactual — predict what shaped history.`;
     } else {
-      text = `${rank.icon} ${rank.title}\n\n${played.length} entries · ${avgPts} avg pts · best streak: ${bestStreak}\n\nCounterfactual — predict who shaped history.`;
+      text = `${rank.icon} ${rank.title}\n\n${played.length} entries · ${avgPts} avg pts · best streak: ${bestStreak}\n\nCounterfactual — predict what shaped history.`;
     }
 
     let imageBlob = null;
@@ -1746,9 +1746,9 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
     } else if (isEvent) {
       hook = `Was ${subject.name} a turning point or was history already headed there?`;
     } else if (isInstitution) {
-      hook = `Would someone else have built what ${subject.name} built?`;
+      hook = `Remove ${subject.name} from history. Does the world look different?`;
     } else if (isInvention) {
-      hook = `Was ${subject.name} inevitable, or did it reshape everything?`;
+      hook = `Without ${subject.name}, does the world end up in the same place?`;
     } else {
       hook = `Without ${subject.name}, how different would the world be?`;
     }
@@ -1778,7 +1778,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
         : `Est. top ${100 - percentile}%.`;
       text = `Counterfactual Daily #${dayNum}\n\n${hook}\n\n${verdict} ${rankText}${streakText}`;
     } else {
-      text = `${hook}\n\n${verdict}\n\nCounterfactual — predict who shaped history.`;
+      text = `${hook}\n\n${verdict}\n\nCounterfactual — predict what shaped history.`;
     }
 
     // Generate image in background
@@ -2259,14 +2259,14 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 </p>
                 <div style={{ display: "flex", gap: 12, fontSize: 13, color: "#5a5750", lineHeight: 1.5, marginBottom: 14 }}>
                   <div style={{ flex: 1, padding: "10px 12px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #bbf7d0" }}>
-                    <strong style={{ color: "#15803d" }}>Low weight</strong> — the same outcome was arriving regardless. Someone else would've done it.
+                    <strong style={{ color: "#15803d" }}>Low weight</strong> — remove it and the world looks mostly the same. The deeper currents were already flowing this direction.
                   </div>
                   <div style={{ flex: 1, padding: "10px 12px", background: "#fef2f2", borderRadius: 8, border: "1px solid #fecaca" }}>
-                    <strong style={{ color: "#b91c1c" }}>High weight</strong> — nothing else was converging here. History genuinely hinged on it.
+                    <strong style={{ color: "#b91c1c" }}>High weight</strong> — remove it and the timeline diverges sharply. The world we know doesn't arrive on its own.
                   </div>
                 </div>
                 <div style={{ fontSize: 13, color: "#78716c", lineHeight: 1.6, padding: "12px 14px", background: "#faf9f6", borderRadius: 8 }}>
-                  <strong style={{ color: "#1a1a1a" }}>For example:</strong> Edison's lightbulb? About <strong style={{ color: "#15803d" }}>20%</strong> — twenty other inventors were racing toward the same thing. But Shakespeare? <strong style={{ color: "#b91c1c" }}>75%</strong> — nobody else was writing like that. The surprise is what counts as inevitable and what doesn't.
+                  <strong style={{ color: "#1a1a1a" }}>For example:</strong> Edison's lightbulb? About <strong style={{ color: "#15803d" }}>20%</strong> — take it away and you still get electric light within a few years. The world barely changes. But Shakespeare? <strong style={{ color: "#b91c1c" }}>75%</strong> — remove him and centuries of English literature, theater, and language develop differently. The surprise is which entries change the world and which ones don't.
                 </div>
               </div>
 
@@ -2385,11 +2385,11 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 <div style={{
                   textAlign: "center", fontSize: 13, color: "#9a9890", marginBottom: 4,
                 }}>
-                  {onboardPred < 20 ? "Low weight — someone else invents it anyway"
-                    : onboardPred < 40 ? "Modest weight — others were close"
-                    : onboardPred < 60 ? "Mixed — some parts were inevitable, some weren't"
-                    : onboardPred < 80 ? "High weight — history doesn't look the same without this"
-                    : "History-defining — the world changes without it"}
+                  {onboardPred < 20 ? "Low weight — the world barely changes without this"
+                    : onboardPred < 40 ? "Modest weight — the world shifts a little, but arrives somewhere similar"
+                    : onboardPred < 60 ? "Mixed — some things change, some don't"
+                    : onboardPred < 80 ? "High weight — the world looks noticeably different"
+                    : "History-defining — the timeline diverges completely"}
                 </div>
               </div>
 
@@ -2497,7 +2497,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   Wait — only {Math.round(tutW * 100)}%?
                 </div>
                 <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0 }}>
-                  Elisha Gray filed a telephone patent <strong>the same day</strong> as Alexander Graham Bell — February 14, 1876. Antonio Meucci had a working device years earlier. Philipp Reis transmitted speech in 1861. The science of electromagnetism made the telephone inevitable. Bell won a patent race, but if he'd never been born, you'd still be making phone calls.
+                  Elisha Gray filed a telephone patent <strong>the same day</strong> as Alexander Graham Bell — February 14, 1876. Antonio Meucci had a working device years earlier. Philipp Reis transmitted speech in 1861. Remove Bell from history and the world in 2026 looks almost identical — you're still making phone calls, just under a different name. That's low weight.
                 </p>
               </div>
 
@@ -2509,7 +2509,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   That's what this game is about.
                 </div>
                 <p style={{ fontSize: 13, color: "#5a5750", lineHeight: 1.65, margin: 0 }}>
-                  Not whether something mattered — the telephone obviously changed everything — but whether it needed <em>that specific person</em>. Some inventions were inevitable. Some people shaped history in ways no one else could have. The fun is figuring out which is which.
+                  Not whether something mattered — the telephone obviously changed everything — but how different the world looks without it. Remove some entries and the world barely flinches. Remove others and the whole timeline shifts. The fun is figuring out which is which.
                 </p>
               </div>
 
@@ -3646,7 +3646,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             // Build insight sentences
             const insights = [];
             if (biasDir === "over") {
-              insights.push({ icon: "📐", text: `You tend to overestimate historical weight by about ${biasAbs} points. Many entries carried less weight than your gut says.` });
+              insights.push({ icon: "📐", text: `You tend to overestimate historical weight by about ${biasAbs} points. The world often changes less than your gut says.` });
             } else if (biasDir === "under") {
               insights.push({ icon: "📐", text: `You tend to underestimate historical weight by about ${biasAbs} points. The specific form matters more than you think.` });
             } else {
@@ -4814,7 +4814,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 background: "linear-gradient(135deg, #f0f9ff, #eff6ff)",
                 border: "1px solid #bfdbfe", fontSize: 13, lineHeight: 1.6, color: "#1e40af",
               }}>
-                <strong>How to play:</strong> Predict this entry's historical weight — was this a turning point that reshaped everything (high weight), or was the same outcome arriving regardless (low weight)?
+                <strong>How to play:</strong> Predict this entry's historical weight — remove it from history and does the world look very different (high weight) or mostly the same (low weight)?
               </div>
             )}
             {isDaily && (
@@ -5633,29 +5633,29 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   const isInvention = subject.cat === "inventions";
                   const isPerson = !isEvent && !isInstitution && !isInvention;
                   const overMisses = isPerson ? [
-                    `Off by ${gap} points. ${subject.name}'s contribution was real, but the conditions were ripe — someone else was close.`,
-                    `${gap} points high. Strip away the name, and the outcome likely still arrives.`,
-                    `Off by ${gap}. Individual genius mattered less here than the forces that made it possible.`,
-                    `${gap}-point miss. History remembers the name, but the work was more convergent than it looks.`,
+                    `Off by ${gap} points. ${subject.name} mattered, but remove them and the world still ends up looking similar.`,
+                    `${gap} points high. The contribution was real — but the trajectory of history doesn't shift much without it.`,
+                    `Off by ${gap}. Take ${subject.name} out of the picture and the downstream changes are smaller than you'd expect.`,
+                    `${gap}-point miss. The world remembers the name, but the world without it looks surprisingly familiar.`,
                   ] : isEvent ? [
-                    `Off by ${gap} points. The underlying pressures made something like this likely — the specific form was less decisive than it feels.`,
-                    `${gap} points high. Events like this feel singular in the moment, but the conditions were already in place.`,
-                    `Off by ${gap}. The shock was real, but the deeper trends were already moving this direction.`,
-                    `${gap}-point miss. Change the trigger, and a similar outcome probably still unfolds.`,
+                    `Off by ${gap} points. The event was dramatic, but the world without it looks more similar than you'd think.`,
+                    `${gap} points high. Remove this event and the timeline adjusts — but the destination doesn't shift as much as it feels.`,
+                    `Off by ${gap}. The shock was real, but the deeper currents were pulling history in this direction regardless.`,
+                    `${gap}-point miss. Erase this event and the world still arrives somewhere recognizable.`,
                   ] : isInstitution ? [
-                    `Off by ${gap} points. The need this filled was real, but another structure would have emerged to meet it.`,
-                    `${gap} points high. Institutions feel permanent, but the function matters more than the specific form.`,
-                    `Off by ${gap}. Remove this one, and the vacuum gets filled — maybe differently, but filled.`,
+                    `Off by ${gap} points. This institution mattered, but remove it and the world still organizes itself in a recognizable way.`,
+                    `${gap} points high. The gap it filled would have been filled — the world without it doesn't diverge as sharply as you'd think.`,
+                    `Off by ${gap}. The need was real, and the world finds a way to meet it even without this specific form.`,
                   ] : [
-                    `Off by ${gap} points. The technology was converging — the specific implementation mattered less than it seems.`,
-                    `${gap} points high. Multiple paths led here. This one won, but wasn't the only possible route.`,
-                    `Off by ${gap}. The invention was coming. The question was when and in what form, not whether.`,
+                    `Off by ${gap} points. Important invention, but the world without it still gets to a similar place.`,
+                    `${gap} points high. Remove this and you lose the name, but the world in 2026 looks surprisingly similar.`,
+                    `Off by ${gap}. The world was heading here. Without this specific version, the destination barely changes.`,
                   ];
                   const underMisses = isPerson ? [
-                    `Off by ${gap} points. ${subject.name} bent the arc of history more than the surface story suggests.`,
-                    `${gap} points low. Remove this person and the ripple effects run deeper than expected.`,
-                    `Off by ${gap}. What looks inevitable in retrospect was actually hanging by a thread.`,
-                    `${gap}-point miss. The specific vision and timing made all the difference.`,
+                    `Off by ${gap} points. Remove ${subject.name} and the ripple effects run deeper than you'd expect.`,
+                    `${gap} points low. The world without ${subject.name} looks more different than the surface story suggests.`,
+                    `Off by ${gap}. What looks like a small piece of the puzzle actually holds a lot of the picture together.`,
+                    `${gap}-point miss. Take this away and decades of downstream history shift in ways you wouldn't predict.`,
                   ] : isEvent ? [
                     `Off by ${gap} points. This event's specific timing and form shaped everything that followed.`,
                     `${gap} points low. A different version of this event would have produced a very different world.`,
@@ -5880,8 +5880,8 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     {/* Direction picker */}
                     <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
                       {[
-                        { val: "higher", label: "Score should be higher", icon: "↑", desc: "More irreplaceable" },
-                        { val: "lower", label: "Score should be lower", icon: "↓", desc: "More replaceable" },
+                        { val: "higher", label: "Score should be higher", icon: "↑", desc: "World changes more" },
+                        { val: "lower", label: "Score should be lower", icon: "↓", desc: "World changes less" },
                       ].map(opt => (
                         <button key={opt.val} onClick={() => setDebateDirection(opt.val)} style={{
                           flex: 1, padding: "10px 12px", borderRadius: 10, cursor: "pointer",
@@ -5900,9 +5900,9 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                       value={debateArgument}
                       onChange={e => setDebateArgument(e.target.value)}
                       placeholder={debateDirection === "higher"
-                        ? `Why was ${subject.name} more irreplaceable than ${Math.round(w * 100)}%? What would NOT have happened without them?`
+                        ? `Why does the world change more than ${Math.round(w * 100)}% without ${subject.name}? What looks different?`
                         : debateDirection === "lower"
-                        ? `Why was ${subject.name} more replaceable than ${Math.round(w * 100)}%? Who else could have done it?`
+                        ? `Why does the world change less than ${Math.round(w * 100)}% without ${subject.name}? What stays the same?`
                         : `First pick a direction above, then write your argument...`
                       }
                       disabled={!debateDirection}

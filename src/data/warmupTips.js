@@ -1,6 +1,6 @@
 // Tips shown during warmup rounds
 export const WARMUP_TIPS = [
-  "Start with your gut - how much did this specific entry change history compared to the forces around it?",
-  "If this never existed or never happened, would the same outcome have arrived anyway?",
-  "Low weight means the outcome was in the air - it was happening with or without this entry. High weight means history hinged on this specific moment.",
+  "Start with your gut - remove this from history and how different does the world look?",
+  "Picture the world without this entry. Is it basically the same, or unrecognizable?",
+  "Low weight means the world barely changes without this. High weight means the timeline diverges sharply.",
 ];
