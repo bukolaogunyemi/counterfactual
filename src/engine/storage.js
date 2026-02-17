@@ -66,7 +66,7 @@ const mirrorToPersistent = async (key, json) => {
   try {
     await window.storage.set(`cf:${key}`, json);
   } catch (e) {
-    // Silently fail — persistent storage is a bonus, not a requirement
+    // Silently fail - persistent storage is a bonus, not a requirement
   }
 };
 
@@ -95,7 +95,7 @@ export const hydrateFromPersistentStorage = async () => {
         recovered++;
       }
     } catch (e) {
-      // Key doesn't exist in persistent storage — fine
+      // Key doesn't exist in persistent storage - fine
     }
   }
 

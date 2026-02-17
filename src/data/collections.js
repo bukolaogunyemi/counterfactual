@@ -3,7 +3,7 @@ export const COLLECTIONS = [
   {
     id: "cold_war",
     title: "The Cold War",
-    subtitle: "What shaped the standoff — people, weapons, or moments?",
+    subtitle: "What shaped the standoff - people, weapons, or moments?",
     emoji: "🧊",
     color: "#1e40af",
     bg: "#eff6ff",
@@ -33,7 +33,7 @@ export const COLLECTIONS = [
   {
     id: "women_science",
     title: "Women Who Changed Science",
-    subtitle: "How much weight did they carry — despite every obstacle?",
+    subtitle: "How much weight did they carry - despite every obstacle?",
     emoji: "🔬",
     color: "#be185d",
     bg: "#fdf2f8",
@@ -103,7 +103,7 @@ export const COLLECTIONS = [
   {
     id: "turning_points",
     title: "Turning Points",
-    subtitle: "Were these moments inevitable — or could history have gone another way?",
+    subtitle: "Were these moments inevitable - or could history have gone another way?",
     emoji: "⚡",
     color: "#7c3aed",
     bg: "#faf5ff",

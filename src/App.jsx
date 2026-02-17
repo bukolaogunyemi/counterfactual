@@ -122,7 +122,7 @@ export default function App() {
   useEffect(() => {
     // Warn if storage is unavailable (incognito, restricted, etc.)
     if (!isStorageAvailable()) {
-      setTimeout(() => showToast("⚠️ Browser storage unavailable — progress won't be saved", 5000), 500);
+      setTimeout(() => showToast("⚠️ Browser storage unavailable - progress won't be saved", 5000), 500);
     }
 
     const saved = loadProgress();
@@ -136,7 +136,7 @@ export default function App() {
       setStreakRewards(saved.streakRewards || []);
       setPointBoostRounds(saved.pointBoostRounds || 0);
     }
-    // Load and clean custom cache — purge stale entries from when API was broken
+    // Load and clean custom cache - purge stale entries from when API was broken
     const cached = loadCustomCache();
     const cleaned = {};
     Object.entries(cached).forEach(([key, val]) => {
@@ -155,7 +155,7 @@ export default function App() {
     if (savedDaily && savedDaily.date === today) {
       setDailyState(savedDaily);
     } else {
-      // New day — calculate streak
+      // New day - calculate streak
       const prevStreak = savedDaily?.dailyStreak || 0;
       const lastDate = savedDaily?.lastCompletedDate;
       const yesterday = getYesterdayStr();
@@ -189,7 +189,7 @@ export default function App() {
     const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
     if (hash && !challenge) {
       if (hash === 'daily') {
-        // Handled after state loads — just flag it
+        // Handled after state loads - just flag it
         window.__deepLinkDaily = true;
       } else {
         const fig = ALL_SUBJECTS.find(s => s.id === hash);
@@ -244,7 +244,7 @@ export default function App() {
         setGameHistory(loadHistory());
         showToast(`☁️ Recovered ${result.recovered} saved data from cloud storage`, 3500);
       }
-    }).catch(() => {}); // Silent failure — hydration is best-effort
+    }).catch(() => {}); // Silent failure - hydration is best-effort
   }, []);
 
   // Handle daily deep link after state loads
@@ -342,7 +342,7 @@ export default function App() {
     if (n < 5) { wHard = 0.10; wMed = 0.30; }       // 60% easy
     else if (n < 15) { wHard = 0.25; wMed = 0.40; }  // 35% easy
     else if (n < 30) { wHard = 0.35; wMed = 0.35; }  // 30% easy
-    else { wHard = 0.45; wMed = 0.35; }               // 20% easy — full mix
+    else { wHard = 0.45; wMed = 0.35; }               // 20% easy - full mix
     const roll = Math.random();
     let pool;
     if (roll < wHard && hard.length > 0) pool = hard;
@@ -452,9 +452,9 @@ export default function App() {
           return next;
         });
       } else {
-        // Streak broken — but check for streak shield
+        // Streak broken - but check for streak shield
         if (streakShields > 0 && streak >= 3) {
-          // Shield consumed — streak preserved!
+          // Shield consumed - streak preserved!
           setStreakShields(prev => prev - 1);
           setStreakMilestone({ at: streak, bonus: 0, emoji: "🛡️", label: "Streak Shield activated!", reward: "shield_used", rewardLabel: `Shield saved your ${streak}-round streak` });
           setTimeout(() => SFX.milestone(), 200);
@@ -541,7 +541,7 @@ export default function App() {
       const show = fresh[fresh.length - 1];
       setNewAchievement(show);
       SFX.achievement();
-      showToast(`🏅 Achievement: ${show.title} — ${show.desc}`);
+      showToast(`🏅 Achievement: ${show.title} - ${show.desc}`);
       setTimeout(() => setNewAchievement(null), 5000);
     }
     prevEarnedRef.current = currentEarned;
@@ -554,12 +554,12 @@ export default function App() {
     );
   }, []);
 
-  // Interlude timer — cycle through steps, then reveal
+  // Interlude timer - cycle through steps, then reveal
   useEffect(() => {
     if (screen !== "interlude" || !subject) return;
     const phases = getInterludePhases(subject, prediction);
     const totalSteps = phases.length;
-    const stepDuration = 1200; // 1.2s per step — slightly longer for reading
+    const stepDuration = 1200; // 1.2s per step - slightly longer for reading
     const timer = setInterval(() => {
       setInterludeStep(prev => {
         if (prev >= totalSteps) {
@@ -664,7 +664,7 @@ export default function App() {
     requestAnimationFrame(animate);
   };
 
-  // Progressive reveal — horizontal result cards + celebrations
+  // Progressive reveal - horizontal result cards + celebrations
   useEffect(() => {
     if (screen !== "result") return;
     setActiveResultCard(0);
@@ -694,7 +694,7 @@ export default function App() {
         if (progress < 1) {
           requestAnimationFrame(tick);
         } else {
-          // Countdown complete — fire celebrations
+          // Countdown complete - fire celebrations
           setAnimatedActual(actPct);
           const d = Math.abs(prediction - actW);
           const p = lastPts;
@@ -800,7 +800,7 @@ export default function App() {
       max_tokens: 3000,
       messages: [{
         role: "user",
-        content: `Analyze the historical inevitability of "${customName}". The question: if this never existed or never happened, would history have found another way to the same outcome? Return ONLY valid JSON — no markdown, no backticks, no preamble — using this exact structure:
+        content: `Analyze the historical inevitability of "${customName}". The question: if this never existed or never happened, would history have found another way to the same outcome? Return ONLY valid JSON - no markdown, no backticks, no preamble - using this exact structure:
 {
   "name": "Full proper name",
   "born": year as number (negative for BCE, null if unknown),
@@ -810,7 +810,7 @@ export default function App() {
   "cat2": "optional secondary category from the same list above, or null if it fits cleanly in one category",
   "quote": "A famous quote by or about them",
   "contributions": ["contribution 1", "contribution 2", "contribution 3", "contribution 4"],
-  "r": inevitability score 0.0 to 1.0 (0=singular, nothing else could have produced this outcome; 1=highly inevitable, multiple paths converging — consider contemporaries, timing, convergent forces). We display this as "historical weight" (inverted: weight = 1 - r),
+  "r": inevitability score 0.0 to 1.0 (0=singular, nothing else could have produced this outcome; 1=highly inevitable, multiple paths converging - consider contemporaries, timing, convergent forces). We display this as "historical weight" (inverted: weight = 1 - r),
   "reasoning": "2-3 sentences explaining the score. Name specific contemporaries or alternatives.",
   "counterfactual": "3-4 sentences: what does the world look like without this? Be concrete and specific.",
 
@@ -828,7 +828,7 @@ export default function App() {
     {"year": number, "happened": "...", "alternate": "..."}
   ],
   "cascade": [
-    {"event": "First domino — what doesn't happen", "consequence": "What follows from that absence, 1-2 sentences", "delay": "Immediate or ~X years", "severity": "high/medium/low", "icon": "single emoji"},
+    {"event": "First domino - what doesn't happen", "consequence": "What follows from that absence, 1-2 sentences", "delay": "Immediate or ~X years", "severity": "high/medium/low", "icon": "single emoji"},
     {"event": "Second domino", "consequence": "...", "delay": "...", "severity": "...", "icon": "emoji"},
     {"event": "Third domino", "consequence": "...", "delay": "...", "severity": "...", "icon": "emoji"},
     {"event": "Fourth domino", "consequence": "...", "delay": "...", "severity": "...", "icon": "emoji"}
@@ -841,7 +841,7 @@ export default function App() {
   }
 }
 
-Be historically precise. The cascade should show a chain reaction where each domino triggers the next — cause and effect flowing through decades. The modernDay section should describe concrete, specific differences you'd notice in 2026. The inevitability score should reflect genuine counterfactual analysis.`
+Be historically precise. The cascade should show a chain reaction where each domino triggers the next - cause and effect flowing through decades. The modernDay section should describe concrete, specific differences you'd notice in 2026. The inevitability score should reflect genuine counterfactual analysis.`
       }],
     });
 
@@ -891,7 +891,7 @@ Be historically precise. The cascade should show a chain reaction where each dom
       setScreen("custom_confirm");
     } catch (err) {
       console.error("Custom figure error:", err);
-      showToast("Analysis failed — check the debug steps below", 4000);
+      showToast("Analysis failed - check the debug steps below", 4000);
     }
 
     setCustomLoading(false);
@@ -982,13 +982,13 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
       saveHistory(updatedHistory);
 
       if (parsed.score >= 80) {
-        showToast(`🏆 ${parsed.grade} — outstanding argument!`, 3000);
+        showToast(`🏆 ${parsed.grade} - outstanding argument!`, 3000);
       } else if (parsed.score >= 60) {
-        showToast(`📝 ${parsed.grade} — solid reasoning`, 3000);
+        showToast(`📝 ${parsed.grade} - solid reasoning`, 3000);
       }
     } catch (err) {
       console.error("Debate evaluation error:", err);
-      showToast("Couldn't evaluate your argument — try again", 3000);
+      showToast("Couldn't evaluate your argument - try again", 3000);
       setDebatePhase("writing");
     }
   };
@@ -1029,9 +1029,9 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
       showToast("🌍 Shared with the community!", 3000);
       fetchCommunityFigures(); // refresh list
     } else if (data.reason === "rate_limited") {
-      showToast("Slow down — max 5 submissions per day", 3000);
+      showToast("Slow down - max 5 submissions per day", 3000);
     } else {
-      showToast("Couldn't submit — try again later", 3000);
+      showToast("Couldn't submit - try again later", 3000);
     }
     return data;
   };
@@ -1115,7 +1115,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
     let target = null;
     while (history.length > 0) {
       const prev = history.pop();
-      // Skip game-flow screens — go back to the selection screen
+      // Skip game-flow screens - go back to the selection screen
       if (prev !== "predict" && prev !== "interlude" && prev !== "result") {
         target = prev;
         break;
@@ -1199,7 +1199,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
     if (!h2hMode) return;
     const nextIdx = h2hMode.currentIndex + 1;
     if (nextIdx >= h2hMode.figures.length) {
-      // All done — show summary
+      // All done - show summary
       setScreen("h2h_summary");
       scrollTop();
       return;
@@ -1275,7 +1275,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
     canvas.height = H;
     const ctx = canvas.getContext("2d");
 
-    // Background — warm dark gradient
+    // Background - warm dark gradient
     const bg = ctx.createLinearGradient(0, 0, W, H);
     bg.addColorStop(0, "#1a1a18");
     bg.addColorStop(0.5, "#222220");
@@ -1335,13 +1335,13 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
 
     // ── LAYOUT ──
 
-    // "Counterfactual" branding — top left, subtle
+    // "Counterfactual" branding - top left, subtle
     ctx.font = "italic 32px Georgia, serif";
     ctx.fillStyle = "rgba(255,255,255,0.35)";
     ctx.textAlign = "left";
     ctx.fillText("Counterfactual", 60, 70);
 
-    // Daily badge — top right
+    // Daily badge - top right
     if (isDaily) {
       ctx.fillStyle = "#d97706";
       const badgeText = `Daily #${dayNum}`;
@@ -1353,15 +1353,15 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
       ctx.fillText(badgeText, badgeX + badgeW / 2, 72);
     }
 
-    // Figure name — hero element
+    // Figure name - hero element
     const nameY = 145;
     centerText(subject.name, nameY, "52px Georgia, serif", "#ffffff", W - 120);
 
-    // Field + lifespan — subtle context
+    // Field + lifespan - subtle context
     const fieldText = `${subject.field}  ·  ${formatLifespan(subject.born, subject.died)}`;
     centerText(fieldText, nameY + 48, "20px 'Helvetica Neue', sans-serif", "rgba(255,255,255,0.4)", W - 120);
 
-    // ── COUNTERFACTUAL HOOK — the centerpiece ──
+    // ── COUNTERFACTUAL HOOK - the centerpiece ──
     const hookY = nameY + 120;
     if (cfFirst) {
       // Italic counterfactual text, wrapped
@@ -1384,7 +1384,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
       });
     }
 
-    // ── VERDICT CARDS — "My Call" vs "Actual" side by side ──
+    // ── VERDICT CARDS - "My Call" vs "Actual" side by side ──
     const cfLines = cfFirst ? wrapText(cfFirst, "italic 30px Georgia, serif", W - 200).length : 0;
     const verdictY = hookY + (cfFirst ? cfLines * 42 + 60 : 20);
 
@@ -1483,7 +1483,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
     ctx.fillStyle = "rgba(255,255,255,0.4)";
     ctx.fillText("Actual", W / 2 + 72, legendY + 5);
 
-    // ── POINTS — competitive centerpiece ──
+    // ── POINTS - competitive centerpiece ──
     const ptsY = legendY + 75;
     const ptsColor = pts >= 80 ? "#22c55e" : pts >= 50 ? "#d97706" : "#ef4444";
     centerText(`${pts}`, ptsY, "bold 84px Georgia, serif", ptsColor);
@@ -1562,7 +1562,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
       // Achievement unlocked card
       cText("🏅 Achievement Unlocked", 160, "bold 28px 'Helvetica Neue', sans-serif", "#f59e0b");
 
-      // Achievement icon — large
+      // Achievement icon - large
       cText(achievement.icon, 300, "120px serif", "#ffffff");
 
       // Achievement title
@@ -1621,7 +1621,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
         ctx.fillText(c.l, x, statsY + 55);
       });
 
-      // Achievement showcase — top 3 earned
+      // Achievement showcase - top 3 earned
       const topEarned = ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)).slice(-3);
       if (topEarned.length > 0) {
         const achY = 730;
@@ -1652,11 +1652,11 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
 
     let text;
     if (achievement) {
-      text = `🏅 ${achievement.title}\n\n${achievement.desc}\n\n${rank.icon} ${rank.title} · ${played.length} entries · ${avgPts} avg pts\n\nCounterfactual — predict who shaped history.`;
+      text = `🏅 ${achievement.title}\n\n${achievement.desc}\n\n${rank.icon} ${rank.title} · ${played.length} entries · ${avgPts} avg pts\n\nCounterfactual - predict who shaped history.`;
     } else if (isRankUp) {
-      text = `${rank.icon} Ranked up to ${rank.title}!\n\n${played.length} entries played · ${avgPts} avg pts · ${earnedCount} badges earned\n\nCounterfactual — predict who shaped history.`;
+      text = `${rank.icon} Ranked up to ${rank.title}!\n\n${played.length} entries played · ${avgPts} avg pts · ${earnedCount} badges earned\n\nCounterfactual - predict who shaped history.`;
     } else {
-      text = `${rank.icon} ${rank.title}\n\n${played.length} entries · ${avgPts} avg pts · best streak: ${bestStreak}\n\nCounterfactual — predict who shaped history.`;
+      text = `${rank.icon} ${rank.title}\n\n${played.length} entries · ${avgPts} avg pts · best streak: ${bestStreak}\n\nCounterfactual - predict who shaped history.`;
     }
 
     let imageBlob = null;
@@ -1685,7 +1685,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
     const cfRaw = subject.counterfactual || "";
     const cfFirst = cfRaw.match(/^[^.!?]+[.!?]+/)?.[0]?.trim() || "";
 
-    // Build the hook — counterfactual-driven when available
+    // Build the hook - counterfactual-driven when available
     const isEvent = subject.cat === "events";
     const isInstitution = subject.cat === "institutions";
     const isInvention = subject.cat === "inventions";
@@ -1704,15 +1704,15 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
       hook = `Without ${subject.name}, how different would the world be?`;
     }
 
-    // Score commentary — varied and specific
+    // Score commentary - varied and specific
     let verdict;
     if (userLabel.label === actualLabel.label) {
       // Same bucket
       verdict = pts >= 80
         ? `I called it: ${actualLabel.label}. ${pts} pts.`
-        : `We both said ${actualLabel.label} — but the exact number matters. ${pts} pts.`;
+        : `We both said ${actualLabel.label} - but the exact number matters. ${pts} pts.`;
     } else if (diff <= 0.1) {
-      verdict = `I said ${userLabel.label} (${userPct}%). Actual: ${actualLabel.label} (${actualPct}%). Close — ${pts} pts.`;
+      verdict = `I said ${userLabel.label} (${userPct}%). Actual: ${actualLabel.label} (${actualPct}%). Close - ${pts} pts.`;
     } else if (prediction > w) {
       verdict = `I said ${userLabel.label} (${userPct}%). Actual: ${actualLabel.label} (${actualPct}%). Overrated. ${pts} pts.`;
     } else {
@@ -1729,7 +1729,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
         : `Est. top ${100 - percentile}%.`;
       text = `Counterfactual Daily #${dayNum}\n\n${hook}\n\n${verdict} ${rankText}${streakText}`;
     } else {
-      text = `${hook}\n\n${verdict}\n\nCounterfactual — predict who shaped history.`;
+      text = `${hook}\n\n${verdict}\n\nCounterfactual - predict who shaped history.`;
     }
 
     // Generate image in background
@@ -1977,7 +1977,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
           shareUrl = `https://wa.me/?text=${encodeURIComponent(text + "\n\n" + url)}`;
           break;
         case "reddit":
-          shareUrl = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent(`How much did ${figureName} shape history? — Counterfactual`)}`;
+          shareUrl = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent(`How much did ${figureName} shape history? - Counterfactual`)}`;
           break;
         default: return;
       }
@@ -2039,7 +2039,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             padding: "18px 22px 0",
           }}>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", margin: 0, fontFamily: fontStack }}>
-              Share{figureName && figureName !== "Profile" ? ` — ${figureName}` : ""}
+              Share{figureName && figureName !== "Profile" ? ` - ${figureName}` : ""}
             </h3>
             <button
               onClick={() => setShareModal(null)}
@@ -2191,7 +2191,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
         <style>{globalCSS}</style>
         <div style={{ ...S.inner, maxWidth: 520, paddingTop: 40 }}>
 
-          {/* Step 0: Hook — no rules, just a question */}
+          {/* Step 0: Hook - no rules, just a question */}
           {step === 0 && (
             <div style={{ textAlign: "center", animation: "fadeUp 0.4s ease both" }}>
               <h1 style={{ ...S.h1, fontSize: 42, marginBottom: 16 }}>
@@ -2210,14 +2210,14 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 </p>
                 <div style={{ display: "flex", gap: 12, fontSize: 13, color: "#5a5750", lineHeight: 1.5, marginBottom: 14 }}>
                   <div style={{ flex: 1, padding: "10px 12px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #bbf7d0" }}>
-                    <strong style={{ color: "#15803d" }}>Low weight</strong> — the same outcome was arriving regardless. Someone else would've done it.
+                    <strong style={{ color: "#15803d" }}>Low weight</strong> - the same outcome was arriving regardless. Someone else would've done it.
                   </div>
                   <div style={{ flex: 1, padding: "10px 12px", background: "#fef2f2", borderRadius: 8, border: "1px solid #fecaca" }}>
-                    <strong style={{ color: "#b91c1c" }}>High weight</strong> — nothing else was converging here. History genuinely hinged on it.
+                    <strong style={{ color: "#b91c1c" }}>High weight</strong> - nothing else was converging here. History genuinely hinged on it.
                   </div>
                 </div>
                 <div style={{ fontSize: 13, color: "#78716c", lineHeight: 1.6, padding: "12px 14px", background: "#faf9f6", borderRadius: 8 }}>
-                  <strong style={{ color: "#1a1a1a" }}>For example:</strong> Edison's lightbulb? About <strong style={{ color: "#15803d" }}>20%</strong> — twenty other inventors were racing toward the same thing. But Shakespeare? <strong style={{ color: "#b91c1c" }}>75%</strong> — nobody else was writing like that. The surprise is what counts as inevitable and what doesn't.
+                  <strong style={{ color: "#1a1a1a" }}>For example:</strong> Edison's lightbulb? About <strong style={{ color: "#15803d" }}>20%</strong> - twenty other inventors were racing toward the same thing. But Shakespeare? <strong style={{ color: "#b91c1c" }}>75%</strong> - nobody else was writing like that. The surprise is what counts as inevitable and what doesn't.
                 </div>
               </div>
 
@@ -2233,7 +2233,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </div>
           )}
 
-          {/* Step 1: The telephone — presented like a real round */}
+          {/* Step 1: The telephone - presented like a real round */}
           {step === 1 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
               <div style={{
@@ -2336,11 +2336,11 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 <div style={{
                   textAlign: "center", fontSize: 13, color: "#9a9890", marginBottom: 4,
                 }}>
-                  {onboardPred < 20 ? "Low weight — someone else invents it anyway"
-                    : onboardPred < 40 ? "Modest weight — others were close"
-                    : onboardPred < 60 ? "Mixed — some parts were inevitable, some weren't"
-                    : onboardPred < 80 ? "High weight — history doesn't look the same without this"
-                    : "History-defining — the world changes without it"}
+                  {onboardPred < 20 ? "Low weight - someone else invents it anyway"
+                    : onboardPred < 40 ? "Modest weight - others were close"
+                    : onboardPred < 60 ? "Mixed - some parts were inevitable, some weren't"
+                    : onboardPred < 80 ? "High weight - history doesn't look the same without this"
+                    : "History-defining - the world changes without it"}
                 </div>
               </div>
 
@@ -2356,7 +2356,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </div>
           )}
 
-          {/* Step 3: The reveal — the surprise */}
+          {/* Step 3: The reveal - the surprise */}
           {step === 3 && (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
 
@@ -2432,23 +2432,23 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 </div>
 
                 <div style={{ fontSize: 13, color: "#9a9890", marginBottom: 0 }}>
-                  {tutDiff < 0.05 ? "Incredible — you already think like a historian."
+                  {tutDiff < 0.05 ? "Incredible - you already think like a historian."
                     : tutDiff < 0.15 ? "Strong intuition. You've got the instinct."
                     : tutDiff < 0.25 ? "Not bad for your first try."
                     : "Most people miss this one. That's what makes it fun."}
                 </div>
               </div>
 
-              {/* The surprise — this is the teaching moment */}
+              {/* The surprise - this is the teaching moment */}
               <div style={{
                 ...S.card, padding: "20px 22px", marginBottom: 16,
                 background: "#fffbeb", borderColor: "#fde68a",
               }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#92400e", marginBottom: 8, fontFamily: sansStack }}>
-                  Wait — only {Math.round(tutW * 100)}%?
+                  Wait - only {Math.round(tutW * 100)}%?
                 </div>
                 <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0 }}>
-                  Elisha Gray filed a telephone patent <strong>the same day</strong> as Alexander Graham Bell — February 14, 1876. Antonio Meucci had a working device years earlier. Philipp Reis transmitted speech in 1861. The science of electromagnetism made the telephone inevitable. Bell won a patent race, but if he'd never been born, you'd still be making phone calls.
+                  Elisha Gray filed a telephone patent <strong>the same day</strong> as Alexander Graham Bell - February 14, 1876. Antonio Meucci had a working device years earlier. Philipp Reis transmitted speech in 1861. The science of electromagnetism made the telephone inevitable. Bell won a patent race, but if he'd never been born, you'd still be making phone calls.
                 </p>
               </div>
 
@@ -2460,11 +2460,11 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   That's what this game is about.
                 </div>
                 <p style={{ fontSize: 13, color: "#5a5750", lineHeight: 1.65, margin: 0 }}>
-                  Not whether something mattered — the telephone obviously changed everything — but whether it needed <em>that specific person</em>. Some inventions were inevitable. Some people shaped history in ways no one else could have. The fun is figuring out which is which.
+                  Not whether something mattered - the telephone obviously changed everything - but whether it needed <em>that specific person</em>. Some inventions were inevitable. Some people shaped history in ways no one else could have. The fun is figuring out which is which.
                 </p>
               </div>
 
-              {/* Scoring — brief, embedded, not a separate lesson */}
+              {/* Scoring - brief, embedded, not a separate lesson */}
               <div style={{
                 ...S.card, padding: "16px 20px", marginBottom: 24,
               }}>
@@ -2529,7 +2529,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
           </div>
 
           {activeTab === "play" && (<>
-          {/* Rank card — clickable → stats */}
+          {/* Rank card - clickable → stats */}
           {played.length > 0 && (
             <div
               onClick={() => { SFX.click(); setActiveTab("stats"); setScreen("stats"); scrollTop(); }}
@@ -2566,7 +2566,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </div>
           )}
 
-          {/* Play tabs — Daily + Random side by side */}
+          {/* Play tabs - Daily + Random side by side */}
           {(() => {
             const dailyFig = dailyState ? getDailyFigure() : null;
             const dayNum = dailyState ? getDayNumber() : 0;
@@ -2639,7 +2639,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             );
           })()}
 
-          {/* Secondary modes — compact pill row */}
+          {/* Secondary modes - compact pill row */}
           <div style={{
             display: "flex", gap: 8, justifyContent: "center", alignItems: "center",
             marginBottom: 24, flexWrap: "wrap",
@@ -2690,7 +2690,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             )}
           </div>
 
-          {/* Smart Recommendations — compact */}
+          {/* Smart Recommendations - compact */}
           {(() => {
             const recs = getRecommendations(played, gameHistory, ALL_SUBJECTS);
             if (recs.length === 0) return null;
@@ -2742,7 +2742,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             );
           })()}
 
-          {/* Analyze Any Figure — compact */}
+          {/* Analyze Any Figure - compact */}
           <div style={{
             padding: "14px 18px", borderRadius: 12, marginBottom: 24,
             background: "#fff", border: "1px solid #e5e2db",
@@ -2875,7 +2875,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             );
           })()}
 
-          {/* Browse by Category — people categories only */}
+          {/* Browse by Category - people categories only */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               📂 Browse by Category
@@ -2916,7 +2916,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </ScrollRow>
           </div>
 
-          {/* Events / Institutions / Inventions — dedicated rows */}
+          {/* Events / Institutions / Inventions - dedicated rows */}
           {[
             { key: "events", icon: "📅", title: "Events", desc: "Turning points that shaped the world" },
             { key: "institutions", icon: "🏢", title: "Institutions", desc: "Organizations that changed the game" },
@@ -2966,7 +2966,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             );
           })}
 
-          {/* Themed Collections — compact */}
+          {/* Themed Collections - compact */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               📚 Collections
@@ -3006,7 +3006,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </ScrollRow>
           </div>
 
-          {/* Browse by Era — compact */}
+          {/* Browse by Era - compact */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               🕰️ Eras
@@ -3047,7 +3047,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </ScrollRow>
           </div>
 
-          {/* ═══ SCENARIO EXPLORER — compound "what if" scenarios ═══ */}
+          {/* ═══ SCENARIO EXPLORER - compound "what if" scenarios ═══ */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ ...S.h3, fontSize: 14, marginBottom: 10, color: "#7a7770" }}>
               🦋 What If Scenarios
@@ -3176,7 +3176,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             {communityAvailable === false && !communityLoading && (
               <div style={{ ...S.card, padding: "16px 20px", textAlign: "center" }}>
                 <div style={{ fontSize: 13, color: "#9a9890", fontFamily: sansStack }}>
-                  Community figures aren't available yet — use the custom figure search to create and share your own!
+                  Community figures aren't available yet - use the custom figure search to create and share your own!
                 </div>
               </div>
             )}
@@ -3186,7 +3186,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 <div style={{ fontSize: 28, marginBottom: 8 }}>🌱</div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: fontStack, marginBottom: 4 }}>No community figures yet</div>
                 <div style={{ fontSize: 13, color: "#9a9890", fontFamily: sansStack }}>
-                  Be the first — search for a custom figure and share it!
+                  Be the first - search for a custom figure and share it!
                 </div>
               </div>
             )}
@@ -3257,7 +3257,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // SCENARIO EXPLORER SCREEN — compound "what if" scenarios
+  // SCENARIO EXPLORER SCREEN - compound "what if" scenarios
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "scenario" && selectedScenario) {
     const sc = selectedScenario;
@@ -3278,7 +3278,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               <p style={{ fontSize: 14, color: "#7a7770", margin: 0 }}>{sc.subtitle}</p>
             </div>
 
-            {/* Removed figures grid — show player's results */}
+            {/* Removed figures grid - show player's results */}
             <div style={{
               display: "grid", gridTemplateColumns: `repeat(${Math.min(figures.length, 3)}, 1fr)`, gap: 10,
               marginBottom: 24,
@@ -3467,7 +3467,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
         <ShareModal />
         <div style={{...S.inner, paddingBottom: 70}}>
 
-          {/* Profile card — rank hero + stats banner + horizontal ladder */}
+          {/* Profile card - rank hero + stats banner + horizontal ladder */}
           <div style={{
             ...S.card, textAlign: "center", marginBottom: 24,
             background: "linear-gradient(180deg, #faf9f6, #f5f4f0)",
@@ -3502,7 +3502,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 { label: "Played", value: played.length, icon: "📚" },
                 { label: "Total Pts", value: score, icon: "⭐" },
                 { label: "Avg Pts", value: avgPts, icon: "🎯" },
-                { label: "Accuracy", value: totalGames > 0 ? `${Math.round(history.reduce((a, g) => a + (100 - g.diff), 0) / totalGames)}%` : "—", icon: "🎪" },
+                { label: "Accuracy", value: totalGames > 0 ? `${Math.round(history.reduce((a, g) => a + (100 - g.diff), 0) / totalGames)}%` : "-", icon: "🎪" },
                 { label: "Best Streak", value: bestStreak, icon: "🔥" },
               ].map((stat, i) => (
                 <div key={i} style={{
@@ -3570,7 +3570,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             )}
           </div>
 
-          {/* Your Tendencies — only show with enough data */}
+          {/* Your Tendencies - only show with enough data */}
           {totalGames >= 10 && (() => {
             // Bias: average of (pred - actual), positive = overestimates impact
             const biasSum = history.reduce((a, g) => a + (g.pred - g.r), 0);
@@ -3601,17 +3601,17 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             } else if (biasDir === "under") {
               insights.push({ icon: "📐", text: `You tend to underestimate historical weight by about ${biasAbs} points. The specific form matters more than you think.` });
             } else {
-              insights.push({ icon: "📐", text: "Your predictions are well-calibrated — no consistent lean toward overrating or underrating impact." });
+              insights.push({ icon: "📐", text: "Your predictions are well-calibrated - no consistent lean toward overrating or underrating impact." });
             }
             if (bestCat) {
               insights.push({ icon: "💪", text: `Strongest category: ${bestCat.label} (${bestCat.avg} avg pts)${worstCat && worstCat.avg < bestCat.avg - 10 ? `. Weakest: ${worstCat.label} (${worstCat.avg} avg pts).` : "."}` });
             }
             if (improving > 5) {
-              insights.push({ icon: "📈", text: `You're improving — your recent games average ${secondAvg} pts, up from ${firstAvg} in your first ${half} games.` });
+              insights.push({ icon: "📈", text: `You're improving - your recent games average ${secondAvg} pts, up from ${firstAvg} in your first ${half} games.` });
             } else if (improving < -5) {
               insights.push({ icon: "📉", text: `Your early games averaged ${firstAvg} pts, but recent ones dropped to ${secondAvg}. Harder entries, or getting overconfident?` });
             } else {
-              insights.push({ icon: "📊", text: `Consistent performer — averaging ${firstAvg} pts early and ${secondAvg} pts recently.` });
+              insights.push({ icon: "📊", text: `Consistent performer - averaging ${firstAvg} pts early and ${secondAvg} pts recently.` });
             }
 
             return (
@@ -3635,7 +3635,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             );
           })()}
 
-          {/* Pattern Insights — teaches transferable counterfactual thinking */}
+          {/* Pattern Insights - teaches transferable counterfactual thinking */}
           {(() => {
             const patterns = getPatternInsights(history);
             if (patterns.length === 0) return null;
@@ -3772,7 +3772,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     <div style={{ fontSize: 24, flexShrink: 0 }}>{unlocked ? m.emoji : "🔒"}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 14, fontWeight: 700, color: unlocked ? "#92400e" : "#7a7770" }}>
-                        {m.at}-Round Streak — {m.label}
+                        {m.at}-Round Streak - {m.label}
                       </div>
                       <div style={{ fontSize: 12, color: unlocked ? "#b45309" : "#9a9890", marginTop: 2 }}>
                         {unlocked ? `✓ ${m.rewardLabel}` : m.rewardLabel}
@@ -3835,7 +3835,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               <h3 style={{ ...S.h3, fontSize: 16, marginBottom: 6 }}>
                 🗂️ Category Breakdown
               </h3>
-              {/* Score distribution summary — compact inline */}
+              {/* Score distribution summary - compact inline */}
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
                 {[
                   { label: "90+", count: distBuckets[0], color: "#16a34a" },
@@ -3994,7 +3994,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     background: "#f5f3ff", border: "1px solid #e9d5ff",
                     fontSize: 13, color: "#6d28d9", fontFamily: sansStack,
                   }}>
-                    Best debate: <strong>{bestDebate.name}</strong> — {bestDebate.grade} ({bestDebate.score}/100)
+                    Best debate: <strong>{bestDebate.name}</strong> - {bestDebate.grade} ({bestDebate.score}/100)
                   </div>
                 )}
               </div>
@@ -4013,7 +4013,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               <div style={{ padding: "8px 12px", borderRadius: 8, background: "#f0fdf4", border: "1px solid #bbf7d0", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 14 }}>☁️</span>
                 <span style={{ fontSize: 12, color: "#166534", fontFamily: sansStack }}>
-                  Cloud sync active — your progress is backed up automatically
+                  Cloud sync active - your progress is backed up automatically
                 </span>
               </div>
             )}
@@ -4551,7 +4551,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 {iWon
                   ? `You beat ${h2hMode.opponentName} by ${myTotal - oppTotal} points.`
                   : tied
-                    ? "Perfectly matched — same total score."
+                    ? "Perfectly matched - same total score."
                     : `${h2hMode.opponentName} beat you by ${oppTotal - myTotal} points.`
                 }
                 {' '}{myRoundsWon > oppRoundsWon ? `Won ${myRoundsWon} of 5 rounds.` : oppRoundsWon > myRoundsWon ? `Won ${myRoundsWon} of 5 rounds.` : ''}
@@ -4719,10 +4719,10 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
 
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={rejectCustomFigure} style={{ ...S.btn, ...S.btnSecondary, flex: 1 }}>
-                Not right — go back
+                Not right - go back
               </button>
               <button onClick={confirmCustomFigure} style={{ ...S.btn, ...S.btnPrimary, flex: 1 }}>
-                Yes — make my prediction →
+                Yes - make my prediction →
               </button>
             </div>
             <button
@@ -4765,7 +4765,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 background: "linear-gradient(135deg, #f0f9ff, #eff6ff)",
                 border: "1px solid #bfdbfe", fontSize: 13, lineHeight: 1.6, color: "#1e40af",
               }}>
-                <strong>How to play:</strong> Predict this entry's historical weight — was this a turning point that reshaped everything (high weight), or was the same outcome arriving regardless (low weight)?
+                <strong>How to play:</strong> Predict this entry's historical weight - was this a turning point that reshaped everything (high weight), or was the same outcome arriving regardless (low weight)?
               </div>
             )}
             {isDaily && (
@@ -4800,7 +4800,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             )}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 4 }}>
               <span style={S.tag(cat.color, cat.bg)}>{cat.label}</span>
-              {/* Difficulty badge — always visible, helps players learn the system */}
+              {/* Difficulty badge - always visible, helps players learn the system */}
               {(() => {
                 const r = subject.r ?? subject._r ?? 0.5;
                 const diff = getDifficultyLabel(r);
@@ -4849,7 +4849,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               {subject.field} · {formatLifespan(subject.born, subject.died)}
             </p>
 
-            {/* Quote — gives flavor without tipping off the answer */}
+            {/* Quote - gives flavor without tipping off the answer */}
             {subject.quote && (
               <div style={{
                 fontStyle: "italic", color: "#4a4840", padding: "16px 20px",
@@ -4867,7 +4867,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               <ContributionTags items={subject.contributions} />
             </div>
 
-            {/* Key Moments — chronological context so players can reason, not guess */}
+            {/* Key Moments - chronological context so players can reason, not guess */}
             {subject.timeline && subject.timeline.length > 0 && (
               <div style={{ marginBottom: 24 }}>
                 <h4 style={{ fontSize: 12, color: "#9a9890", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -4910,7 +4910,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               </div>
             )}
 
-            {/* Tension hook — frames why this figure is debatable */}
+            {/* Tension hook - frames why this figure is debatable */}
             {(() => {
               const hook = getTensionHook(subject);
               if (!hook) return null;
@@ -5036,7 +5036,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     How much did {subject.name} shape history?
                   </h4>
 
-                  {/* Gauge — just the arc outline and needle */}
+                  {/* Gauge - just the arc outline and needle */}
                   <div style={{
                     width: "100%", maxWidth: 280, margin: "0 auto",
                     animation: lockingIn ? "lockShake 0.4s ease" : "none",
@@ -5047,7 +5047,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                       style={{ width: "100%", height: "auto", touchAction: "none", cursor: "pointer", display: "block", overflow: "hidden" }}
                       onPointerDown={handlePointerDown}
                     >
-                      {/* Semicircle — thin arc */}
+                      {/* Semicircle - thin arc */}
                       <path d={semiPath} fill="none" stroke="#e0ddd6" strokeWidth={2} />
 
                       {/* Tick marks at 0, 25, 50, 75, 100 */}
@@ -5070,7 +5070,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                         );
                       })}
 
-                      {/* Needle — color shifts with position */}
+                      {/* Needle - color shifts with position */}
                       <polygon
                         points={`${needleTip.x},${needleTip.y} ${needleBase1.x},${needleBase1.y} ${needleBase2.x},${needleBase2.y}`}
                         fill={needleColor}
@@ -5159,7 +5159,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     </div>
                     {cm.tier === "penalty" && (
                       <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, color: "#dc2626" }}>
-                        ⚠️ {cm.label} — move away from 50%
+                        ⚠️ {cm.label} - move away from 50%
                       </div>
                     )}
                     {cm.tier === "bonus" && (
@@ -5207,7 +5207,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // INTERLUDE SCREEN — builds anticipation before reveal
+  // INTERLUDE SCREEN - builds anticipation before reveal
   // ─────────────────────────────────────────────────────────────────────────
   if (screen === "interlude" && subject) {
     const cat = CATS[subject.cat] || { label: subject.cat || "Custom", color: "#64748b", bg: "rgba(100,116,139,0.06)" };
@@ -5224,7 +5224,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             textAlign: "center", width: "100%",
             animation: "fadeUp 0.4s ease both",
           }}>
-            {/* Figure identity — compact */}
+            {/* Figure identity - compact */}
             {isDaily && (
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
@@ -5261,7 +5261,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               {currentPhase.icon}
             </div>
 
-            {/* Phase text — larger and more prominent for analysis */}
+            {/* Phase text - larger and more prominent for analysis */}
             <div key={interludeStep} style={{
               minHeight: 80, marginBottom: 32, padding: "0 16px",
               animation: "fadeUp 0.35s ease both",
@@ -5470,7 +5470,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                       display: "inline-block",
                       animation: countdownDone ? "none" : "none",
                     }}>{animatedActual}%</span>
-                  ) : "—"}
+                  ) : "-"}
                 </div>
               </div>
               <div>
@@ -5483,8 +5483,8 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     <span style={{
                       display: "inline-block",
                       animation: "scorePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
-                    }}>{pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}</span>
-                  ) : "—"}
+                    }}>{pts > 0 ? `+${pts}` : isReplay ? "-" : "+0"}</span>
+                  ) : "-"}
                 </div>
                 {countdownDone && pts > 0 && !isReplay && (() => {
                   const mult = DIFFICULTY_MULTIPLIER(r);
@@ -5522,7 +5522,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 background: "linear-gradient(90deg, #15803d, #a16207 40%, #c2410c 65%, #b91c1c)",
                 overflow: "visible",
               }}>
-                {/* Gap highlight — animates during countdown */}
+                {/* Gap highlight - animates during countdown */}
                 {diff > 0.08 && animatedActual !== null && (() => {
                   const animW = (animatedActual ?? Math.round(prediction * 100)) / 100;
                   const lo = Math.min(prediction, animW), hi = Math.max(prediction, animW);
@@ -5534,7 +5534,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                     transition: "left 0.05s linear, width 0.05s linear",
                   }} />;
                 })()}
-                {/* You dot — always visible */}
+                {/* You dot - always visible */}
                 <div style={{
                   position: "absolute", top: "50%", transform: "translate(-50%,-50%)",
                   left: `${Math.round(prediction * 100)}%`,
@@ -5542,7 +5542,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   background: "#fff", border: "3px solid #1a1a1a",
                   boxShadow: "0 1px 4px rgba(0,0,0,0.2)", zIndex: 2,
                 }} />
-                {/* Actual dot — slides during countdown */}
+                {/* Actual dot - slides during countdown */}
                 {animatedActual !== null && <div style={{
                   position: "absolute", top: "50%", transform: "translate(-50%,-50%)",
                   left: `${animatedActual}%`,
@@ -5566,7 +5566,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               </div>
             </div>
 
-            {/* Big miss commentary — appears after countdown with shake */}
+            {/* Big miss commentary - appears after countdown with shake */}
             {diff > 0.24 && countdownDone && (
               <div style={{
                 textAlign: "center", padding: "14px 22px",
@@ -5584,21 +5584,21 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   const isInvention = subject.cat === "inventions";
                   const isPerson = !isEvent && !isInstitution && !isInvention;
                   const overMisses = isPerson ? [
-                    `Off by ${gap} points. ${subject.name}'s contribution was real, but the conditions were ripe — someone else was close.`,
+                    `Off by ${gap} points. ${subject.name}'s contribution was real, but the conditions were ripe - someone else was close.`,
                     `${gap} points high. Strip away the name, and the outcome likely still arrives.`,
                     `Off by ${gap}. Individual genius mattered less here than the forces that made it possible.`,
                     `${gap}-point miss. History remembers the name, but the work was more convergent than it looks.`,
                   ] : isEvent ? [
-                    `Off by ${gap} points. The underlying pressures made something like this likely — the specific form was less decisive than it feels.`,
+                    `Off by ${gap} points. The underlying pressures made something like this likely - the specific form was less decisive than it feels.`,
                     `${gap} points high. Events like this feel singular in the moment, but the conditions were already in place.`,
                     `Off by ${gap}. The shock was real, but the deeper trends were already moving this direction.`,
                     `${gap}-point miss. Change the trigger, and a similar outcome probably still unfolds.`,
                   ] : isInstitution ? [
                     `Off by ${gap} points. The need this filled was real, but another structure would have emerged to meet it.`,
                     `${gap} points high. Institutions feel permanent, but the function matters more than the specific form.`,
-                    `Off by ${gap}. Remove this one, and the vacuum gets filled — maybe differently, but filled.`,
+                    `Off by ${gap}. Remove this one, and the vacuum gets filled - maybe differently, but filled.`,
                   ] : [
-                    `Off by ${gap} points. The technology was converging — the specific implementation mattered less than it seems.`,
+                    `Off by ${gap} points. The technology was converging - the specific implementation mattered less than it seems.`,
                     `${gap} points high. Multiple paths led here. This one won, but wasn't the only possible route.`,
                     `Off by ${gap}. The invention was coming. The question was when and in what form, not whether.`,
                   ];
@@ -5610,15 +5610,15 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   ] : isEvent ? [
                     `Off by ${gap} points. This event's specific timing and form shaped everything that followed.`,
                     `${gap} points low. A different version of this event would have produced a very different world.`,
-                    `Off by ${gap}. The details of how this happened — not just that it happened — changed the trajectory.`,
+                    `Off by ${gap}. The details of how this happened - not just that it happened - changed the trajectory.`,
                     `${gap}-point miss. Delay or alter this, and decades of downstream history shift.`,
                   ] : isInstitution ? [
                     `Off by ${gap} points. This institution's specific structure and decisions shaped outcomes more than you'd think.`,
-                    `${gap} points low. The form matters, not just the function — and this form was hard to replicate.`,
+                    `${gap} points low. The form matters, not just the function - and this form was hard to replicate.`,
                     `Off by ${gap}. Without this specific institution, the alternatives would have looked very different.`,
                   ] : [
                     `Off by ${gap} points. The specific design choices locked in a path that shaped everything after.`,
-                    `${gap} points low. This wasn't just "the next step" — the particular form it took redirected whole fields.`,
+                    `${gap} points low. This wasn't just "the next step" - the particular form it took redirected whole fields.`,
                     `Off by ${gap}. Implementation matters. A different version would have produced a different world.`,
                   ];
                   const pool = prediction > w ? overMisses : underMisses;
@@ -5627,7 +5627,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               </div>
             )}
 
-            {/* Historian variance — shows when replaying a figure */}
+            {/* Historian variance - shows when replaying a figure */}
             {isReplay && historianVariance && countdownDone && (
               <div style={{
                 padding: "14px 18px", borderRadius: 12,
@@ -5683,7 +5683,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   <>
                     <div style={{ fontSize: 28, marginBottom: 6 }}>{streakMilestone.emoji}</div>
                     <div style={{ fontSize: 16, fontWeight: 700, fontFamily: sansStack, color: streakMilestone.reward === "shield_used" ? "#0d9488" : "#92400e", marginBottom: 4 }}>
-                      {streakMilestone.reward === "shield_used" ? "Streak Shield Activated!" : `${streak}-Round Streak — ${streakMilestone.label}!`}
+                      {streakMilestone.reward === "shield_used" ? "Streak Shield Activated!" : `${streak}-Round Streak - ${streakMilestone.label}!`}
                     </div>
                     {streakMilestone.bonus > 0 && (
                       <div style={{ display: "inline-block", padding: "6px 16px", borderRadius: 8, background: "#92400e", color: "#fff", fontSize: 14, fontWeight: 700, marginTop: 4, fontFamily: sansStack }}>
@@ -5710,7 +5710,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               </div>
             )}
 
-            {/* Exploration prompt — shows exactly what content is ahead */}
+            {/* Exploration prompt - shows exactly what content is ahead */}
             <div style={{ ...rcFade(ci, 0.55), marginTop: "auto", paddingTop: 20 }}>
               <div style={{
                 fontSize: 11, fontWeight: 700, color: "#9a9890", textTransform: "uppercase",
@@ -5782,7 +5782,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               })()}
             </div>
 
-            {/* Counterfactual — same card */}
+            {/* Counterfactual - same card */}
             {hasCounterfactual && (
               <div style={{
                 ...S.card, padding: "22px 24px",
@@ -5932,7 +5932,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                       </div>
                     </div>
 
-                    {/* Concessions — what the evaluator grants */}
+                    {/* Concessions - what the evaluator grants */}
                     {debateResult.concessions && (
                       <div style={{
                         padding: "12px 16px", borderRadius: 10,
@@ -6202,7 +6202,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 fontSize: 44, fontWeight: 400, fontFamily: fontStack,
                 color: pts > 0 ? "#6d28d9" : "#b0ada6",
                 margin: "12px 0 2px",
-              }}>{pts > 0 ? `+${pts}` : isReplay ? "—" : "+0"}</div>
+              }}>{pts > 0 ? `+${pts}` : isReplay ? "-" : "+0"}</div>
               <p style={{ fontSize: 13, color: "#9a9890", margin: 0, fontFamily: sansStack }}>
                 {isReplay ? "already played" : "points earned"}
               </p>
@@ -6339,7 +6339,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
               ) : null;
             })()}
 
-            {/* Smart next suggestions — primary CTA for replay loop */}
+            {/* Smart next suggestions - primary CTA for replay loop */}
             {!h2hMode && !isDaily && !subject._isCustom && (() => {
               const suggestions = [];
               const connected = getConnectedFigures(subject, played);
@@ -6434,7 +6434,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
           pointerEvents: "none", zIndex: 200,
         }} />
 
-        {/* Bottom navigation — labeled so players know what's ahead */}
+        {/* Bottom navigation - labeled so players know what's ahead */}
         <div style={{
           position: "fixed", bottom: 14, left: "50%", transform: "translateX(-50%)",
           zIndex: 100, display: "flex", gap: 4, padding: "5px 8px",

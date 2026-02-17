@@ -1,4 +1,4 @@
-// Pattern insights — teaches transferable counterfactual reasoning
+// Pattern insights - teaches transferable counterfactual reasoning
 import { ALL_SUBJECTS } from "../subjects.js";
 import { toWeight } from "../helpers.js";
 import { getDifficulty } from "./scoring.js";
@@ -7,27 +7,27 @@ export const CATEGORY_HEURISTICS = {
   science: {
     over: [
       { at: 4, title: "The Convergence Trap", text: (n, total) => `You've overestimated ${n} of ${total} science entries. When multiple labs race toward the same breakthrough, the specific discoverer matters less than intuition suggests. Ask: was anyone else close?` },
-      { at: 10, title: "Simultaneous Discovery", text: (n, total) => `Still overestimating science (${n}/${total}). Calculus, evolution, oxygen, the telephone — history is full of near-simultaneous discovery. In competitive fields, "who" matters less than "when."` },
+      { at: 10, title: "Simultaneous Discovery", text: (n, total) => `Still overestimating science (${n}/${total}). Calculus, evolution, oxygen, the telephone - history is full of near-simultaneous discovery. In competitive fields, "who" matters less than "when."` },
     ],
     under: [
-      { at: 4, title: "Vision vs. Discovery", text: (n, total) => `You've underestimated ${n} of ${total} science entries. Some breakthroughs aren't just about getting there first — they require conceptual leaps that reshape how entire fields think. The framework can matter more than the finding.` },
+      { at: 4, title: "Vision vs. Discovery", text: (n, total) => `You've underestimated ${n} of ${total} science entries. Some breakthroughs aren't just about getting there first - they require conceptual leaps that reshape how entire fields think. The framework can matter more than the finding.` },
     ],
   },
   arts: {
     over: [
-      { at: 4, title: "Art Isn't Convergent", text: (n, total) => `You've overestimated ${n} of ${total} arts entries. Unlike science, a different artist wouldn't produce the same work. No one else writes Hamlet. Art is personal — the creator's specific vision carries enormous weight.` },
+      { at: 4, title: "Art Isn't Convergent", text: (n, total) => `You've overestimated ${n} of ${total} arts entries. Unlike science, a different artist wouldn't produce the same work. No one else writes Hamlet. Art is personal - the creator's specific vision carries enormous weight.` },
     ],
     under: [
-      { at: 4, title: "Movements vs. Artists", text: (n, total) => `You've underestimated ${n} of ${total} arts entries. Artistic movements often have structural causes — cultural conditions that produce Impressionism or hip-hop regardless of any single artist. The movement was coming; the specific masterpieces weren't.` },
+      { at: 4, title: "Movements vs. Artists", text: (n, total) => `You've underestimated ${n} of ${total} arts entries. Artistic movements often have structural causes - cultural conditions that produce Impressionism or hip-hop regardless of any single artist. The movement was coming; the specific masterpieces weren't.` },
     ],
   },
   politics: {
     over: [
-      { at: 4, title: "Structural Forces Matter", text: (n, total) => `You've overestimated ${n} of ${total} political entries. Political outcomes often reflect deep structural forces — economics, demographics, geography — that constrain what any leader can do. The office shapes the person as much as the reverse.` },
+      { at: 4, title: "Structural Forces Matter", text: (n, total) => `You've overestimated ${n} of ${total} political entries. Political outcomes often reflect deep structural forces - economics, demographics, geography - that constrain what any leader can do. The office shapes the person as much as the reverse.` },
       { at: 10, title: "The Substitute Leader", text: (n, total) => `Still overestimating politics (${n}/${total}). When a political need is urgent enough, someone fills the role. Revolutions find their leaders; crises produce their commanders. The question is whether *this specific person's* decisions diverged from what a typical leader would have chosen.` },
     ],
     under: [
-      { at: 4, title: "Decisions at the Pivot", text: (n, total) => `You've underestimated ${n} of ${total} political entries. Leaders at critical junctures make choices that foreclose other paths. A different person in the same office, facing the same pressures, might have chosen differently — and history would have forked.` },
+      { at: 4, title: "Decisions at the Pivot", text: (n, total) => `You've underestimated ${n} of ${total} political entries. Leaders at critical junctures make choices that foreclose other paths. A different person in the same office, facing the same pressures, might have chosen differently - and history would have forked.` },
     ],
   },
   military: {
@@ -40,7 +40,7 @@ export const CATEGORY_HEURISTICS = {
   },
   social: {
     over: [
-      { at: 4, title: "Movements Have Roots", text: (n, total) => `You've overestimated ${n} of ${total} social movement entries. Social movements grow from structural conditions — inequality, oppression, demographic change. The pressure existed before the leader. Someone would have channeled it.` },
+      { at: 4, title: "Movements Have Roots", text: (n, total) => `You've overestimated ${n} of ${total} social movement entries. Social movements grow from structural conditions - inequality, oppression, demographic change. The pressure existed before the leader. Someone would have channeled it.` },
     ],
     under: [
       { at: 4, title: "The Shape of the Movement", text: (n, total) => `You've underestimated ${n} of ${total} social entries. Movements feel inevitable in retrospect, but specific leaders shaped their character, timing, and strategy in ways that produced very different outcomes. Nonviolence wasn't inevitable. Neither was that specific vision of justice.` },
@@ -48,24 +48,24 @@ export const CATEGORY_HEURISTICS = {
   },
   inventions: {
     over: [
-      { at: 4, title: "Multiple Inventors", text: (n, total) => `You've overestimated ${n} of ${total} invention entries. Most inventions had near-simultaneous inventors. The telephone, lightbulb, radio, calculus — when the prerequisite technologies exist, the next step becomes almost inevitable. Focus on timing, not credit.` },
+      { at: 4, title: "Multiple Inventors", text: (n, total) => `You've overestimated ${n} of ${total} invention entries. Most inventions had near-simultaneous inventors. The telephone, lightbulb, radio, calculus - when the prerequisite technologies exist, the next step becomes almost inevitable. Focus on timing, not credit.` },
       { at: 15, title: "Implementation Matters", text: (n, total) => `You keep overestimating inventions (${n}/${total}). Here's the nuance: even when the invention was coming, the *specific implementation* often shaped everything after. VHS vs Betamax. QWERTY keyboards. The form factor gets locked in.` },
     ],
     under: [
-      { at: 4, title: "Convergent Technology", text: (n, total) => `You've underestimated ${n} of ${total} invention entries. Technology is highly convergent — when the components exist, someone assembles them. The question isn't "would it have been invented?" but "how much later, and in what form?"` },
+      { at: 4, title: "Convergent Technology", text: (n, total) => `You've underestimated ${n} of ${total} invention entries. Technology is highly convergent - when the components exist, someone assembles them. The question isn't "would it have been invented?" but "how much later, and in what form?"` },
     ],
   },
   events: {
     over: [
-      { at: 4, title: "Contingent Triggers", text: (n, total) => `You've overestimated ${n} of ${total} event entries. The underlying pressures were real, but the specific trigger was often contingent. An assassination, a storm, a chance meeting — remove the trigger and the explosion might not happen, or happen very differently.` },
+      { at: 4, title: "Contingent Triggers", text: (n, total) => `You've overestimated ${n} of ${total} event entries. The underlying pressures were real, but the specific trigger was often contingent. An assassination, a storm, a chance meeting - remove the trigger and the explosion might not happen, or happen very differently.` },
     ],
     under: [
-      { at: 4, title: "Pressure Finds Release", text: (n, total) => `You've underestimated ${n} of ${total} event entries. When structural pressures build — economic crisis, political repression, technological change — *something* happens. The specific event might differ, but the category of outcome was likely.` },
+      { at: 4, title: "Pressure Finds Release", text: (n, total) => `You've underestimated ${n} of ${total} event entries. When structural pressures build - economic crisis, political repression, technological change - *something* happens. The specific event might differ, but the category of outcome was likely.` },
     ],
   },
   institutions: {
     over: [
-      { at: 4, title: "Needs Find Expression", text: (n, total) => `You've overestimated ${n} of ${total} institution entries. When a genuine need exists — for governance, coordination, knowledge — some institution forms to fill it. The specific institution might look different, but the function would be served.` },
+      { at: 4, title: "Needs Find Expression", text: (n, total) => `You've overestimated ${n} of ${total} institution entries. When a genuine need exists - for governance, coordination, knowledge - some institution forms to fill it. The specific institution might look different, but the function would be served.` },
       { at: 15, title: "Institutional Inertia", text: (n, total) => `Still overestimating institutions (${n}/${total}). Once formed, institutions develop internal logic, culture, and constituencies. The specific founder's choices get locked in for decades. The need was generic; the institution that resulted was not.` },
     ],
     under: [
@@ -77,20 +77,20 @@ export const CATEGORY_HEURISTICS = {
       { at: 4, title: "Computing Is Convergent", text: (n, total) => `You've overestimated ${n} of ${total} computing entries. Computing advances are among the most convergent in history. Multiple teams build similar hardware, write similar software, have similar ideas. Moore's Law doesn't care who's in the chair.` },
     ],
     under: [
-      { at: 4, title: "Architecture Gets Locked In", text: (n, total) => `You've underestimated ${n} of ${total} computing entries. The specific architecture — x86, Unix, TCP/IP — shapes decades of development once adopted. Someone else builds *a* computer, but the one we got sent ripples through every system built on top of it.` },
+      { at: 4, title: "Architecture Gets Locked In", text: (n, total) => `You've underestimated ${n} of ${total} computing entries. The specific architecture - x86, Unix, TCP/IP - shapes decades of development once adopted. Someone else builds *a* computer, but the one we got sent ripples through every system built on top of it.` },
     ],
   },
   medicine: {
     over: [
-      { at: 4, title: "Medical Convergence", text: (n, total) => `You've overestimated ${n} of ${total} medicine entries. Medical breakthroughs often have multiple near-discoverers working with the same tools and knowledge. The cure was coming — usually within a decade. The question is how many lives that decade costs.` },
+      { at: 4, title: "Medical Convergence", text: (n, total) => `You've overestimated ${n} of ${total} medicine entries. Medical breakthroughs often have multiple near-discoverers working with the same tools and knowledge. The cure was coming - usually within a decade. The question is how many lives that decade costs.` },
     ],
     under: [
-      { at: 4, title: "Unique Clinical Insight", text: (n, total) => `You've underestimated ${n} of ${total} medicine entries. Some medical advances required a specific person's unusual perspective — a surgeon willing to try what others wouldn't, a researcher connecting fields no one else bridged.` },
+      { at: 4, title: "Unique Clinical Insight", text: (n, total) => `You've underestimated ${n} of ${total} medicine entries. Some medical advances required a specific person's unusual perspective - a surgeon willing to try what others wouldn't, a researcher connecting fields no one else bridged.` },
     ],
   },
   philosophy: {
     over: [
-      { at: 4, title: "Ideas Have Preconditions", text: (n, total) => `You've overestimated ${n} of ${total} philosophy entries. Philosophical ideas emerge from cultural and intellectual conditions. The questions were being asked; someone would have answered them. But the *articulation* — how the idea was expressed — shaped how it was received.` },
+      { at: 4, title: "Ideas Have Preconditions", text: (n, total) => `You've overestimated ${n} of ${total} philosophy entries. Philosophical ideas emerge from cultural and intellectual conditions. The questions were being asked; someone would have answered them. But the *articulation* - how the idea was expressed - shaped how it was received.` },
     ],
     under: [
       { at: 4, title: "Articulation Is Everything", text: (n, total) => `You've underestimated ${n} of ${total} philosophy entries. In philosophy, how an idea is expressed can matter as much as the idea itself. A different thinker might reach similar conclusions but frame them in ways that fail to catch fire.` },
@@ -101,7 +101,7 @@ export const CATEGORY_HEURISTICS = {
       { at: 4, title: "Financial Innovation Clusters", text: (n, total) => `You've overestimated ${n} of ${total} finance entries. Financial innovations tend to emerge when market conditions demand them. Multiple people were developing similar instruments. The specific form mattered, but the capability was arriving.` },
     ],
     under: [
-      { at: 4, title: "Path Dependence in Markets", text: (n, total) => `You've underestimated ${n} of ${total} finance entries. Financial systems are deeply path-dependent. The specific design choices — of a currency, a market, an institution — get locked in and shape behavior for generations.` },
+      { at: 4, title: "Path Dependence in Markets", text: (n, total) => `You've underestimated ${n} of ${total} finance entries. Financial systems are deeply path-dependent. The specific design choices - of a currency, a market, an institution - get locked in and shape behavior for generations.` },
     ],
   },
   exploration: {
@@ -109,7 +109,7 @@ export const CATEGORY_HEURISTICS = {
       { at: 4, title: "Someone Was Coming", text: (n, total) => `You've overestimated ${n} of ${total} exploration entries. Once the technology and motivation exist, "discovery" is mostly a matter of timing. Others were literally sailing the same oceans. But the *timing* of contact shaped centuries of what followed.` },
     ],
     under: [
-      { at: 4, title: "First Contact Shapes Everything", text: (n, total) => `You've underestimated ${n} of ${total} exploration entries. Who arrives first — and what they do on arrival — shapes the trajectory of entire civilizations. A different explorer with different priorities could have meant radically different colonial outcomes.` },
+      { at: 4, title: "First Contact Shapes Everything", text: (n, total) => `You've underestimated ${n} of ${total} exploration entries. Who arrives first - and what they do on arrival - shapes the trajectory of entire civilizations. A different explorer with different priorities could have meant radically different colonial outcomes.` },
     ],
   },
 };
@@ -124,7 +124,7 @@ export const CROSS_PATTERNS = [
       const cats = Object.values(catData);
       if (cats.reduce((a, c) => a + c.games.length, 0) < 12) return null;
       const overCats = cats.filter(c => c.games.length >= 3 && c.overPct > 0.55);
-      if (overCats.length >= 3) return "You consistently overrate individual impact across multiple categories. This is the 'Great Person' bias — history tends to be more driven by structural forces, competing actors, and convergent pressures than our narratives suggest.";
+      if (overCats.length >= 3) return "You consistently overrate individual impact across multiple categories. This is the 'Great Person' bias - history tends to be more driven by structural forces, competing actors, and convergent pressures than our narratives suggest.";
       return null;
     },
   },
@@ -150,10 +150,10 @@ export const CROSS_PATTERNS = [
       if (convergent.length < 1 || divergent.length < 1) return null;
       const convOver = convergent.filter(c => catData[c].overPct > 0.55).length;
       const divUnder = divergent.filter(c => catData[c].underPct > 0.55).length;
-      if (convOver >= 1 && divUnder >= 1) return "You overrate individuals in convergent fields (science, tech) while underrating them in divergent ones (arts, politics). That's backwards — science has substitute discoverers; art and political leadership don't. Try flipping your instincts.";
+      if (convOver >= 1 && divUnder >= 1) return "You overrate individuals in convergent fields (science, tech) while underrating them in divergent ones (arts, politics). That's backwards - science has substitute discoverers; art and political leadership don't. Try flipping your instincts.";
       const convUnder = convergent.filter(c => catData[c].underPct > 0.55).length;
       const divOver = divergent.filter(c => catData[c].overPct > 0.55).length;
-      if (convUnder >= 1 && divOver >= 1) return "You've got good instincts about convergent fields — you correctly sense that science and tech breakthroughs have substitute discoverers. But you're also calibrated well on the personal nature of art and leadership. That's the right mental model.";
+      if (convUnder >= 1 && divOver >= 1) return "You've got good instincts about convergent fields - you correctly sense that science and tech breakthroughs have substitute discoverers. But you're also calibrated well on the personal nature of art and leadership. That's the right mental model.";
       return null;
     },
   },
@@ -183,7 +183,7 @@ export const getPatternInsights = (history) => {
 
   const insights = [];
 
-  // Category-specific insights — threshold: 4+ games, >55% directional bias
+  // Category-specific insights - threshold: 4+ games, >55% directional bias
   Object.entries(catData).forEach(([cat, data]) => {
     const h = CATEGORY_HEURISTICS[cat];
     if (!h) return;
@@ -226,7 +226,7 @@ export const getPatternInsights = (history) => {
       if (worst.avgErr - best.avgErr > 5) {
         insights.push({
           icon: "🔍", title: "Category Gap",
-          text: `Your ${bestLabel} predictions average ${Math.round(best.avgErr)} points off — strong intuition. But ${worstLabel} averages ${Math.round(worst.avgErr)} points off. What's different about how historical weight works in ${worstLabel.toLowerCase()}?`,
+          text: `Your ${bestLabel} predictions average ${Math.round(best.avgErr)} points off - strong intuition. But ${worstLabel} averages ${Math.round(worst.avgErr)} points off. What's different about how historical weight works in ${worstLabel.toLowerCase()}?`,
           cross: true,
         });
       }
@@ -253,7 +253,7 @@ export const getRecommendations = (playedIds, history, allSubjects) => {
     return a;
   };
 
-  // 1. "Because you played X" — connected figure from most recent game
+  // 1. "Because you played X" - connected figure from most recent game
   const recentEntry = history[history.length - 1];
   const recentFig = allSubjects.find(s => s.id === recentEntry?.id || s.name === recentEntry?.name);
   if (recentFig) {
@@ -271,7 +271,7 @@ export const getRecommendations = (playedIds, history, allSubjects) => {
     }
   }
 
-  // 2. "Weak spot" — category with lowest avg score (min 2 games in that cat)
+  // 2. "Weak spot" - category with lowest avg score (min 2 games in that cat)
   const catStats = {};
   history.forEach(g => {
     if (!catStats[g.cat]) catStats[g.cat] = { total: 0, count: 0 };
@@ -294,13 +294,13 @@ export const getRecommendations = (playedIds, history, allSubjects) => {
       recs.push({
         type: "weak",
         label: `Sharpen your weak spot`,
-        sublabel: `${catLabel} — avg ${Math.round(weakCat.avg)} pts`,
+        sublabel: `${catLabel} - avg ${Math.round(weakCat.avg)} pts`,
         figure: pick,
       });
     }
   }
 
-  // 3. "Step up" — harder difficulty if recent accuracy is good
+  // 3. "Step up" - harder difficulty if recent accuracy is good
   const recent10 = history.slice(-10);
   const recentAvg = recent10.reduce((s, g) => s + g.pts, 0) / recent10.length;
   if (recentAvg >= 55) {
@@ -317,7 +317,7 @@ export const getRecommendations = (playedIds, history, allSubjects) => {
       });
     }
   } else if (recent10.length >= 5 && recentAvg < 40) {
-    // Struggling — suggest an easier one
+    // Struggling - suggest an easier one
     const easyUnplayed = seededShuffle(
       unplayed.filter(s => getDifficulty(s.r) < 0.10 && !recs.some(r => r.figure.id === s.id))
     );

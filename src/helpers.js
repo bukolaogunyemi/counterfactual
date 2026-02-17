@@ -43,23 +43,23 @@ export const getConsistentScore = (name) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HISTORIAN VARIANCE — different perspectives on replayed figures
+// HISTORIAN VARIANCE - different perspectives on replayed figures
 // Historians genuinely disagree about how replaceable historical actors were.
 // On replay, we surface this ambiguity with a named perspective and adjusted score.
 
 const HISTORIAN_PERSPECTIVES = [
   { name: "Structuralist", school: "Structural determinism", direction: -1,
-    desc: "Broader forces matter more than individuals — the conditions were ripe regardless." },
+    desc: "Broader forces matter more than individuals - the conditions were ripe regardless." },
   { name: "Great Person Theorist", school: "Great person theory", direction: 1,
-    desc: "Individual agency was decisive here — remove the person and the outcome changes." },
+    desc: "Individual agency was decisive here - remove the person and the outcome changes." },
   { name: "Contingency Historian", school: "Contingency theory", direction: 1,
-    desc: "Timing and accident shaped events — small changes could have produced very different results." },
+    desc: "Timing and accident shaped events - small changes could have produced very different results." },
   { name: "Marxist Analyst", school: "Marxist historiography", direction: -1,
-    desc: "Material conditions and class dynamics drove the outcome — the individual was secondary." },
+    desc: "Material conditions and class dynamics drove the outcome - the individual was secondary." },
   { name: "Institutionalist", school: "Institutional analysis", direction: -1,
     desc: "Organizations and systems shaped events more than any single person." },
   { name: "Cultural Historian", school: "Cultural history", direction: 1,
-    desc: "Ideas and cultural currents created a unique moment — not easily replicated." },
+    desc: "Ideas and cultural currents created a unique moment - not easily replicated." },
 ];
 
 export const getHistorianVariance = (subjectId, playCount) => {
