@@ -1,6 +1,5 @@
 // Tips shown during warmup rounds
 export const WARMUP_TIPS = [
-  "Start with your gut feeling about how much this entry changed history.",
-  "If this never existed, would the same outcome have arrived anyway?",
-  "Low weight = it was happening regardless. High weight = history hinged on this moment.",
-];
+  "Start with your gut — how much did this specific entry change history compared to the forces around it?",
+  "Think about it this way: if this never existed or never happened, would the same outcome have arrived anyway?",
+  "Low weight means the outcome was in the air — it was happening with or without this entry. High weight means history hinged on this specific moment.",

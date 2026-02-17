@@ -1,4 +1,4 @@
-﻿import { toWeight } from "../helpers.js";
+import { toWeight } from "../helpers.js";
 
 export const getInterludePhases = (subject, prediction) => {
   const name = subject.name;
@@ -10,23 +10,23 @@ export const getInterludePhases = (subject, prediction) => {
     .map(s => s.trim())
     .filter(s => s.length > 10 && s.length < 200);
   
-  // Build phases: intro â†’ reasoning sentences â†’ verdict tease
+  // Build phases: intro → reasoning sentences → verdict tease
   const phases = [];
   
   // Opening: set the scene with what the player committed to
   const predPct = Math.round(prediction * 100);
   const predWord = predPct >= 70 ? "history-defining" : predPct >= 40 ? "moderately consequential" : "low-weight";
   phases.push({
-    icon: "ðŸŽ¯",
+    icon: "🎯",
     text: `You called ${name} ${predWord} at ${predPct}% weight. Let's see...`,
     style: "prediction",
   });
   
   // Middle: reasoning sentences (take up to 3)
-  const icons = ["ðŸ”", "âš–ï¸", "ðŸŒ€", "ðŸ“"];
+  const icons = ["🔍", "⚖️", "🌀", "📐"];
   const useSentences = sentences.slice(0, Math.min(3, sentences.length));
   useSentences.forEach((s, i) => {
-    phases.push({ icon: icons[i] || "ðŸ”", text: s, style: "analysis" });
+    phases.push({ icon: icons[i] || "🔍", text: s, style: "analysis" });
   });
   
   // If we got fewer than 2 reasoning sentences, add a category-specific filler
@@ -47,16 +47,16 @@ export const getInterludePhases = (subject, prediction) => {
       institutions: "Would other organizations have converged on the same model?",
       inventions: "Was the underlying science ready for anyone to find this?",
     };
-    phases.push({ icon: "ðŸŒ€", text: catFillers[subject.cat] || "Weighing the evidence...", style: "analysis" });
+    phases.push({ icon: "🌀", text: catFillers[subject.cat] || "Weighing the evidence...", style: "analysis" });
   }
   
   // Closing: verdict incoming
-  phases.push({ icon: "ðŸ“Š", text: "Rendering the verdict...", style: "verdict" });
+  phases.push({ icon: "📊", text: "Rendering the verdict...", style: "verdict" });
   
   return phases;
 };
 
-// DIRECTIONAL INSIGHT â€” explains why the player was off, using actual subject context
+// DIRECTIONAL INSIGHT — explains why the player was off, using actual subject context
 export const getDirectionInsight = (prediction, rValue, subject) => {
   const actual = toWeight(rValue); // convert to weight
   const diff = prediction - actual; // positive = player said MORE impactful than reality
@@ -78,7 +78,7 @@ export const getDirectionInsight = (prediction, rValue, subject) => {
   if (diff > 0) {
     // Player overestimated impact (thought more important than analysis says)
     if (actual < 0.30) {
-      return `${name} mattered less than intuition suggests. ${detail || `The conditions in ${field.toLowerCase()} were converging â€” the same outcome was arriving from multiple directions.`}`;
+      return `${name} mattered less than intuition suggests. ${detail || `The conditions in ${field.toLowerCase()} were converging — the same outcome was arriving from multiple directions.`}`;
     } else if (actual < 0.50) {
       return `${name}'s impact was real but not as singular as it seems. ${detail || `Similar forces in ${field.toLowerCase()} were pushing toward the same outcome.`}`;
     } else {
@@ -89,14 +89,14 @@ export const getDirectionInsight = (prediction, rValue, subject) => {
     if (actual > 0.70) {
       return `${name} carried more weight than you thought. ${detail || `Nothing else in ${field.toLowerCase()} was converging on this specific outcome.`}`;
     } else if (actual > 0.50) {
-      return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened â€” how it happened shaped what came after.`}`;
+      return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened — how it happened shaped what came after.`}`;
     } else {
       return `Even with similar forces at work, ${name}'s particular version of events carried more weight than expected. ${detail}`.trim();
     }
   }
 };
 
-// TENSION HOOK â€” extracts the debatable framing from reasoning for predict screen
+// TENSION HOOK — extracts the debatable framing from reasoning for predict screen
 export const getTensionHook = (subject) => {
   if (!subject.reasoning) return null;
   const sentences = subject.reasoning.match(/[^.!?]+[.!?]+/g) || [];
@@ -107,4 +107,3 @@ export const getTensionHook = (subject) => {
   if (hook.length < 40 || hook.length > 300) return null;
   return hook;
 };
-

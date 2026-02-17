@@ -1,4 +1,4 @@
-﻿import { ALL_SUBJECTS } from "../subjects.js";
+import { ALL_SUBJECTS } from "../subjects.js";
 
 export const fieldKeywords = (field) => field.toLowerCase().replace(/[&,]/g, ' ').split(/\s+/).filter(w => w.length > 2);
 
@@ -48,7 +48,7 @@ export const getConnectedFigures = (current, playedIds = [], count = 4) => {
   return scored;
 };
 
-// Connection label â€” why these figures are related
+// Connection label — why these figures are related
 export const getConnectionLabel = (current, other) => {
   const sameCat = current.cat === other.cat;
   const curKeys = fieldKeywords(current.field);
@@ -70,4 +70,3 @@ export const getConnectionLabel = (current, other) => {
   if (similarR) return "Similar score";
   return "Related";
 };
-

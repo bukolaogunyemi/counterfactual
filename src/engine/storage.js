@@ -1,4 +1,4 @@
-﻿// Tiered persistence: window.storage (artifact API) â†’ localStorage â†’ in-memory fallback
+// Tiered persistence: window.storage (artifact API) → localStorage → in-memory fallback
 // Reads are synchronous (localStorage/memory). Writes mirror to window.storage async.
 // On mount, hydrateFromPersistentStorage() pulls durable data into localStorage if empty.
 
@@ -8,10 +8,10 @@ export const HISTORY_KEY = "counterfactual_history";
 export const DAILY_KEY = "counterfactual_daily";
 const BACKUP_VERSION = 2;
 
-// â”€â”€â”€ In-memory fallback (for incognito / restricted environments) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── In-memory fallback (for incognito / restricted environments) ────────────
 const memoryStore = new Map();
 
-// â”€â”€â”€ Environment detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Environment detection ──────────────────────────────────────────────────
 export const isStorageAvailable = () => {
   try {
     const test = "__cf_storage_test__";
@@ -31,7 +31,7 @@ const isPersistentStorageAvailable = () => {
   }
 };
 
-// â”€â”€â”€ Core read/write with tiered fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Core read/write with tiered fallback ───────────────────────────────────
 const readKey = (key, fallback = null) => {
   // Try localStorage first (synchronous, fast)
   try {
@@ -58,7 +58,7 @@ const writeKey = (key, data) => {
   mirrorToPersistent(key, json);
 };
 
-// â”€â”€â”€ Persistent storage mirror (artifact environment API) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Persistent storage mirror (artifact environment API) ────────────────────
 // window.storage is async. We write to it as a durable backup so data survives
 // browser clears, device switches, and incognito sessions.
 const mirrorToPersistent = async (key, json) => {
@@ -66,11 +66,11 @@ const mirrorToPersistent = async (key, json) => {
   try {
     await window.storage.set(`cf:${key}`, json);
   } catch (e) {
-    // Silently fail â€” persistent storage is a bonus, not a requirement
+    // Silently fail — persistent storage is a bonus, not a requirement
   }
 };
 
-// â”€â”€â”€ Hydration: pull durable data into localStorage on mount â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Hydration: pull durable data into localStorage on mount ────────────────
 // Call once on app startup. If localStorage is empty but window.storage has
 // data (user cleared browser, switched devices, artifact env), this recovers it.
 export const hydrateFromPersistentStorage = async () => {
@@ -95,30 +95,30 @@ export const hydrateFromPersistentStorage = async () => {
         recovered++;
       }
     } catch (e) {
-      // Key doesn't exist in persistent storage â€” fine
+      // Key doesn't exist in persistent storage — fine
     }
   }
 
   return { hydrated: recovered > 0, recovered };
 };
 
-// â”€â”€â”€ Public API: progress â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Public API: progress ───────────────────────────────────────────────────
 export const saveProgress = (data) => writeKey(STORAGE_KEY, data);
 export const loadProgress = () => readKey(STORAGE_KEY, null);
 
-// â”€â”€â”€ Public API: game history â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Public API: game history ───────────────────────────────────────────────
 export const saveHistory = (data) => writeKey(HISTORY_KEY, data);
 export const loadHistory = () => readKey(HISTORY_KEY, []);
 
-// â”€â”€â”€ Public API: custom figure cache â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Public API: custom figure cache ────────────────────────────────────────
 export const saveCustomCache = (data) => writeKey(CUSTOM_CACHE_KEY, data);
 export const loadCustomCache = () => readKey(CUSTOM_CACHE_KEY, {});
 
-// â”€â”€â”€ Public API: daily state (used by daily.js) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Public API: daily state (used by daily.js) ─────────────────────────────
 export const saveDailyRaw = (data) => writeKey(DAILY_KEY, data);
 export const loadDailyRaw = () => readKey(DAILY_KEY, null);
 
-// â”€â”€â”€ Full data export (manual backup) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Full data export (manual backup) ───────────────────────────────────────
 export const exportAllData = () => {
   const bundle = {
     _meta: {
@@ -144,7 +144,7 @@ export const exportAllData = () => {
   return true;
 };
 
-// â”€â”€â”€ Full data import (manual restore) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Full data import (manual restore) ──────────────────────────────────────
 export const importAllData = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -178,4 +178,3 @@ export const importAllData = (file) => {
     reader.readAsText(file);
   });
 };
-

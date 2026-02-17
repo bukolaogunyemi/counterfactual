@@ -1,4 +1,4 @@
-﻿// Visual styles
+// Visual styles
 
 export const fontStack = "'Instrument Serif', 'Georgia', serif";
 export const sansStack = "'DM Sans', 'Helvetica Neue', sans-serif";
@@ -242,4 +242,3 @@ export const S = {
     borderBottom: "1px solid #e5e2db",
   },
 };
-

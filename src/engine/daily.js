@@ -1,9 +1,9 @@
-﻿// Daily challenge system â€” real community data when available, honest estimates when not
+// Daily challenge system — real community data when available, honest estimates when not
 import { ALL_SUBJECTS } from "../subjects.js";
 import { hashString, toWeight } from "../helpers.js";
 import { DAILY_KEY, saveDailyRaw, loadDailyRaw } from "./storage.js";
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 export { DAILY_KEY };
 export const DAILY_LAUNCH = new Date("2026-02-11");
 
@@ -47,11 +47,11 @@ export const getYesterdayStr = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// COMMUNITY STATS â€” real API with model-based fallback
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
+// COMMUNITY STATS — real API with model-based fallback
+// ─────────────────────────────────────────────────────────────────────────────
 
-// The API base URL â€” set to "" for same-origin Vercel deployment,
+// The API base URL — set to "" for same-origin Vercel deployment,
 // or override for local dev / different hosting
 const API_BASE = (typeof window !== "undefined" && window.__CF_API_BASE) || "";
 
@@ -65,7 +65,7 @@ export const submitDailyPrediction = async (prediction, figureId, points, diff) 
     });
     return await resp.json();
   } catch (e) {
-    // Silently fail â€” community features are non-critical
+    // Silently fail — community features are non-critical
     return { accepted: false, reason: "network_error" };
   }
 };
@@ -77,7 +77,7 @@ export const fetchCommunityStats = async (figureR) => {
     const data = await resp.json();
 
     if (data.available && data.sufficient && data.stats) {
-      // Real data with enough submissions â€” use it directly
+      // Real data with enough submissions — use it directly
       return {
         ...data.stats,
         isReal: true,
@@ -86,18 +86,18 @@ export const fetchCommunityStats = async (figureR) => {
     }
 
     if (data.available && !data.sufficient && data.submissions) {
-      // Some real data but not enough â€” blend with model
+      // Some real data but not enough — blend with model
       return blendWithModel(data.submissions, figureR, data.count);
     }
   } catch (e) {
-    // Network error â€” fall through to pure model
+    // Network error — fall through to pure model
   }
 
-  // No API available â€” use model-based estimates
+  // No API available — use model-based estimates
   return generateModelEstimate(figureR);
 };
 
-// Pure model-based estimate â€” uses figure difficulty to project likely responses.
+// Pure model-based estimate — uses figure difficulty to project likely responses.
 // Labeled as "estimated" everywhere it appears.
 export const generateModelEstimate = (figureR) => {
   const w = toWeight(figureR);
@@ -115,7 +115,7 @@ export const generateModelEstimate = (figureR) => {
   const offset = (seededRandom(0) - 0.5) * 0.10;
   const avgGuess = Math.max(0.05, Math.min(0.95, w + offset));
 
-  // % who got within 10 points â€” correlates inversely with difficulty
+  // % who got within 10 points — correlates inversely with difficulty
   const pctClose = Math.round(20 + (1 - difficulty * 2) * 15 + seededRandom(2) * 8);
 
   // Distribution buckets (0-20, 20-40, 40-60, 60-80, 80-100)
@@ -142,7 +142,7 @@ const blendWithModel = (realSubmissions, figureR, realCount) => {
   const model = generateModelEstimate(figureR);
   const realPredictions = realSubmissions.map(s => s.p);
 
-  // Weight real data proportionally â€” at 5+ submissions it dominates
+  // Weight real data proportionally — at 5+ submissions it dominates
   const realWeight = Math.min(0.8, realCount / 8);
   const modelWeight = 1 - realWeight;
 
@@ -166,12 +166,12 @@ const blendWithModel = (realSubmissions, figureR, realCount) => {
     pctClose: Math.round(realPctClose * realWeight + model.pctClose * modelWeight),
     buckets,
     maxBucket: Math.max(...buckets),
-    isReal: false,  // Not fully real yet â€” blended
+    isReal: false,  // Not fully real yet — blended
     sampleSize: realCount,
   };
 };
 
-// Calculate player's percentile â€” model-based, honest about it
+// Calculate player's percentile — model-based, honest about it
 export const getDailyPercentile = (playerDiff, figureR) => {
   const w = toWeight(figureR);
   const dateStr = getTodayStr();
@@ -191,6 +191,5 @@ export const getDailyPercentile = (playerDiff, figureR) => {
   return Math.round((worse / 200) * 100);
 };
 
-// â”€â”€â”€ DEPRECATED â€” kept for backward compatibility during migration â”€â”€â”€
+// ─── DEPRECATED — kept for backward compatibility during migration ───
 export const generateCommunityStats = (figureR) => generateModelEstimate(figureR);
-

@@ -1,4 +1,4 @@
-﻿// Category definitions
+// Category definitions
 export const CATS = {
   science:{label:"Science & Tech",color:"#2563eb",bg:"rgba(37,99,235,0.08)"},
   politics:{label:"Politics",color:"#dc2626",bg:"rgba(220,38,38,0.06)"},
@@ -17,13 +17,12 @@ export const CATS = {
 };
 
 export const CAT_ICONS = {
-  science: "ðŸ”¬", politics: "ðŸ›ï¸", military: "âš”ï¸", arts: "ðŸŽ¨",
-  philosophy: "ðŸ“œ", medicine: "âš•ï¸", computing: "ðŸ’»", finance: "ðŸ’°",
-  exploration: "ðŸ§­", social: "âœŠ", sports: "ðŸ†", events: "ðŸ“…",
-  institutions: "ðŸ¢", inventions: "âš™ï¸",
+  science: "🔬", politics: "🏛️", military: "⚔️", arts: "🎨",
+  philosophy: "📜", medicine: "⚕️", computing: "💻", finance: "💰",
+  exploration: "🧭", social: "✊", sports: "🏆", events: "📅",
+  institutions: "🏢", inventions: "⚙️",
 };
 
 
 // Helper: check if figure matches a category (primary or secondary)
 export const figInCat = (fig, catKey) => fig.cat === catKey || fig.cat2 === catKey;
-

@@ -1,4 +1,4 @@
-﻿// ALL_SUBJECTS â€” deduplicated, cascade-enriched master list
+// ALL_SUBJECTS — deduplicated, cascade-enriched master list
 import { FIGURES } from './data/figures.js';
 import { INSTITUTIONS } from './data/institutions.js';
 import { INVENTIONS } from './data/inventions.js';
@@ -20,4 +20,3 @@ export const ALL_SUBJECTS = (() => {
     return s;
   });
 })();
-
