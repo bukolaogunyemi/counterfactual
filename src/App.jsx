@@ -2334,7 +2334,59 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
           )}
 
           {/* Step 2: Predict */}
-          {step === 2 && (
+          {step === 2 && (() => {
+            const obNorm = onboardPred / 100;
+            const obLabel = getScoreLabel(obNorm, { cat: "inventions" });
+            const GW = 280, GCX = 140, GCY = 140, GR = 110;
+            const gToRad = (deg) => (deg * Math.PI) / 180;
+            const gValToAngle = (v) => 180 - v * 180;
+            const gAngleToXY = (deg, r) => ({
+              x: GCX + r * Math.cos(gToRad(deg)),
+              y: GCY - r * Math.sin(gToRad(deg)),
+            });
+            const gNeedleAngle = gValToAngle(obNorm);
+            const gNeedleTip = gAngleToXY(gNeedleAngle, GR - 10);
+            const gNeedleBase1 = gAngleToXY(gNeedleAngle + 90, 5);
+            const gNeedleBase2 = gAngleToXY(gNeedleAngle - 90, 5);
+            const gSemiPath = `M ${GCX - GR} ${GCY} A ${GR} ${GR} 0 0 1 ${GCX + GR} ${GCY}`;
+            const gNeedleColor = obNorm < 0.25 ? "#15803d" : obNorm < 0.50 ? "#a16207" : obNorm < 0.75 ? "#c2410c" : "#b91c1c";
+
+            const obPointerToValue = (clientX, clientY, svgEl) => {
+              if (!svgEl) return null;
+              const rect = svgEl.getBoundingClientRect();
+              const sx = GW / rect.width;
+              const sy = 148 / rect.height;
+              const px = (clientX - rect.left) * sx;
+              const py = (clientY - rect.top) * sy;
+              let angle = Math.atan2(GCY - py, px - GCX) * (180 / Math.PI);
+              if (angle < -10) angle = 0;
+              if (angle > 190) angle = 180;
+              angle = Math.max(0, Math.min(180, angle));
+              let val = (180 - angle) / 180;
+              val = Math.round(val * 20) / 20;
+              return Math.max(0, Math.min(100, Math.round(val * 100)));
+            };
+
+            const obHandlePointer = (e) => {
+              e.preventDefault();
+              const svg = e.currentTarget;
+              const update = (cx, cy) => {
+                const v = obPointerToValue(cx, cy, svg);
+                if (v !== null) setOnboardPred(v);
+              };
+              update(e.clientX, e.clientY);
+              const onMove = (ev) => update(ev.clientX, ev.clientY);
+              const onUp = () => {
+                window.removeEventListener("pointermove", onMove);
+                window.removeEventListener("pointerup", onUp);
+                window.removeEventListener("pointercancel", onUp);
+              };
+              window.addEventListener("pointermove", onMove);
+              window.addEventListener("pointerup", onUp);
+              window.addEventListener("pointercancel", onUp);
+            };
+
+            return (
             <div style={{ animation: "fadeUp 0.4s ease both" }}>
               <div style={{
                 fontSize: 11, fontWeight: 700, color: "#9a9890", letterSpacing: "0.05em",
@@ -2347,49 +2399,112 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                 <h3 style={{ ...S.h3, fontSize: 18, marginBottom: 4, textAlign: "center" }}>
                   The Telephone
                 </h3>
-                <p style={{ fontSize: 13, color: "#9a9890", textAlign: "center", marginBottom: 28 }}>
-                  If the telephone had never been invented in 1876, how different would history be?
+                <p style={{ fontSize: 13, color: "#9a9890", textAlign: "center", marginBottom: 16 }}>
+                  If the telephone had never been invented in 1876, how different would the world look today?
                 </p>
 
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, padding: "0 4px" }}>
-                  <div style={{ textAlign: "left" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#15803d" }}>0%</div>
-                    <div style={{ fontSize: 10, color: "#9a9890" }}>Bound to happen</div>
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#a16207" }}>50%</div>
-                    <div style={{ fontSize: 10, color: "#9a9890" }}>Debatable</div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#b91c1c" }}>100%</div>
-                    <div style={{ fontSize: 10, color: "#9a9890" }}>History-defining</div>
-                  </div>
+                {/* SVG Gauge — matches main game dial */}
+                <div style={{ width: "100%", maxWidth: 280, margin: "0 auto" }}>
+                  <svg
+                    viewBox={`0 6 ${GW} 142`}
+                    style={{ width: "100%", height: "auto", touchAction: "none", cursor: "pointer", display: "block", overflow: "hidden" }}
+                    onPointerDown={obHandlePointer}
+                  >
+                    <path d={gSemiPath} fill="none" stroke="#e0ddd6" strokeWidth={2} />
+                    {[0, 25, 50, 75, 100].map(v => {
+                      const a = gValToAngle(v / 100);
+                      const outer = gAngleToXY(a, GR + 6);
+                      const inner = gAngleToXY(a, GR - 6);
+                      const lbl = gAngleToXY(a, GR + 18);
+                      return (
+                        <g key={v}>
+                          <line x1={outer.x} y1={outer.y} x2={inner.x} y2={inner.y}
+                            stroke="#b0ada6" strokeWidth={1.5} strokeLinecap="round" />
+                          <text x={lbl.x} y={lbl.y} textAnchor="middle" dominantBaseline="middle"
+                            style={{ fontSize: 9, fill: "#9a9890", fontWeight: 600, fontFamily: sansStack, userSelect: "none" }}
+                          >{v}</text>
+                        </g>
+                      );
+                    })}
+                    <polygon
+                      points={`${gNeedleTip.x},${gNeedleTip.y} ${gNeedleBase1.x},${gNeedleBase1.y} ${gNeedleBase2.x},${gNeedleBase2.y}`}
+                      fill={gNeedleColor}
+                      style={{ transition: "fill 0.15s ease" }}
+                    />
+                    <circle cx={GCX} cy={GCY} r={8} fill={gNeedleColor} style={{ transition: "fill 0.15s ease" }} />
+                    <circle cx={GCX} cy={GCY} r={4} fill="#fff" />
+                  </svg>
                 </div>
 
-                <input
-                  type="range" min="0" max="100" step="1"
-                  value={onboardPred}
-                  onChange={e => setOnboardPred(parseInt(e.target.value))}
-                  className="prediction-slider"
-                  style={{ width: "100%", marginBottom: 12 }}
-                />
-
+                {/* Scale labels */}
                 <div style={{
-                  textAlign: "center", fontSize: 36, fontWeight: 300,
-                  color: "#1a1a1a", fontFamily: fontStack, letterSpacing: "-0.03em",
-                  marginBottom: 8,
+                  display: "flex", justifyContent: "space-between", padding: "0 6px",
+                  maxWidth: 280, margin: "2px auto 0",
                 }}>
-                  {onboardPred}%
+                  <span style={{ fontSize: 11, color: "#15803d", fontWeight: 600 }}>Footnote</span>
+                  <span style={{ fontSize: 11, color: "#b91c1c", fontWeight: 600 }}>Turning Point</span>
                 </div>
 
-                <div style={{
-                  textAlign: "center", fontSize: 13, color: "#9a9890", marginBottom: 4,
-                }}>
-                  {onboardPred < 20 ? "Low weight — the world barely changes without this"
-                    : onboardPred < 40 ? "Modest weight — the world shifts a little, but arrives somewhere similar"
-                    : onboardPred < 60 ? "Mixed — some things change, some don't"
-                    : onboardPred < 80 ? "High weight — the world looks noticeably different"
-                    : "History-defining — the timeline diverges completely"}
+                {/* Readout with fine-tune controls */}
+                <div style={{ textAlign: "center", marginTop: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <button
+                      onClick={() => setOnboardPred(Math.max(0, onboardPred - 5))}
+                      style={{
+                        width: 36, height: 36, borderRadius: "50%", border: "1.5px solid #e5e2db",
+                        background: "#faf9f6", cursor: "pointer", fontSize: 16, fontWeight: 700,
+                        color: "#78716c", display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: sansStack, lineHeight: 1, padding: 0,
+                      }}
+                    >{"\u22125"}</button>
+                    <button
+                      onClick={() => setOnboardPred(Math.max(0, onboardPred - 1))}
+                      style={{
+                        width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #e5e2db",
+                        background: "#faf9f6", cursor: "pointer", fontSize: 14, fontWeight: 600,
+                        color: "#9a9890", display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: sansStack, lineHeight: 1, padding: 0,
+                      }}
+                    >{"\u2212"}</button>
+
+                    <div style={{
+                      fontSize: 48, fontWeight: 400, color: gNeedleColor,
+                      fontFamily: fontStack, letterSpacing: "-0.03em", lineHeight: 1,
+                      transition: "color 0.15s ease",
+                      minWidth: 100, textAlign: "center",
+                    }}>
+                      {onboardPred}<span style={{ fontSize: 24, fontWeight: 300 }}>%</span>
+                    </div>
+
+                    <button
+                      onClick={() => setOnboardPred(Math.min(100, onboardPred + 1))}
+                      style={{
+                        width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #e5e2db",
+                        background: "#faf9f6", cursor: "pointer", fontSize: 14, fontWeight: 600,
+                        color: "#9a9890", display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: sansStack, lineHeight: 1, padding: 0,
+                      }}
+                    >+</button>
+                    <button
+                      onClick={() => setOnboardPred(Math.min(100, onboardPred + 5))}
+                      style={{
+                        width: 36, height: 36, borderRadius: "50%", border: "1.5px solid #e5e2db",
+                        background: "#faf9f6", cursor: "pointer", fontSize: 16, fontWeight: 700,
+                        color: "#78716c", display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: sansStack, lineHeight: 1, padding: 0,
+                      }}
+                    >+5</button>
+                  </div>
+                  <div style={{ fontSize: 16, color: gNeedleColor, fontWeight: 700, marginTop: 4, transition: "color 0.15s ease" }}>
+                    {obLabel.label}
+                  </div>
+                  <div style={{ fontSize: 13, color: "#9a9890", marginTop: 4, maxWidth: 300, margin: "4px auto 0" }}>
+                    {onboardPred < 20 ? "Low weight - the world barely changes without this"
+                      : onboardPred < 40 ? "Modest weight - the world shifts a little, but arrives somewhere similar"
+                      : onboardPred < 60 ? "Mixed - some things change, some don't"
+                      : onboardPred < 80 ? "High weight - the world looks noticeably different"
+                      : "History-defining - the timeline diverges completely"}
+                  </div>
                 </div>
               </div>
 
@@ -2400,9 +2515,11 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   background: "#1a1a1a", color: "#fff", border: "none",
                 }}
               >
-                Lock it in →
+                Lock it in {"\u2192"}
               </button>
             </div>
+            );
+          })()}
           )}
 
           {/* Step 3: The reveal — the surprise */}
@@ -2497,7 +2614,7 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
                   Wait — only {Math.round(tutW * 100)}%?
                 </div>
                 <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0 }}>
-                  Elisha Gray filed a telephone patent <strong>the same day</strong> as Alexander Graham Bell — February 14, 1876. Antonio Meucci had a working device years earlier. Philipp Reis transmitted speech in 1861. Remove Bell from history and the world in 2026 looks almost identical — you're still making phone calls, just under a different name. That's low weight.
+                  The telephone changed the world. But by 1876, the science of transmitting voice electrically was so well understood that three separate inventors filed working designs within months of each other. Erase the telephone from 1876 and the world in 2026 looks almost identical - you get the same technology a year or two later. The invention mattered enormously. Its weight is low because the world was getting it regardless.
                 </p>
               </div>
 
