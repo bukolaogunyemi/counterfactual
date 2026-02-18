@@ -2520,7 +2520,6 @@ EVALUATE this argument. Respond in JSON only (no markdown, no backticks):
             </div>
             );
           })()}
-          )}
 
           {/* Step 3: The reveal — the surprise */}
           {step === 3 && (
