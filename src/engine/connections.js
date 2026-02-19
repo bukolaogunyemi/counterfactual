@@ -1,4 +1,6 @@
 import { ALL_SUBJECTS } from "../subjects.js";
+import { hashString } from "../helpers.js";
+import { CATS } from "../categories.js";
 
 export const fieldKeywords = (field) => field.toLowerCase().replace(/[&,]/g, ' ').split(/\s+/).filter(w => w.length > 2);
 
