@@ -140,12 +140,6 @@ function App() {
   const [newAchievement, setNewAchievement] = useState(null);
   const prevEarnedRef = useRef(new Set());
 
-  // Memoized earned achievements — computed once per game/play change, used everywhere
-  const earnedAchievements = useMemo(() =>
-    ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)),
-    [played.length, gameHistory.length, dailyState?.completed, streakRewards.length]
-  );
-  const earnedAchievementIds = useMemo(() => new Set(earnedAchievements.map(a => a.id)), [earnedAchievements]);
   const [lastPts, setLastPts] = useState(0);
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
   const [onboardStep, setOnboardStep] = useState(0);
@@ -171,6 +165,13 @@ function App() {
   const [communityLoading, setCommunityLoading] = useState(false);
   const [communityAvailable, setCommunityAvailable] = useState(null); // null = unknown, true/false
   const [communitySort, setCommunitySort] = useState("top"); // "top" | "newest"
+
+  // Memoized earned achievements — computed once per game/play change, used everywhere
+  const earnedAchievements = useMemo(() =>
+    ACHIEVEMENTS.filter(a => a.check(gameHistory, played, dailyState, streakRewards)),
+    [played.length, gameHistory.length, dailyState?.completed, streakRewards.length]
+  );
+  const earnedAchievementIds = useMemo(() => new Set(earnedAchievements.map(a => a.id)), [earnedAchievements]);
 
   const showToast = (msg, duration = 2500) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
