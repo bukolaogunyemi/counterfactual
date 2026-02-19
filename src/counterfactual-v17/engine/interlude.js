@@ -32,20 +32,20 @@ export const getInterludePhases = (subject, prediction) => {
   // If we got fewer than 2 reasoning sentences, add a category-specific filler
   if (useSentences.length < 2) {
     const catFillers = {
-      science: `Checking who else was close to ${name}'s breakthroughs...`,
-      politics: `Would the same movement have found a different champion?`,
-      military: `Would a different commander have changed the outcome?`,
-      arts: `How much of this legacy belongs to the individual vs. the moment?`,
-      philosophy: `Were these ideas waiting to be thought, or truly original?`,
-      medicine: `How many lives hinge on the timing of one breakthrough?`,
-      computing: "Was this a question of who, or just when?",
-      finance: "Would the same market forces have produced the same outcome?",
-      exploration: "Separating the explorer from the conditions that made exploration possible...",
-      social: "Was this change driven by one person, or by forces larger than any individual?",
-      sports: `Would the sport have evolved the same way without ${name}?`,
-      events: `Was this moment inevitable, or could it have gone completely differently?`,
-      institutions: "Would other organizations have converged on the same model?",
-      inventions: "Was the underlying science ready for anyone to find this?",
+      science: `How different does science look without ${name}'s breakthroughs?`,
+      politics: `Remove this from history. How much changes?`,
+      military: `Take this out of the equation. Does the war end differently?`,
+      arts: `Remove this from the record. How different does the cultural landscape look?`,
+      philosophy: `Would the same ideas have shaped the world without this specific voice?`,
+      medicine: `How many lives change if you erase this from the timeline?`,
+      computing: "Remove this and fast-forward to 2026. What looks different?",
+      finance: "Erase this and trace the ripple effects forward...",
+      exploration: "Take this out of the history books. Does the map look different?",
+      social: "Remove this from the timeline. Does society still arrive at the same place?",
+      sports: `Erase ${name} from the record books. Does the sport look different today?`,
+      events: `Rewind and delete this moment. How much actually changes?`,
+      institutions: "Remove this institution. Does the world organize itself the same way?",
+      inventions: "Take this invention off the table. Does 2026 look different?",
     };
     phases.push({ icon: "🌀", text: catFillers[subject.cat] || "Weighing the evidence...", style: "analysis" });
   }
@@ -78,16 +78,16 @@ export const getDirectionInsight = (prediction, rValue, subject) => {
   if (diff > 0) {
     // Player overestimated impact (thought more important than analysis says)
     if (actual < 0.30) {
-      return `${name} mattered less than intuition suggests. ${detail || `The conditions in ${field.toLowerCase()} were converging — the same outcome was arriving from multiple directions.`}`;
+      return `${name} mattered less than intuition suggests. ${detail || `Remove it from the timeline and ${field.toLowerCase()} still ends up in a similar place.`}`;
     } else if (actual < 0.50) {
-      return `${name}'s impact was real but not as singular as it seems. ${detail || `Similar forces in ${field.toLowerCase()} were pushing toward the same outcome.`}`;
+      return `${name}'s impact was real but the world without it doesn't diverge as much as you'd think. ${detail || `The broad trajectory of ${field.toLowerCase()} doesn't shift dramatically.`}`;
     } else {
       return `${name} was important, but the underlying conditions were doing more of the work than it appears. ${detail}`.trim();
     }
   } else {
     // Player underestimated impact (thought less consequential than analysis says)
     if (actual > 0.70) {
-      return `${name} carried more weight than you thought. ${detail || `Nothing else in ${field.toLowerCase()} was converging on this specific outcome.`}`;
+      return `${name} carried more weight than you thought. ${detail || `Remove it and the world of ${field.toLowerCase()} looks very different.`}`;
     } else if (actual > 0.50) {
       return `The specific form of ${name} mattered more than the outcome alone suggests. ${detail || `It wasn't just that it happened — how it happened shaped what came after.`}`;
     } else {

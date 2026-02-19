@@ -1,4 +1,5 @@
 // Scoring engine — points, difficulty, ranks, feedback
+// r = historical weight (0 = no impact, 1 = maximum impact)
 import { toWeight } from '../helpers.js';
 
 export const DIFFICULTY_MULTIPLIER = (r) => {
@@ -15,25 +16,25 @@ export const getScoreLabel = (score, subject) => {
   const isInstitution = cat === "institutions";
 
   if (score >= 0.80) return { label: "Turning Point", color: "#b91c1c", desc:
-    isEvent ? "This didn't have to happen — and without it, the world becomes unrecognizable"
-    : isInvention ? "This specific invention reshaped everything — nothing else was converging on the same solution"
-    : isInstitution ? "Without this institution, the systems it built don't emerge on their own"
-    : "Without them, the world looks fundamentally different — no one else was close" };
+    isEvent ? "Remove this event and the world becomes unrecognizable"
+    : isInvention ? "Without this invention, the world in 2026 looks fundamentally different"
+    : isInstitution ? "Without this institution, the systems it shaped don't develop the same way"
+    : "Remove them from history and the world we know doesn't arrive" };
   if (score >= 0.50) return { label: "Major Force", color: "#c2410c", desc:
-    isEvent ? "The specific way this unfolded mattered — a different version of events changes the outcome"
-    : isInvention ? "The specific form of this invention mattered — a different version changes what followed"
-    : isInstitution ? "This institution shaped its domain in ways that weren't guaranteed by the underlying need"
-    : "Shaped history in ways no one else was positioned to" };
+    isEvent ? "The specific way this unfolded mattered — change the details and you change the outcome"
+    : isInvention ? "The specific form mattered — a different version changes what followed"
+    : isInstitution ? "This institution shaped its domain in ways the underlying need alone wouldn't guarantee"
+    : "Remove this and the world looks meaningfully different — the specifics mattered" };
   if (score >= 0.20) return { label: "Supporting Role", color: "#a16207", desc:
-    isEvent ? "The underlying forces were real, but the timing and shape weren't guaranteed"
-    : isInvention ? "The need was real, but the specific timing and form weren't guaranteed"
-    : isInstitution ? "Something like this was needed, but the specific institution shaped the outcome"
-    : "Others were working toward similar ends — the timeline shifts, but the outcome likely arrives" };
+    isEvent ? "The underlying forces were real, but the timing and shape still mattered"
+    : isInvention ? "The need was real, but how and when it was met still shaped what followed"
+    : isInstitution ? "Something like this was needed — the specific form shifted the outcome, but not dramatically"
+    : "The world without this still arrives somewhere similar — but the path there looks different" };
   return { label: "Footnote", color: "#15803d", desc:
-    isEvent ? "History was converging here from multiple directions — this was coming regardless"
-    : isInvention ? "Multiple inventors were closing in — this was arriving within a generation"
-    : isInstitution ? "The function this served was being filled from multiple directions"
-    : "Multiple paths were converging — someone else gets here within a generation" };
+    isEvent ? "Remove this and the world barely flinches — the same destination, slightly different route"
+    : isInvention ? "The world without this looks almost the same — you just get there a little later"
+    : isInstitution ? "The need it filled gets met regardless — the world without it is hard to distinguish"
+    : "The world without this looks surprisingly similar — the broad strokes don't change" };
 };
 
 export const getDifficulty = (r) => Math.abs(r - 0.5);
@@ -45,13 +46,16 @@ export const calculatePoints = (diff) => {
   return Math.round(100 * Math.pow(1 - diff * 2, 2));
 };
 
-// Conviction multiplier — penalizes hedging near 50%, rewards bold predictions
-// prediction at 50% → 0.75x, at 35%/65% → ~0.98x, at 15%/85% → 1.15x, at 0%/100% → 1.25x
+// Conviction bonus — rewards bold predictions, never punishes
+// 40-60% range: 1.0x (neutral, no penalty for reasonable calls)
+// Beyond that: bonus ramps up to 1.25x at the extremes
+// The accuracy scoring already punishes wrong bold bets — no need to double-penalize hedging
 export const CONVICTION_MULT = (prediction) => {
-  const conviction = Math.pow(Math.abs(prediction - 0.5) / 0.5, 0.65);
-  const mult = 0.75 + 0.5 * conviction;
-  if (mult >= 1.05) return { mult, label: `${Math.round((mult - 1) * 100)}% conviction`, tier: "bonus" };
-  if (mult <= 0.90) return { mult, label: `${Math.round((1 - mult) * 100)}% hedge penalty`, tier: "penalty" };
+  const distance = Math.abs(prediction - 0.5);
+  if (distance <= 0.10) return { mult: 1.0, label: null, tier: "neutral" };
+  const boldness = (distance - 0.10) / 0.40; // 0 at 40/60%, 1 at 0/100%
+  const mult = 1.0 + 0.25 * Math.pow(boldness, 0.7);
+  if (mult >= 1.03) return { mult, label: `${Math.round((mult - 1) * 100)}% conviction`, tier: "bonus" };
   return { mult, label: null, tier: "neutral" };
 };
 
@@ -68,7 +72,7 @@ export const getAccuracyFeedback = (diff, pts, subject, prediction) => {
     ? `You thought ${name} was more impactful than the analysis shows.`
     : `${name} shaped history more than you'd expect.`, tier: "okay" };
   if (diff < 0.40) return { emoji: "📚", msg: over
-    ? `${name}'s impact was less singular than you assumed.`
+    ? `The world without ${name} doesn't look as different as you assumed.`
     : `${name} left a deeper mark on history than most people realize.`, tier: "miss" };
   return { emoji: "😮", msg: over
     ? `Way off — ${name} carried far less weight than you guessed.`

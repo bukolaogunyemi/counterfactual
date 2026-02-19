@@ -43,7 +43,7 @@ export const COLLECTIONS = [
   {
     id: "empire_builders",
     title: "Empire Builders",
-    subtitle: "Did they make history, or would someone else have conquered?",
+    subtitle: "Remove these conquerors — does the map look different?",
     emoji: "👑",
     color: "#92400e",
     bg: "#fef3c7",
@@ -103,7 +103,7 @@ export const COLLECTIONS = [
   {
     id: "turning_points",
     title: "Turning Points",
-    subtitle: "Were these moments inevitable — or could history have gone another way?",
+    subtitle: "Erase these moments — how different does the world look?",
     emoji: "⚡",
     color: "#7c3aed",
     bg: "#faf5ff",
